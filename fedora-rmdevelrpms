@@ -5,7 +5,7 @@
 #
 # Author:  Ville Skyttä <ville.skytta at iki.fi>
 # License: GPL
-# $Id: fedora-rmdevelrpms,v 1.4 2003/08/15 20:25:45 scop Exp $
+# $Id: fedora-rmdevelrpms,v 1.5 2003/10/02 20:38:12 scop Exp $
 #
 # This script is useful in cleaning up development RPMs from your system,
 # eg. when starting to make a new RPM package.
@@ -29,7 +29,7 @@ if [ -r $HOME/.develrpmsrc ]; then
     . $HOME/.develrpmsrc
 fi
 
-DEVPKGS="autoconf autoconf213 automake automake14 automake15 automake16 bison byacc compat-gcc compat-gcc-c++ compface dev86 djbfft docbook-utils-pdf doxygen flex gettext glade glade2 kernel-source libgcj libtool nasm qt-designer swig tetex-dvips texinfo $ADDITIONAL_DEVEL_RPMS"
+DEVPKGS="autoconf autoconf213 automake automake14 automake15 automake16 bison byacc compat-gcc compat-gcc-c++ compface dev86 djbfft docbook-utils-pdf doxygen flex gettext glade glade2 kernel-source libgcj libtool nasm qt-designer swig texinfo $ADDITIONAL_DEVEL_RPMS"
 
 # Find -devel RPMs.
 
