@@ -2,7 +2,7 @@
 
 #
 # Helper script for creating the fedora-rpmdevtools dist tarball.
-# $Id: mkdist.sh,v 1.2 2004/04/01 19:31:08 scop Exp $
+# $Id: mkdist.sh,v 1.3 2005/03/15 10:42:35 scop Exp $
 #
 # Author:  Ville Skyttä <ville.skytta at iki.fi>
 # License: GPL
@@ -29,6 +29,7 @@ mkdir -p $tmpdir/fedora-rpmdevtools-$1
 cp -pR * $tmpdir/fedora-rpmdevtools-$1
 find $tmpdir -type d -name CVS | xargs -r rm -rf
 rm -f $tmpdir/fedora-rpmdevtools-$1/mkdist.sh
+rm -f $tmpdir/fedora-rpmdevtools-$1/*.tar.*
 find $tmpdir/fedora-rpmdevtools-$1 -type d | xargs chmod 0755
 find $tmpdir/fedora-rpmdevtools-$1 -type f | xargs chmod 0644
 cd $tmpdir
