@@ -22,7 +22,7 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# $Id: fedora-kmodhelper,v 1.2 2003/12/28 18:05:30 scop Exp $
+# $Id: fedora-kmodhelper,v 1.3 2003/12/28 19:21:42 scop Exp $
 
 myprog="fedora-kmodhelper"
 myver="0.9.5"
@@ -91,7 +91,7 @@ get_srcdir ()
     get_uname # || return $?
     for dir in "/usr/src/linux-${verrel}" "/lib/modules/${uname}/build"; do
       if [ -d "${dir}" -o -h "${dir}" ] ; then
-        if [ -e "${dir}/include/linux/version.h" ] ; then
+        if [ -e "${dir}/include/linux" ] ; then
           srcdir="${dir}"
           return 0
         else
