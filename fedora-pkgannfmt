@@ -5,11 +5,16 @@
 #
 # Author:  Ville Skyttä <ville.skytta at iki.fi>
 # License: GPL
-# $Id: fedora-pkgannfmt,v 1.1 2003/10/31 18:54:46 scop Exp $
+# $Id: fedora-pkgannfmt,v 1.2 2003/12/28 18:03:31 scop Exp $
+
+if [ -z "$1" ] ; then
+  echo $"Usage: fedora-pkgannfmt <rpm-file or name of an installed package>"
+  exit 2
+fi
 
 pkg=
-if [ -f "$1" ]; then
+if [ -f "$1" ] ; then
   pkg=p
 fi
 
-rpm -q$pkg --qf "Name   : %{name}\nVersion: %{version}\nRelease: %{release}\nLicense: %{license}\nURL    : %{url}\n\n%{description}\n\n" --changelog "$1" | perl -pe 's|^(Release:.*)\.rh\d+|$1|'
+rpm -q$pkg --qf "Name   : %{name}\nVersion: %{version}\nRelease: %{release}\nLicense: %{license}\nURL    : %{url}\n\n%{description}\n\n" --changelog "$1" | sed 's/^\(Release:.*\)\.rh[0-9]\+/\1/'
