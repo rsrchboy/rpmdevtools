@@ -95,7 +95,7 @@ env PATH="$RPM_BUILD_ROOT%{_bindir}:$PATH" sh test/fedora-kmodhelper-test.sh
 rm -rf $RPM_BUILD_ROOT
 
 
-%triggerin -- emacs
+%triggerin -- emacs-common
 [ -d %{emacs_sitestart_d} ] && \
   ln -sf %{_datadir}/fedora/emacs/fedora-init.el %{emacs_sitestart_d} || :
 
@@ -103,7 +103,7 @@ rm -rf $RPM_BUILD_ROOT
 [ -d %{xemacs_sitestart_d} ] && \
   ln -sf %{_datadir}/fedora/emacs/fedora-init.el %{xemacs_sitestart_d} || :
 
-%triggerun -- emacs
+%triggerun -- emacs-common
 [ $2 -eq 0 ] && rm -f %{emacs_sitestart_d}/fedora-init.el* || :
 
 %triggerun -- xemacs-common
@@ -123,7 +123,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Sun Mar 20 2005 Ville Skyttä <ville.skytta at iki.fi>
 - Own (%%ghost'd) more dirs from the site-lisp dir hierarchies.
-- Drop trigger support pre-FC2 xemacs packages.
+- Drop trigger support pre-FC2 Emacs and XEmacs packages.
 
 * Tue Mar 15 2005 Ville Skyttä <ville.skytta at iki.fi>
 - Make fedora-diffarchive work better with archives containing dirs without
