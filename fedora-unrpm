@@ -1,36 +1,28 @@
-#!/bin/sh
+#!/bin/bash
 
 #
 # fedora-unrpm
-# Extract RPMs into PWD, "tar zxvf"-style
+# Extract RPMs, "tar xvf" style
 #
 # Author:  Ville Skyttä <ville.skytta at iki.fi>
 # License: GPL
-# $Id: fedora-unrpm,v 1.2 2003/08/15 20:25:45 scop Exp $
+# $Id: fedora-unrpm,v 1.3 2004/01/29 18:13:59 scop Exp $
 
 usage()
 {
-    echo "Usage: `basename $0` RPMFILE..."
+    echo "Usage: `basename $0` [-q] [-C dir] RPMFILE..."
+    echo "  -C dir    change to directory 'dir' before extracting"
 }
 
 extract()
 {
     name=$(rpm -qp --qf "%{NAME}-%{VERSION}-%{RELEASE}" "$1")
-    if [ $? -ne 0 -o -z "$name" ]; then
-        echo "Warning: can't extract $name"
-        return 1
-    fi
-
-    # Is it an absolute filename?
-    absname="$1"
-    if ! echo "$1" | grep -q "^/" -; then
-        absname="$PWD/$1"
-    fi
+    [ $? -ne 0 ] && echo "$name" && return 1
 
     (mkdir -p "$name" && \
     cd "$name" && \
-    rpm2cpio "$absname" \
-    | cpio --quiet -ivdum 2>&1 \
+    rpm2cpio "$1" \
+    | cpio --quiet -idum$verbose 2>&1 \
     | sed "s|^\(\./\)\?|$name/|" && \
     cd ..)
 }
@@ -40,6 +32,30 @@ if [ -z "$*" ]; then
     exit 1
 fi
 
-for file in $*; do
+
+oldpwd="$PWD"
+outputdir="$PWD"
+verbose=v
+
+while getopts "qC:" key ; do
+    case "$key" in
+        q) verbose= ;;
+        C) outputdir="$OPTARG" ;;
+        *) usage ; exit 1 ;;
+    esac
+done
+shift $(( $OPTIND - 1 ))
+
+if [ -n "$outputdir" -a "$outputdir" != "$PWD" ] ; then
+    if ! cd "$outputdir" ; then
+        usage
+        exit 1
+    fi
+fi
+
+for file in "$@"; do
+    if ! echo "$file" | grep -q "^/" - ; then
+        file="$oldpwd/$file"
+    fi
     extract "$file"
 done
