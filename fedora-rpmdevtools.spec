@@ -34,7 +34,6 @@ fedora-installdevkeys   Install GPG keys in alternate RPM keyring
 fedora-kmodhelper       Helper script for building kernel module RPMs
 fedora-md5              Display the md5sum of all files in an RPM
 fedora-newrpmspec       Creates new .spec from template
-fedora-pkgannfmt        Produce output for fedora-package-announce
 fedora-rmdevelrpms      Find (and optionally remove) "development" RPMs
 fedora-rpmchecksig      Check package signatures using alternate RPM keyring
 fedora-rpminfo          Prints information about executables and libraries
@@ -62,7 +61,6 @@ install -pm 755 fedora-installdevkeys  $RPM_BUILD_ROOT%{_bindir}
 install -pm 755 fedora-kmodhelper      $RPM_BUILD_ROOT%{_bindir}
 install -pm 755 fedora-md5             $RPM_BUILD_ROOT%{_bindir}
 install -pm 755 fedora-newrpmspec      $RPM_BUILD_ROOT%{_bindir}
-install -pm 755 fedora-pkgannfmt       $RPM_BUILD_ROOT%{_bindir}
 install -pm 755 fedora-rmdevelrpms     $RPM_BUILD_ROOT%{_bindir}
 install -pm 755 fedora-rpmchecksig     $RPM_BUILD_ROOT%{_bindir}
 install -pm 755 rpminfo                $RPM_BUILD_ROOT%{_bindir}/fedora-rpminfo
@@ -135,6 +133,7 @@ rm -rf $RPM_BUILD_ROOT
 - Drop rpm-spec-mode.el patch, no longer needed for FC2 Emacs and later.
 - Update URLs.
 - Drop developer GPG keys from the package, add Fedora Extras key.
+- Drop fedora-pkgannfmt, it's no longer relevant.
 
 * Tue Mar 15 2005 Ville Skyttä <ville.skytta at iki.fi>
 - Make fedora-diffarchive work better with archives containing dirs without
