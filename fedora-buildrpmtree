@@ -1,6 +1,13 @@
 #!/bin/sh
 #
+#	RPM-build-tree.txt
+#		also called: fedora-buildrpmtree
+#
 #	Set up a 'plain userid' SRPM build environment
+#
+#		Home locale for this script:
+#	http://www.rpm.org/hintskinks/buildtree/RPM-build-tree.txt
+#		also: ftp://ftp.owlriver.com/pub/local/ORC/rpmbuild/
 #
 #	See also: http://freshrpms.net/docs/fight.html
 #
@@ -9,10 +16,17 @@
 #	From: Ralf Ertzinger <ralf@camperquake.de>
 #	Reply-To: rpm-list@freshrpms.net
 #
-VER="0.03-021210"
+VER="0.05-030814"
 #	copyright (c) 2002 Owl River Company - Columbus OH
 #	info@owlriver.com -- GPL v.2 
 #
+#       $Id: fedora-buildrpmtree,v 1.2 2003/08/15 20:24:19 scop Exp $
+#
+#	rev 0.05 030814 RPH -- apply NIS extension per 
+#			nate at rj1.org (Nathan Owen)
+#		https://bugzilla.fedora.us/show_bug.cgi?id=594
+#	rev 0.04 030422 RPH -- change to vendor neutral 'rpmbuild' 
+#		path element
 #	rev 0.03 021210 RPH -- put the home in the right place 
 #		automatically
 #	rev 0.02 021207 RPH -- add %make macro for people using 
@@ -28,11 +42,16 @@ VER="0.03-021210"
 IAM=`id -un`
 # 	returns bare username
 #
-HOMEDIR=`grep ^$IAM: /etc/passwd | awk -F":" '{print $6}'`
+PASSWDDIR=`grep ^$IAM: /etc/passwd | awk -F":" '{print $6}'`
+HOMEDIR=${HOME:=$PASSWDDIR}
+[ ! -d $HOMEDIR ] && {
+	echo "ERROR: Home directory for user $IAM not found in /etc/passwd."
+	exit 1
+	}
 #	and home directory
 #
 #
-RHDIR="$HOMEDIR/redhat"
+RHDIR="$HOMEDIR/rpmbuild"
 #
 RPMMACROS="$HOMEDIR/.rpmmacros"
 touch $RPMMACROS
@@ -40,7 +59,7 @@ touch $RPMMACROS
 TOPDIR="%_topdir"
 ISTOP=`grep -c ^$TOPDIR $RPMMACROS`
 [ $ISTOP -lt 1 ] && {
-	echo "%_topdir      %(echo $HOME)/redhat" >> $RPMMACROS
+	echo "%_topdir      %(echo \$HOME)/rpmbuild" >> $RPMMACROS
 	}
 #
 MAKE="%make "
@@ -60,5 +79,5 @@ for i in RPMS SOURCES SPECS SRPMS BUILD ; do
 	[ ! -d ./$i ] && mkdir ./$i 
 done
 #
-exit
+exit 0
 #
