@@ -6,7 +6,7 @@
 # Author:  Ville Skyttä <ville.skytta at iki.fi>
 # License: GPL
 # Credits: Seth Vidal (yum), Thomas Vander Stichele (mach)
-# $Id: fedora-rmdevelrpms,v 1.12 2004/10/07 18:45:33 scop Exp $
+# $Id: fedora-rmdevelrpms,v 1.13 2005/03/24 16:07:44 scop Exp $
 #
 # This script is useful hack in cleaning up development RPMs from your
 # system, eg. before starting to build a new RPM package.
@@ -44,7 +44,7 @@
 import getopt, os, re, rpm, stat, sys, types
 
 
-__version__ = "0.9.7"
+__version__ = "1.0"
 
 
 dev_re  = re.compile("-de(?:buginfo|vel)\\b")
@@ -54,20 +54,24 @@ lib_re2 = re.compile("-libs?$")
 a_re    = re.compile("\\w\\.a$")
 so_re   = re.compile("\\w\\.so(?:\\.\\d+)*$")
 comp_re = re.compile("^compat-gcc")
+# required by Ant, which is required by Eclipse...
+jdev_re = re.compile("^java-.+-gcj-compat-devel$")
 
 
 def_devpkgs =\
 ("autoconf", "autoconf213", "automake", "automake14", "automake15",
  "automake16", "automake17", "bison", "byacc", "compface", "dev86", "djbfft",
- "docbook-utils-pdf", "doxygen", "flex", "gcc-g77", "gcc-gnat", "gcc-java",
+ "docbook-utils-pdf", "doxygen", "flex", "gcc-g77", "gcc-gnat",
  "gcc-objc", "gcc32", "gcc34", "gcc34-c++", "gcc34-java", "gcc35", "gcc35-c++",
  "gcc4", "gcc4-c++", "gcc4-gfortran", "gettext", "glade", "glade2",
- "kernel-source", "kernel-sourcecode", "libgcj", "libtool", "m4", "nasm",
+ "kernel-source", "kernel-sourcecode", "libtool", "m4", "nasm",
  "perl-Module-Build", "pkgconfig", "qt-designer", "swig", "texinfo",
  )
 
+# zlib-devel: see #151622
 def_nondevpkgs =\
-("glibc-devel", "libstdc++-devel")
+("glibc-devel", "libstdc++-devel", "libgcj-devel", "zlib-devel",
+ )
 
 
 devpkgs = ()
@@ -86,6 +90,7 @@ def isDevelPkg(hdr):
     if name in devpkgs: return 1
     if name in def_nondevpkgs: return 0
     if name in def_devpkgs: return 1
+    if jdev_re.search(name): return 0
     if dev_re.search(name): return 1
     if test_re.search(name): return 1
     if comp_re.search(name): return 1

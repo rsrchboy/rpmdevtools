@@ -126,7 +126,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Mar 21 2005 Ville Skyttä <ville.skytta at iki.fi>
+* Thu Mar 24 2005 Ville Skyttä <ville.skytta at iki.fi>
 - Make fedora-diffarchive work better with archives containing dirs without
   read/execute permissions.
 - Sync "Epoch: 0" drops with Fedora Extras CVS.
@@ -138,6 +138,7 @@ rm -rf $RPM_BUILD_ROOT
 - Drop developer GPG keys from the package, add Fedora Extras key.
 - Drop fedora-pkgannfmt, it's no longer relevant.
 - Remove pre-FC2 compatibility stuff from Perl spec template.
+- Don't try to remove gcc-java and related packages by default in rmdevelrpms.
 
 * Sun Feb  6 2005 Ville Skyttä <ville.skytta at iki.fi> - 0:0.3.1-1
 - Make buildrpmtree and wipebuildtree less dependent on a specific
