@@ -1,6 +1,6 @@
 Name:           fedora-rpmdevtools
 Version:        0.1.8
-Release:        0.fdr.1
+Release:        0.fdr.2
 Epoch:          0
 Summary:        Fedora RPM Development Tools
 
@@ -113,6 +113,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Aug  7 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.8-0.fdr.2
+- Treat gcc35, gcc35-c++, kernel-sourcecode, and any package matching
+  "-devel\b" or "-debuginfo\b" (for version-in-name stuff) as devel
+  packages in rmdevelrpms.
+
 * Sun May  2 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.8-0.fdr.1
 - New script: Thomas Woerner's rpminfo (included here as fedora-rpminfo).
 - Split Requires(pre,postun) into two in spec template due to
