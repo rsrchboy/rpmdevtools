@@ -95,6 +95,7 @@ env PATH="$RPM_BUILD_ROOT%{_bindir}:$PATH" sh test/fedora-kmodhelper-test.sh
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+
 %triggerin -- emacs
 if [ -d %{emacs_sitestart_d} ] ; then
   ln -sf %{_datadir}/fedora/emacs/fedora-init.el %{emacs_sitestart_d}
@@ -129,6 +130,8 @@ fi
 
 %changelog
 * Tue Mar 15 2005 Ville Skyttä <ville.skytta at iki.fi>
+- Make fedora-diffarchive work better with archives containing dirs without
+  read/execute permissions.
 - Sync "Epoch: 0" drops with Fedora Extras CVS.
 
 * Sun Feb  6 2005 Ville Skyttä <ville.skytta at iki.fi> - 0:0.3.1-1
