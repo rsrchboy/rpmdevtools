@@ -6,52 +6,11 @@
 #
 # Author:  Ville Skyttä <ville.skytta at iki.fi>
 # License: GPL
-# $Id: fedora-diffrpm,v 1.4 2004/05/19 19:42:56 scop Exp $
+# $Id: fedora-diffrpm,v 1.5 2004/10/07 19:04:29 scop Exp $
 
-set -e
-
-tmpdir1=
-tmpdir2=
-diffopts=
-trap cleanup EXIT
-
-cleanup()
-{
-    set +e
-    [ -z "$tmpdir1" -o ! -d "$tmpdir1" ] || rm -rf "$tmpdir1"
-    [ -z "$tmpdir2" -o ! -d "$tmpdir2" ] || rm -rf "$tmpdir2"
-}
-
-usage()
-{
-    cat <<EOF
-Usage: `basename $0` [diff-options] from-RPM to-RPM
-  diff-options  Options passed to diff(1), in addition to -r (default: -Nu).
-                The first argument not starting with a '-' ends diff-options.
+cat <<EOF >&2
+Warning: fedora-diffrpm is deprecated, use fedora-diffarchive instead."
 EOF
-}
+sleep 2
 
-while true ; do
-    case "$1" in
-        -*) diffopts="$diffopts $1" ;;
-        *)  break ;;
-    esac
-    shift
-done
-if [ $# -lt 2 ] ; then
-    usage
-    exit 1
-fi
-
-tmpdir1=`mktemp -d /tmp/diffrpm.XXXXXX`
-tmpdir2=`mktemp -d /tmp/diffrpm.XXXXXX`
-d1=`fedora-unrpm -qC "$tmpdir1" "$1"`
-d2=`fedora-unrpm -qC "$tmpdir2" "$2"`
-cd "$tmpdir2"
-if [ "$d1" = "$d2" ] ; then
-  mv "$tmpdir1/$d1" "./$d1.old"
-  d1="$d1.old"
-else
-  mv "$tmpdir1/$d1" .
-fi
-diff -r ${diffopts:--Nu} "$d1" "$d2"
+fedora-diffarchive "$@"
