@@ -1,6 +1,6 @@
 Name:           fedora-rpmdevtools
 Version:        0.1.7
-Release:        0.fdr.1
+Release:        0.fdr.2
 Epoch:          0
 Summary:        Fedora RPM Development Tools
 
@@ -67,6 +67,10 @@ cp -p fedora-unrpm           $RPM_BUILD_ROOT%{_bindir}
 cp -p fedora-diffrpm         $RPM_BUILD_ROOT%{_bindir}
 cp -p fedora-wipebuildtree   $RPM_BUILD_ROOT%{_bindir}
 
+mkdir -p $RPM_BUILD_ROOT%{_libdir}/rpm
+
+cp -p check-buildroot check-rpaths* $RPM_BUILD_ROOT%{_libdir}/rpm
+
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/fedora/devgpgkeys
 cp -p spectemplate*.spec template.init $RPM_BUILD_ROOT%{_datadir}/fedora
 cp -p devgpgkeys/* $RPM_BUILD_ROOT%{_datadir}/fedora/devgpgkeys
@@ -82,6 +86,10 @@ cp -p emacs/fedora-init.el \
   $RPM_BUILD_ROOT%{_datadir}/xemacs/site-packages/lisp/site-start.d
 
 
+%check || :
+env PATH="$RPM_BUILD_ROOT%{_bindir}:$PATH" sh test/fedora-kmodhelper-test.sh
+
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -89,9 +97,11 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(0644,root,root,0755)
 %doc COPYING
-%attr(0755,root,root) %{_bindir}/fedora-*
 %config(noreplace) %{_sysconfdir}/fedora
 %{_datadir}/fedora
+%defattr(0755,root,root,0755)
+%{_bindir}/fedora-*
+%{_libdir}/rpm/check-*
 
 %files emacs
 %defattr(0644,root,root,0755)
@@ -101,6 +111,14 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Feb  8 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.7-0.fdr.2
+- Include more $TNV suggestions from bug 1167:
+- Include GConf schema installation examples in spectemplate.spec (bug 1178).
+- Add check-buildroot and check-rpaths rpm lib scripts, see
+  fedora-buildrpmtree (or use it) for an example how to enable them.
+- Add Python spec template and (X)Emacs support for it.
+- Add more kmodhelper improvements, version 0.9.8 and a tiny test suite.
+
 * Thu Jan 29 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.7-0.fdr.1
 - Include $TNV suggestions from bug 1167:
 - Add -q, -Q and -C arguments to fedora-unrpm.
