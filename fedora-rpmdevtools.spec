@@ -1,6 +1,6 @@
 Name:           fedora-rpmdevtools
 Version:        0.1.7
-Release:        0.fdr.4
+Release:        0.fdr.5
 Epoch:          0
 Summary:        Fedora RPM Development Tools
 
@@ -52,37 +52,37 @@ Requires:       %{name} = %{epoch}:%{version}-%{release}
 %install
 rm -rf $RPM_BUILD_ROOT
 
-mkdir -p $RPM_BUILD_ROOT%{_bindir}
+install -dm 755 $RPM_BUILD_ROOT%{_bindir}
+install -pm 755 fedora-buildrpmtree    $RPM_BUILD_ROOT%{_bindir}
+install -pm 755 fedora-installdevkeys  $RPM_BUILD_ROOT%{_bindir}
+install -pm 755 fedora-kmodhelper      $RPM_BUILD_ROOT%{_bindir}
+install -pm 755 fedora-md5             $RPM_BUILD_ROOT%{_bindir}
+install -pm 755 fedora-newrpmspec      $RPM_BUILD_ROOT%{_bindir}
+install -pm 755 fedora-pkgannfmt       $RPM_BUILD_ROOT%{_bindir}
+install -pm 755 fedora-rmdevelrpms     $RPM_BUILD_ROOT%{_bindir}
+install -pm 755 fedora-rpmchecksig     $RPM_BUILD_ROOT%{_bindir}
+install -pm 755 fedora-rpmvercmp       $RPM_BUILD_ROOT%{_bindir}
+install -pm 755 fedora-unrpm           $RPM_BUILD_ROOT%{_bindir}
+install -pm 755 fedora-diffrpm         $RPM_BUILD_ROOT%{_bindir}
+install -pm 755 fedora-wipebuildtree   $RPM_BUILD_ROOT%{_bindir}
 
-cp -p fedora-buildrpmtree    $RPM_BUILD_ROOT%{_bindir}
-cp -p fedora-installdevkeys  $RPM_BUILD_ROOT%{_bindir}
-cp -p fedora-kmodhelper      $RPM_BUILD_ROOT%{_bindir}
-cp -p fedora-md5             $RPM_BUILD_ROOT%{_bindir}
-cp -p fedora-newrpmspec      $RPM_BUILD_ROOT%{_bindir}
-cp -p fedora-pkgannfmt       $RPM_BUILD_ROOT%{_bindir}
-cp -p fedora-rmdevelrpms     $RPM_BUILD_ROOT%{_bindir}
-cp -p fedora-rpmchecksig     $RPM_BUILD_ROOT%{_bindir}
-cp -p fedora-rpmvercmp       $RPM_BUILD_ROOT%{_bindir}
-cp -p fedora-unrpm           $RPM_BUILD_ROOT%{_bindir}
-cp -p fedora-diffrpm         $RPM_BUILD_ROOT%{_bindir}
-cp -p fedora-wipebuildtree   $RPM_BUILD_ROOT%{_bindir}
+install -dm 755 $RPM_BUILD_ROOT%{_libdir}/rpm
+install -pm 755 check-buildroot check-rpaths* $RPM_BUILD_ROOT%{_libdir}/rpm
 
-mkdir -p $RPM_BUILD_ROOT%{_libdir}/rpm
+install -dm 755 $RPM_BUILD_ROOT%{_datadir}/fedora/devgpgkeys
+install -pm 644 spectemplate*.spec template.init \
+  $RPM_BUILD_ROOT%{_datadir}/fedora
+install -pm 644 devgpgkeys/* $RPM_BUILD_ROOT%{_datadir}/fedora/devgpgkeys
 
-cp -p check-buildroot check-rpaths* $RPM_BUILD_ROOT%{_libdir}/rpm
+install -dm 755 $RPM_BUILD_ROOT%{_sysconfdir}/fedora
+install -pm 644 rmdevelrpms.conf $RPM_BUILD_ROOT%{_sysconfdir}/fedora
 
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/fedora/devgpgkeys
-cp -p spectemplate*.spec template.init $RPM_BUILD_ROOT%{_datadir}/fedora
-cp -p devgpgkeys/* $RPM_BUILD_ROOT%{_datadir}/fedora/devgpgkeys
-
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/fedora
-cp -p rmdevelrpms.conf $RPM_BUILD_ROOT%{_sysconfdir}/fedora
-
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/emacs/site-lisp/site-start.d
-cp -p emacs/fedora-init.el \
+install -dm 755 $RPM_BUILD_ROOT%{_datadir}/emacs/site-lisp/site-start.d
+install -pm 644 emacs/fedora-init.el \
   $RPM_BUILD_ROOT%{_datadir}/emacs/site-lisp/site-start.d
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/xemacs/site-packages/lisp/site-start.d
-cp -p emacs/fedora-init.el \
+install -dm 755 \
+  $RPM_BUILD_ROOT%{_datadir}/xemacs/site-packages/lisp/site-start.d
+install -pm 644 emacs/fedora-init.el \
   $RPM_BUILD_ROOT%{_datadir}/xemacs/site-packages/lisp/site-start.d
 
 
@@ -95,22 +95,25 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %files
-%defattr(0644,root,root,0755)
+%defattr(-,root,root,-)
 %doc COPYING
 %config(noreplace) %{_sysconfdir}/fedora
 %{_datadir}/fedora
-%defattr(0755,root,root,0755)
 %{_bindir}/fedora-*
 %{_libdir}/rpm/check-*
 
 %files emacs
-%defattr(0644,root,root,0755)
+%defattr(-,root,root,-)
 %doc emacs/*.patch
 %{_datadir}/emacs/site-lisp/site-start.d
 %{_datadir}/xemacs/site-packages/lisp/site-start.d
 
 
 %changelog
+* Sun Mar 14 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.7-0.fdr.5
+- Ensure that the correct kmodhelper is tested and executable during build
+  (bug 1167).
+
 * Sun Feb 22 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.7-0.fdr.4
 - Ignore *.py[co], *.elc and .packlist in check-buildroot (bug 1167).
 
