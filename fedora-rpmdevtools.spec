@@ -112,7 +112,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc COPYING emacs/*.patch
+%doc COPYING
 %config(noreplace) %{_sysconfdir}/fedora
 %{_datadir}/fedora
 %{_bindir}/fedora-*
@@ -124,6 +124,7 @@ rm -rf $RPM_BUILD_ROOT
 * Sun Mar 20 2005 Ville Skyttä <ville.skytta at iki.fi>
 - Own (%%ghost'd) more dirs from the site-lisp dir hierarchies.
 - Drop trigger support pre-FC2 Emacs and XEmacs packages.
+- Drop rpm-spec-mode.el patch, no longer needed for FC2 Emacs and later.
 
 * Tue Mar 15 2005 Ville Skyttä <ville.skytta at iki.fi>
 - Make fedora-diffarchive work better with archives containing dirs without
