@@ -1,6 +1,6 @@
 Name:           fedora-rpmdevtools
-Version:        0.1.3
-Release:        0.fdr.1
+Version:        0.1.4
+Release:        0.fdr.2
 Epoch:          0
 Summary:        Fedora RPM Development Tools
 
@@ -94,6 +94,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Nov  8 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.4-0.fdr.2
+- Remove duplicate rawhide 2003 automated build key.
+
+* Sat Nov  8 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.4-0.fdr.1
+- Add Fedora Project keys.
+
 * Fri Oct 31 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.3-0.fdr.1
 - Add Nils Olav Selåsdal's key into devgpgkeys (bug 783).
 - fedora-wipebuildtree now cleans up both ~/redhat and ~/rpmbuild for
