@@ -5,8 +5,8 @@
 # Author:  Warren Togami <warren@togami.com>
 # License: GPL
 
-echo "Fedora.us Trusted Developer Key Installer"
-echo "   This script will install trusted developer keys into an alternate RPM keyring."
+echo "Fedora Trusted GPG Key Installer"
+echo "   This script will install trusted GPG keys into an alternate RPM keyring."
 echo "   This allows you to easily check signatures of packages without the risk of "
 echo "   installing extra keys in your system RPM keyring."
 echo 
@@ -18,11 +18,6 @@ else
     RPMROOT=/var/fedora/rpm
 fi
 mkdir -p $RPMROOT
-
-echo "pub  1024D/8DF56D05 2003-03-27 Fedora Linux (RPMS) <security@fedora.us>"
-echo "     Key fingerprint = B5BD CEB2 8F0D 54DE 6F4D  2275 29D5 BA24 8DF5 6D05"
-echo "sub  2048g/6E208B8B 2003-03-27"
-rpm --root $RPMROOT --import /usr/share/fedora/devgpgkeys/8DF56D05
 
 echo "pub  1024D/DB42A60E 1999-09-23 Red Hat, Inc <security@redhat.com>"
 echo "     Key fingerprint = CA20 8686 2BD6 9DFC 65F6  ECC4 2191 80CD DB42 A60E"
@@ -51,86 +46,17 @@ echo "pub  1024D/1CDDBCA9 2003-10-27 Fedora Project automated build signing key 
 echo "     Key fingerprint = 2312 6DEE 2014 B8A7 6CD6  D32C E138 5D4E 1CDD BCA9"
 rpm --root $RPMROOT --import /usr/share/fedora/devgpgkeys/RPM-GPG-KEY-fedora-rawhide
 
-echo "pub  1024D/54A2ACF1 2002-11-25 Warren Togami (Linux) <warren@togami.com>"
-echo "     Key fingerprint = 785A 304B 08C1 F291 F54F  9A68 6BDD FE8E 54A2 ACF1"
-echo "sub  2048g/4AD75982 2002-11-25 [expires: 2007-11-24]"
-rpm --root $RPMROOT --import /usr/share/fedora/devgpgkeys/54A2ACF1
+echo "pub  1024D/8DF56D05 2003-03-27 Fedora Linux (RPMS) <security@fedora.us>"
+echo "     Key fingerprint = B5BD CEB2 8F0D 54DE 6F4D  2275 29D5 BA24 8DF5 6D05"
+echo "sub  2048g/6E208B8B 2003-03-27"
+rpm --root $RPMROOT --import /usr/share/fedora/devgpgkeys/RPM-GPG-KEY-fedora.us
 
-echo "pub  1024D/BCD241CB 2002-04-07 Ville Skyttä <ville.skytta@iki.fi>"
-echo "     Key fingerprint = 4E0D EBAB 3106 F1FA 3FA9  B875 D98C D635 BCD2 41CB"
-echo "sub  2048g/9426F4D1 2002-04-07"
-rpm --root $RPMROOT --import /usr/share/fedora/devgpgkeys/BCD241CB
-
-echo "pub  1024D/3FF87D98 2003-01-15 Phillip Compton <pcompton@proteinmedia.com>"
-echo "     Key fingerprint = 8669 5A77 7B8C 748B E857  E5E0 780B 7CFA 3FF8 7D98"
-echo "sub  1024g/AC321A3B 2003-01-15"
-rpm --root $RPMROOT --import /usr/share/fedora/devgpgkeys/3FF87D98
-
-echo "pub  1024D/3C9DB0AA 2003-02-28 Panu Matilainen <pmatilai@welho.com>"
-echo "     Key fingerprint = F117 8ACB 14DD CB35 6B31  D65F 95AE 54F2 3C9D B0AA"
-echo "sub  1024g/51FEBA3F 2003-02-28"
-rpm --root $RPMROOT --import /usr/share/fedora/devgpgkeys/3C9DB0AA
-
-echo "pub  1024D/D881FF60 2000-11-22 Marius Larsen Johndal <mariuslj@ifi.uio.no>"
-echo "     Key fingerprint = 561B CBC3 DF8A 5350 3A62  416E A7DE 43E1 D881 FF60"
-echo "sub  1024g/52098C02 2000-11-22 [expires: 2005-03-19]"
-rpm --root $RPMROOT --import /usr/share/fedora/devgpgkeys/D881FF60
-
-echo "pub  1024D/55F3AA6F 2003-01-24 Thomas Vander Stichele <thomas@apestaart.org>"
-echo "     Key fingerprint = 5EC3 04AE 424E 807E CD5F  E165 00A7 144C 55F3 AA6F"
-echo "sub  1024g/DB2C7E95 2003-01-24"
-rpm --root $RPMROOT --import /usr/share/fedora/devgpgkeys/55F3AA6F
-
-echo "pub  1024D/8E279021 2003-02-21 Damien Nade <anvil@livna.org>"
-echo "     Key fingerprint = 99A0 3D10 CD3F BD31 CFE7  CBCC 5BFF 8902 8E27 9021"
-echo "sub  1024g/A4FC25D7 2003-02-21"
-rpm --root $RPMROOT --import /usr/share/fedora/devgpgkeys/8E279021
-
-echo "pub  1024D/E42D547B 2000-07-03 Matthias Saou (Thias) <matthias.saou@est.une.marmotte.net>"
-echo "     Key fingerprint = E55D C93E BF12 8CDA 2D36  2482 692A C459 E42D 547B"
-echo "sub  1024g/40043CA7 2000-07-03"
-rpm --root $RPMROOT --import /usr/share/fedora/devgpgkeys/E42D547B
-
-echo "pub  1024D/69886CC7 2001-09-16 Seth Vidal <skvidal@phy.duke.edu>"
-echo "     Key fingerprint = CB55 05F9 8868 0962 DF52  F6A6 D408 F7C7 6988 6CC7"
-echo "sub  2048g/65B66ED3 2001-09-16"
-rpm --root $RPMROOT --import /usr/share/fedora/devgpgkeys/69886CC7
-
-echo "pub  1024D/E421D146 2002-06-12 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de>"
-echo "     Key fingerprint = DFE1 5168 F3BC 0A58 6119  3190 196F A845 E421 D146"
-echo "sub  4096g/C6C7982E 2002-06-12 [expires: 2004-06-11]"
-rpm --root $RPMROOT --import /usr/share/fedora/devgpgkeys/E421D146
-
-echo "pub  1024D/3ED6F034 2002-01-13 Adrian Reber <adrian@lisas.de>"
-echo "     Key fingerprint = 2202 79D1 1EB4 E7A6 5A9C  D1D8 B730 2A0A 3ED6 F034"
-echo "sub  1024g/6089A992 2002-01-13"
-rpm --root $RPMROOT --import /usr/share/fedora/devgpgkeys/3ED6F034
-
-echo "pub  1024D/B8AF1C54 1998-07-23 Michael Schwendt <mschwendt@users.sf.net>"
-echo "     Key fingerprint = DBAB 0EC0 5A00 F457 8B6C  88C4 D223 1572 B8AF 1C54"
-echo "sub  1024g/4FC3B4A8 1998-07-23"
-rpm --root $RPMROOT --import /usr/share/fedora/devgpgkeys/B8AF1C54
-
-echo "pub  1024D/C58CF1CB 2003-02-12 Andreas Bierfert <andreas.bierfert@lowlatency.de>"
-echo "     Key fingerprint = 6991 E12E 38AA 08EE 7D99  CFDE 4044 323E C58C F1CB"
-echo "sub  1024g/A18A2AC7 2003-02-12"
-rpm --root $RPMROOT --import /usr/share/fedora/devgpgkeys/C58CF1CB
-
-echo "pub  1024D/2EB1D4BD 2003-08-20 Nils Olav Selåsdal <NOS@Utel.no>"
-echo "     Key fingerprint = FF9F C94A 6DB4 3356 926D  F6E2 6036 8B6E 2EB1 D4BD"
-echo "sub  1024g/D5FBFF09 2003-08-20"
-rpm --root $RPMROOT --import /usr/share/fedora/devgpgkeys/2EB1D4BD
-
-echo "pub  1024D/1B4259B3 2003-02-11 Aurelien BOMPARD (perso) <aurelien.bompard@free.fr>"
-echo "     Key fingerprint = 4832 1239 8C18 F5F3 C466  AE69 21A6 2396 1B42 59B3"
-echo "uid                            Aurelien BOMPARD (perso) <gauret@free.fr>"
-echo "sub  1024g/F1285CAF 2003-02-11"
-rpm --root $RPMROOT --import /usr/share/fedora/devgpgkeys/1B4259B3
-
-echo "pub  1024D/736A7502 2004-02-12 Erik S. LaBianca <erik@labianca.org>"
-echo "     Key fingerprint = EAB0 63A2 716A A392 6DA6  FCBD C5E3 2C16 736A 7502"
-echo "sub  1024g/A82006E2 2004-02-12"
-rpm --root $RPMROOT --import /usr/share/fedora/devgpgkeys/736A7502
+echo "pub  1024D/1AC70CE6 2004-12-14 Fedora Pre Extras Release <pre-extras@fedoraproject.org>"
+echo "     Key fingerprint = 5389 DD00 C5BC 5168 12B4  3272 82ED 9504 1AC7 0CE6"
+echo "uid                            Fedora Project <fedora-extras@redhat.com>"
+echo "uid                            Fedora Project <fedora-extras@fedoraproject.org>"
+echo "sub  1024g/4E1A9D43 2004-12-14"
+rpm --root $RPMROOT --import /usr/share/fedora/devgpgkeys/RPM-GPG-KEY-fedora-extras
 
 echo
 echo "   Installation complete within $RPMROOT.  You may now use the following command:"

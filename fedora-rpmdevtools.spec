@@ -30,7 +30,7 @@ This package contains scripts and (X)Emacs support files to aid in
 development of Fedora RPM packages.  These tools are designed for Red
 Hat Linux 8.0 and higher.
 fedora-buildrpmtree     Create RPM build tree within user's home directory
-fedora-installdevkeys   Install developer keys in alternate RPM keyring
+fedora-installdevkeys   Install GPG keys in alternate RPM keyring
 fedora-kmodhelper       Helper script for building kernel module RPMs
 fedora-md5              Display the md5sum of all files in an RPM
 fedora-newrpmspec       Creates new .spec from template
@@ -128,12 +128,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Mar 20 2005 Ville Skyttä <ville.skytta at iki.fi>
+* Mon Mar 21 2005 Ville Skyttä <ville.skytta at iki.fi>
 - Include Nils Philippsen's spectool.
 - Own (%%ghost'd) more dirs from the site-lisp dir hierarchies.
 - Drop trigger support pre-FC2 Emacs and XEmacs packages.
 - Drop rpm-spec-mode.el patch, no longer needed for FC2 Emacs and later.
-- Update URL.
+- Update URLs.
+- Drop developer GPG keys from the package, add Fedora Extras key.
 
 * Tue Mar 15 2005 Ville Skyttä <ville.skytta at iki.fi>
 - Make fedora-diffarchive work better with archives containing dirs without
