@@ -13,7 +13,7 @@ Source0:        <method>://<primary source>
 #Patch1:         
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-#---For kernel modules------------------------------------------------
+#---For kernel modules [ O U T D A T E D ] ---------------------------
 # # "uname -r" output of the kernel to build for, the running one
 # # if none was specified with "--define 'kernel <uname -r>'"
 # %{!?kernel: %{expand: %%define        kernel          %(uname -r)}}
@@ -55,17 +55,21 @@ Requires:       <requirements>
 %configure
 make %{?_smp_mflags}
 
-#make test
-#make check
-
 
 %install
 rm -rf $RPM_BUILD_ROOT
+# For GConf apps: prevent schemas from being installed at this stage
+#export GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1
 make install DESTDIR=$RPM_BUILD_ROOT
 %find_lang %{name}
 
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
+
+
+%check || :
+#make test
+#make check
 
 
 %clean
@@ -80,12 +84,20 @@ rm -rf $RPM_BUILD_ROOT
 %post
 /sbin/ldconfig
 /sbin/install-info %{_infodir}/%{name}.info %{_infodir}/dir 2>/dev/null || :
+# For GConf apps: install schemas as system default
+#export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
+#gconftool-2 --makefile-install-rule \
+#  %{_sysconfdir}/gconf/schemas/%{name}.schemas >/dev/null
 
 %preun
 if [ $1 = 0 ]; then
   /sbin/install-info --delete %{_infodir}/%{name}.info \
     %{_infodir}/dir 2>/dev/null || :
 fi
+# For GConf apps: uninstall app's system default schemas
+#export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
+#gconftool-2 --makefile-uninstall-rule \
+#  %{_sysconfdir}/gconf/schemas/%{name}.schemas >/dev/null || :
 
 %postun
 /sbin/ldconfig
