@@ -1,5 +1,5 @@
 %define emacs_sitestart_d  %{_datadir}/emacs/site-lisp/site-start.d
-%define xemacs_sitestart_d %{_prefix}/lib/xemacs/xemacs-packages/lisp/site-start.d %{_prefix}/lib64/xemacs/site-packages/lisp/site-start.d %{_datadir}/xemacs/site-packages/lisp/site-start.d
+%define xemacs_sitestart_d %{_datadir}/xemacs/site-packages/lisp/site-start.d
 
 Name:           fedora-rpmdevtools
 Version:        0.3.1
@@ -81,7 +81,6 @@ for dir in %{emacs_sitestart_d} %{xemacs_sitestart_d} ; do
   install -dm 755 $RPM_BUILD_ROOT$dir
   ln -s %{_datadir}/fedora/emacs/fedora-init.el $RPM_BUILD_ROOT$dir
   touch $RPM_BUILD_ROOT$dir/fedora-init.elc
-  echo "%ghost $dir/fedora-init.el*" >> %{name}-%{version}.files
 done
 
 install -dm 755 $RPM_BUILD_ROOT%{_sysconfdir}/fedora
@@ -97,38 +96,35 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %triggerin -- emacs
-if [ -d %{emacs_sitestart_d} ] ; then
-  ln -sf %{_datadir}/fedora/emacs/fedora-init.el %{emacs_sitestart_d}
-fi
+[ -d %{emacs_sitestart_d} ] && \
+  ln -sf %{_datadir}/fedora/emacs/fedora-init.el %{emacs_sitestart_d} || :
 
-%triggerin -- xemacs
-for dir in %{xemacs_sitestart_d} ; do
-  if [ -d $dir ] ; then
-    ln -sf %{_datadir}/fedora/emacs/fedora-init.el $dir
-  fi
-done
+%triggerin -- xemacs-common
+[ -d %{xemacs_sitestart_d} ] && \
+  ln -sf %{_datadir}/fedora/emacs/fedora-init.el %{xemacs_sitestart_d} || :
 
 %triggerun -- emacs
-[ $2 -eq 0 ] && rm -f %{emacs_sitestart_d}/fedora-init.{el,elc} || :
+[ $2 -eq 0 ] && rm -f %{emacs_sitestart_d}/fedora-init.el* || :
 
-%triggerun -- xemacs
-if [ $2 -eq 0 ] ; then
-  for dir in %{xemacs_sitestart_d} ; do
-    rm -f $dir/fedora-init.{el,elc} || :
-  done
-fi
+%triggerun -- xemacs-common
+[ $2 -eq 0 ] && rm -f %{xemacs_sitestart_d}/fedora-init.el* || :
 
 
-%files -f %{name}-%{version}.files
+%files
 %defattr(-,root,root,-)
 %doc COPYING emacs/*.patch
 %config(noreplace) %{_sysconfdir}/fedora
 %{_datadir}/fedora
 %{_bindir}/fedora-*
 %{_prefix}/lib/rpm/check-*
+%ghost %{_datadir}/*emacs
 
 
 %changelog
+* Sun Mar 20 2005 Ville Skyttä <ville.skytta at iki.fi>
+- Own (%%ghost'd) more dirs from the site-lisp dir hierarchies.
+- Drop trigger support pre-FC2 xemacs packages.
+
 * Tue Mar 15 2005 Ville Skyttä <ville.skytta at iki.fi>
 - Make fedora-diffarchive work better with archives containing dirs without
   read/execute permissions.
