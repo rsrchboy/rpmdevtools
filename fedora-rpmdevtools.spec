@@ -1,5 +1,5 @@
 Name:           fedora-rpmdevtools
-Version:        0.1.6
+Version:        0.1.7
 Release:        0.fdr.1
 Epoch:          0
 Summary:        Fedora RPM Development Tools
@@ -29,7 +29,8 @@ fedora-pkgannfmt        Produce output for fedora-package-announce
 fedora-rmdevelrpms      Find (and optionally remove) "development" RPMs
 fedora-rpmchecksig      Check package signatures using alternate RPM keyring
 fedora-rpmvercmp        RPM version comparison checker
-fedora-unrpm            Extract an RPM, "tar zxvf"-style
+fedora-unrpm            Extract an RPM, "tar xvf" style
+fedora-diffrpm          Diff contents of two RPMs
 fedora-wipebuildtree    Erases all files within dirs created by buildrpmtree
 
 %package        emacs
@@ -63,6 +64,7 @@ cp -p fedora-rmdevelrpms     $RPM_BUILD_ROOT%{_bindir}
 cp -p fedora-rpmchecksig     $RPM_BUILD_ROOT%{_bindir}
 cp -p fedora-rpmvercmp       $RPM_BUILD_ROOT%{_bindir}
 cp -p fedora-unrpm           $RPM_BUILD_ROOT%{_bindir}
+cp -p fedora-diffrpm         $RPM_BUILD_ROOT%{_bindir}
 cp -p fedora-wipebuildtree   $RPM_BUILD_ROOT%{_bindir}
 
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/fedora/devgpgkeys
@@ -99,6 +101,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jan 29 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.7-0.fdr.1
+- Include $TNV suggestions from bug 1167:
+- Add -q, -Q and -C arguments to fedora-unrpm.
+- New script: fedora-diffrpm for diffing contents of two RPMs.
+- Treat compat-gcc* and perl-Devel-* as development packages in rmdevelrpms.
+- kmodhelper improvements, thanks to Thorsten Leemhuis and Michael Schwendt.
+
 * Sat Dec 27 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.6-0.fdr.1
 - Include $TNV suggestions from bug 1115:
 - Do not define %%make in ~/.rpmmacros in fedora-buildrpmtree.
