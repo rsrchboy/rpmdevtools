@@ -1,0 +1,50 @@
+#!/bin/bash
+
+#
+# fedora-diffrpm
+# Diff contents of two RPMs
+#
+# Author:  Ville Skyttä <ville.skytta at iki.fi>
+# License: GPL
+# $Id: fedora-diffrpm,v 1.1 2004/01/29 18:14:30 scop Exp $
+
+set -e
+
+tmpdir=
+diffopts=
+trap cleanup EXIT
+
+cleanup()
+{
+    set +e
+    [ -z "$tmpdir" -o ! -d "$tmpdir" ] || rm -rf "$tmpdir"
+}
+
+usage()
+{
+    cat <<EOF
+Usage: `basename $0` [diff-options] from-RPM to-RPM
+  diff-options  Options passed to diff(1), in addition to -r (default: -u).
+                The first argument not starting with a '-' ends diff-options.
+EOF
+}
+
+while true ; do
+    case "$1" in
+        -*) diffopts="$diffopts $1" ;;
+        *)  break ;;
+    esac
+    shift
+done
+if [ $# -lt 2 ] ; then
+    usage
+    exit 1
+fi
+
+tmpdir=`mktemp -d`
+fedora-unrpm -qC "$tmpdir" "$1"
+fedora-unrpm -qC "$tmpdir" "$2"
+cd "$tmpdir"
+diff -r ${diffopts:--u} `ls -1td * | head -n 2`
+cd -
+rm -rf "$tmpdir"
