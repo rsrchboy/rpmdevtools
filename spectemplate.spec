@@ -13,18 +13,6 @@ Source0:        <method>://<primary source>
 #Patch1:         
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-#---For kernel modules [ O U T D A T E D ] ---------------------------
-# # "uname -r" output of the kernel to build for, the running one
-# # if none was specified with "--define 'kernel <uname -r>'"
-# %{!?kernel: %{expand: %%define        kernel          %(uname -r)}}
-#
-# %define       kversion        %(echo %{kernel} | sed -e s/smp// -)
-# %define       krelver         %(echo %{kversion} | tr -s '-' '_')
-# %if %(echo %{kernel} | grep -c smp)
-#       %{expand:%%define ksmp -smp}
-# %endif
-#---------------------------------------------------------------------
-
 BuildRequires:  
 Requires:       <requirements>
 #Requires(pre):  
