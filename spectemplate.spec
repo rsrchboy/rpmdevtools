@@ -8,7 +8,7 @@ Group:          <group>
 License:        <license>
 URL:            http://
 Source0:        <method>://<primary source>
-#Source99:       <for original Red Hat or other upstream spec>
+#Source99:       <for original Red Hat or upstream spec as *.spec.upstream>
 #Patch0:         
 #Patch1:         
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -31,7 +31,7 @@ Requires:       <requirements>
 #Requires:       %{name} = %{epoch}:%{version}-%{release}
 
 #%description    devel
-#<Long description of sub-package here>
+#<Long description of subpackage here>
 #<Multiple lines are fine>
 
 
@@ -50,6 +50,7 @@ rm -rf $RPM_BUILD_ROOT
 # For GConf apps: prevent schemas from being installed at this stage
 #export GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1
 make install DESTDIR=$RPM_BUILD_ROOT
+# Note: the find_lang macro requires gettext
 %find_lang %{name}
 
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
@@ -79,7 +80,7 @@ rm -rf $RPM_BUILD_ROOT
 #  %{_sysconfdir}/gconf/schemas/%{name}.schemas >/dev/null
 
 %preun
-if [ $1 = 0 ]; then
+if [ $1 -eq 0 ]; then
   /sbin/install-info --delete %{_infodir}/%{name}.info \
     %{_infodir}/dir 2>/dev/null || :
 fi
@@ -88,8 +89,7 @@ fi
 #gconftool-2 --makefile-uninstall-rule \
 #  %{_sysconfdir}/gconf/schemas/%{name}.schemas >/dev/null || :
 
-%postun
-/sbin/ldconfig
+%postun -p /sbin/ldconfig
 
 
 %files -f %{name}.lang
