@@ -1,5 +1,5 @@
 Name:           fedora-rpmdevtools
-Version:        0.1.5
+Version:        0.1.6
 Release:        0.fdr.1
 Epoch:          0
 Summary:        Fedora RPM Development Tools
@@ -19,17 +19,18 @@ Requires:       diffutils, gzip, bzip2, unzip
 
 %description
 Scripts to aid in development of Fedora RPM packages.  These
-tools are designed for Red Hat Linux 8 and higher.
-fedora-newrpmspec       Creates new .spec from template
-fedora-rpmvercmp        RPM version comparison checker
-fedora-buildrpmtree     Create RPM build tree within user homedir
-fedora-rmdevelrpms      Find (and optionally remove) "development" RPMs
+tools are designed for Red Hat Linux 8.0 and higher.
+fedora-buildrpmtree     Create RPM build tree within user's home directory
 fedora-installdevkeys   Install developer keys in alternate RPM keyring
-fedora-rpmsigcheck      Check package sigs using alterate RPM keyring
-fedora-wipebuildtree    Erases all files within ~/redhat
-fedora-unrpm            Extract a RPM, "tar zxvf"-style
+fedora-kmodhelper       Helper script for building kernel module RPMs
+fedora-md5              Display the md5sum of all files in an RPM
+fedora-newrpmspec       Creates new .spec from template
 fedora-pkgannfmt        Produce output for fedora-package-announce
-fedora-md5              Display the md5sum of all files in a RPM
+fedora-rmdevelrpms      Find (and optionally remove) "development" RPMs
+fedora-rpmchecksig      Check package signatures using alternate RPM keyring
+fedora-rpmvercmp        RPM version comparison checker
+fedora-unrpm            Extract an RPM, "tar zxvf"-style
+fedora-wipebuildtree    Erases all files within dirs created by buildrpmtree
 
 %package        emacs
 Summary:        (X)Emacs support for Fedora RPM Development Tools
@@ -51,16 +52,18 @@ Requires:       %{name} = %{epoch}:%{version}-%{release}
 rm -rf $RPM_BUILD_ROOT
 
 mkdir -p $RPM_BUILD_ROOT%{_bindir}
-cp -p fedora-newrpmspec      $RPM_BUILD_ROOT%{_bindir}
-cp -p fedora-rpmvercmp       $RPM_BUILD_ROOT%{_bindir}
+
 cp -p fedora-buildrpmtree    $RPM_BUILD_ROOT%{_bindir}
-cp -p fedora-rmdevelrpms     $RPM_BUILD_ROOT%{_bindir}
 cp -p fedora-installdevkeys  $RPM_BUILD_ROOT%{_bindir}
-cp -p fedora-rpmchecksig     $RPM_BUILD_ROOT%{_bindir}
-cp -p fedora-wipebuildtree   $RPM_BUILD_ROOT%{_bindir}
-cp -p fedora-unrpm           $RPM_BUILD_ROOT%{_bindir}
-cp -p fedora-pkgannfmt       $RPM_BUILD_ROOT%{_bindir}
+cp -p fedora-kmodhelper      $RPM_BUILD_ROOT%{_bindir}
 cp -p fedora-md5             $RPM_BUILD_ROOT%{_bindir}
+cp -p fedora-newrpmspec      $RPM_BUILD_ROOT%{_bindir}
+cp -p fedora-pkgannfmt       $RPM_BUILD_ROOT%{_bindir}
+cp -p fedora-rmdevelrpms     $RPM_BUILD_ROOT%{_bindir}
+cp -p fedora-rpmchecksig     $RPM_BUILD_ROOT%{_bindir}
+cp -p fedora-rpmvercmp       $RPM_BUILD_ROOT%{_bindir}
+cp -p fedora-unrpm           $RPM_BUILD_ROOT%{_bindir}
+cp -p fedora-wipebuildtree   $RPM_BUILD_ROOT%{_bindir}
 
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/fedora/devgpgkeys
 cp -p spectemplate*.spec template.init $RPM_BUILD_ROOT%{_datadir}/fedora
@@ -96,6 +99,15 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Dec 27 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.6-0.fdr.1
+- Include $TNV suggestions from bug 1115:
+- Do not define %%make in ~/.rpmmacros in fedora-buildrpmtree.
+- Add %%_smp_mflags -j3 by default in ~/.rpmmacros in fedora-buildrpmtree
+  to make it easier to catch packages with parallel build problems.
+- Improved %%description.
+- Check arguments in fedora-pkgannfmt, use sed instead of perl.
+- New script: fedora-kmodhelper.
+
 * Sat Dec  6 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.5-0.fdr.1
 - Incorporate $TNV suggestions from bug 1010:
 - Add unzip into the list of "assumed present" packages.
