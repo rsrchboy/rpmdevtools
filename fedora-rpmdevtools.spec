@@ -4,7 +4,6 @@
 Name:           fedora-rpmdevtools
 Version:        0.3.0
 Release:        1
-Epoch:          0
 Summary:        Fedora RPM Development Tools
 
 Group:          Development/Tools
@@ -15,8 +14,8 @@ Source1:        http://people.redhat.com/twoerner/rpminfo/bin/rpminfo
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
-Provides:       %{name}-emacs = %{epoch}:%{version}-%{release}
-Obsoletes:      %{name}-emacs < 0:0.1.9
+Provides:       %{name}-emacs = %{version}-%{release}
+Obsoletes:      %{name}-emacs < 0.1.9
 # Required for tool operations
 Requires:       rpm-python, python, cpio, sed, perl
 # Minimal RPM build requirements
@@ -131,8 +130,8 @@ fi
 
 
 %changelog
-* Sat Dec 11 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.3.0-1
-- Remove 0.fdr. prefixes from all spec templates.
+* Wed Dec 15 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.3.0-1
+- Remove 0.fdr. prefixes and epoch 0's from all spec templates (and here).
 - Add try-restart action to init script template.
 
 * Thu Oct  7 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.2.0-0.fdr.1

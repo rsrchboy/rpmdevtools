@@ -4,7 +4,6 @@
 Name:           
 Version:        
 Release:        1
-Epoch:          0
 Summary:        
 
 Group:          Development/Languages

@@ -1,7 +1,6 @@
 Name:           <app name>
 Version:        <app version>
 Release:        x
-Epoch:          0
 Summary:        <summary>
 
 Group:          <group>
@@ -28,7 +27,7 @@ Requires:       <requirements>
 #%package        devel
 #Summary:        
 #Group:          Development/Libraries
-#Requires:       %{name} = %{epoch}:%{version}-%{release}
+#Requires:       %{name} = %{version}-%{release}
 
 #%description    devel
 #<Long description of subpackage here>
@@ -109,5 +108,5 @@ fi
 
 
 %changelog
-* Fri May 03 2003 Your Name <you[AT]your.domain> - epoch:version-release
+* Fri May 03 2003 Your Name <you[AT]your.domain> - (epoch:)version-release
 - Initial RPM release.
