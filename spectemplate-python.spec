@@ -1,4 +1,5 @@
-%{!?python_sitelib:  %define python_sitelib  %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
+%define pyver %(%{__python} -c "from distutils.sysconfig import get_python_version; print get_python_version()")
+%{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 %{!?python_sitearch: %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:           
@@ -15,11 +16,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      
 BuildRequires:  python-devel
-Requires:       python
-# For noarch packages:
-Requires:       %{python_sitelib}
-# For arch-dependent packages:
-Requires:       %{python_sitearch}
+Requires:       python-abi = %{pyver}
 
 %description
 
