@@ -3,14 +3,14 @@
 
 Name:           fedora-rpmdevtools
 Version:        0.3.0
-Release:        1
+Release:        0.1
 Summary:        Fedora RPM Development Tools
 
 Group:          Development/Tools
 License:        GPL
 URL:            http://www.fedora.us/
+# rpminfo upstream: http://people.redhat.com/twoerner/rpminfo/bin/
 Source0:        %{name}-%{version}.tar.bz2
-Source1:        http://people.redhat.com/twoerner/rpminfo/bin/rpminfo
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -60,7 +60,7 @@ install -pm 755 fedora-newrpmspec      $RPM_BUILD_ROOT%{_bindir}
 install -pm 755 fedora-pkgannfmt       $RPM_BUILD_ROOT%{_bindir}
 install -pm 755 fedora-rmdevelrpms     $RPM_BUILD_ROOT%{_bindir}
 install -pm 755 fedora-rpmchecksig     $RPM_BUILD_ROOT%{_bindir}
-install -pm 755 %{SOURCE1}             $RPM_BUILD_ROOT%{_bindir}/fedora-rpminfo
+install -pm 755 rpminfo                $RPM_BUILD_ROOT%{_bindir}/fedora-rpminfo
 install -pm 755 fedora-extract         $RPM_BUILD_ROOT%{_bindir}
 install -pm 755 fedora-diffarchive     $RPM_BUILD_ROOT%{_bindir}
 install -pm 755 fedora-rpmvercmp       $RPM_BUILD_ROOT%{_bindir}
@@ -128,12 +128,13 @@ fi
 
 
 %changelog
-* Sat Dec 18 2004 Ville Skyttä <ville.skytta at iki.fi> - 0.3.0-1
+* Sat Dec 18 2004 Ville Skyttä <ville.skytta at iki.fi> - 0.3.0-0.1
 - Remove 0.fdr. prefixes and epoch 0's from all spec templates (and here).
 - Add try-restart action to init script template.
 - Remove deprecated fedora-diffrpm and fedora-unrpm.
 - Install check-* to %%{_prefix}/lib/rpm instead of %%{_libdir}/rpm (bug 2351).
 - Check both %%{_prefix}/lib and %%{_prefix}/lib64 in the xemacs trigger.
+- Update rpminfo to 2004-07-07-01 and include it in the tarball.
 
 * Thu Oct  7 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.2.0-0.fdr.1
 - New generalized replacements for fedora-unrpm and fedora-diffrpm:
