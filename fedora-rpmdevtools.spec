@@ -1,6 +1,6 @@
 Name:           fedora-rpmdevtools
-Version:        0.1.7
-Release:        0.fdr.5
+Version:        0.1.8
+Release:        0.fdr.0.1
 Epoch:          0
 Summary:        Fedora RPM Development Tools
 
@@ -110,6 +110,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Apr  9 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.8-0.fdr.1
+- Split Requires(pre,postun) into two in spec template due to
+  https://bugzilla.redhat.com/118780 (Michael Schwendt).
+
 * Sun Mar 14 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.7-0.fdr.5
 - Ensure that the correct kmodhelper is tested and executable during build
   (bug 1167).

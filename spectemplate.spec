@@ -27,10 +27,11 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  
 Requires:       <requirements>
+#Requires(pre):  
+#Requires(post): 
 #Conflicts:      
 #Obsoletes:      
 #BuildConflicts: 
-#Requires(pre,post): 
 
 %description
 <Long description of package here>
@@ -77,9 +78,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 # ldconfig's for packages that install %{_libdir}/*.so.*
-# -> Don't forget Requires(post,postun): /sbin/ldconfig
+# -> Don't forget Requires(post) and Requires(postun): /sbin/ldconfig
 # ...and install-info's for ones that install %{_infodir}/*.info*
-# -> Don't forget Requires(post,preun): /sbin/install-info
+# -> Don't forget Requires(post) and Requires(preun): /sbin/install-info
 
 %post
 /sbin/ldconfig
