@@ -1,5 +1,5 @@
 %define emacs_sitestart_d  %{_datadir}/emacs/site-lisp/site-start.d
-%define xemacs_sitestart_d %{_libdir}/xemacs/xemacs-packages/lisp/site-start.d %{_datadir}/xemacs/site-packages/lisp/site-start.d
+%define xemacs_sitestart_d %{_prefix}/lib/xemacs/xemacs-packages/lisp/site-start.d %{_prefix}/lib64/xemacs/site-packages/lisp/site-start.d %{_datadir}/xemacs/site-packages/lisp/site-start.d
 
 Name:           fedora-rpmdevtools
 Version:        0.3.0
@@ -66,8 +66,9 @@ install -pm 755 fedora-diffarchive     $RPM_BUILD_ROOT%{_bindir}
 install -pm 755 fedora-rpmvercmp       $RPM_BUILD_ROOT%{_bindir}
 install -pm 755 fedora-wipebuildtree   $RPM_BUILD_ROOT%{_bindir}
 
-install -dm 755 $RPM_BUILD_ROOT%{_libdir}/rpm
-install -pm 755 check-buildroot check-rpaths* $RPM_BUILD_ROOT%{_libdir}/rpm
+install -dm 755 $RPM_BUILD_ROOT%{_prefix}/lib/rpm
+install -pm 755 check-buildroot check-rpaths* \
+  $RPM_BUILD_ROOT%{_prefix}/lib/rpm
 
 install -dm 755 $RPM_BUILD_ROOT%{_datadir}/fedora/devgpgkeys
 install -pm 644 spectemplate*.spec template.init \
@@ -123,14 +124,16 @@ fi
 %config(noreplace) %{_sysconfdir}/fedora
 %{_datadir}/fedora
 %{_bindir}/fedora-*
-%{_libdir}/rpm/check-*
+%{_prefix}/lib/rpm/check-*
 
 
 %changelog
-* Fri Dec 17 2004 Ville Skyttä <ville.skytta at iki.fi> - 0.3.0-1
+* Sat Dec 18 2004 Ville Skyttä <ville.skytta at iki.fi> - 0.3.0-1
 - Remove 0.fdr. prefixes and epoch 0's from all spec templates (and here).
 - Add try-restart action to init script template.
 - Remove deprecated fedora-diffrpm and fedora-unrpm.
+- Install check-* to %%{_prefix}/lib/rpm instead of %%{_libdir}/rpm (bug 2351).
+- Check both %%{_prefix}/lib and %%{_prefix}/lib64 in the xemacs trigger.
 
 * Thu Oct  7 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.2.0-0.fdr.1
 - New generalized replacements for fedora-unrpm and fedora-diffrpm:
