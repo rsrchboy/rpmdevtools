@@ -8,6 +8,7 @@ Group:          Development/Tools
 License:        GPL
 URL:            http://www.fedora.us/
 Source0:        %{name}-%{version}.tar.bz2
+Source1:        http://people.redhat.com/twoerner/rpminfo/bin/rpminfo
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -28,6 +29,7 @@ fedora-newrpmspec       Creates new .spec from template
 fedora-pkgannfmt        Produce output for fedora-package-announce
 fedora-rmdevelrpms      Find (and optionally remove) "development" RPMs
 fedora-rpmchecksig      Check package signatures using alternate RPM keyring
+fedora-rpminfo          Prints information about executables and libraries
 fedora-rpmvercmp        RPM version comparison checker
 fedora-unrpm            Extract an RPM, "tar xvf" style
 fedora-diffrpm          Diff contents of two RPMs
@@ -61,6 +63,7 @@ install -pm 755 fedora-newrpmspec      $RPM_BUILD_ROOT%{_bindir}
 install -pm 755 fedora-pkgannfmt       $RPM_BUILD_ROOT%{_bindir}
 install -pm 755 fedora-rmdevelrpms     $RPM_BUILD_ROOT%{_bindir}
 install -pm 755 fedora-rpmchecksig     $RPM_BUILD_ROOT%{_bindir}
+install -pm 755 %{SOURCE1}             $RPM_BUILD_ROOT%{_bindir}/fedora-rpminfo
 install -pm 755 fedora-rpmvercmp       $RPM_BUILD_ROOT%{_bindir}
 install -pm 755 fedora-unrpm           $RPM_BUILD_ROOT%{_bindir}
 install -pm 755 fedora-diffrpm         $RPM_BUILD_ROOT%{_bindir}
@@ -111,6 +114,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Sun May  2 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.8-0.fdr.1
+- New script: Thomas Woerner's rpminfo (included here as fedora-rpminfo).
 - Split Requires(pre,postun) into two in spec template due to
   https://bugzilla.redhat.com/118780 (bug 1401/Michael Schwendt).
 - Make fedora-diffrpm work on < FC1, as well as with two different packages
