@@ -6,7 +6,7 @@
 #
 # Author:  Ville Skyttä <ville.skytta at iki.fi>
 # License: GPL
-# $Id: fedora-diffarchive,v 1.1 2004/10/07 19:04:29 scop Exp $
+# $Id: fedora-diffarchive,v 1.2 2005/03/15 12:42:05 scop Exp $
 
 set -e
 
@@ -48,8 +48,9 @@ mkdir "$tmpdir/old" "$tmpdir/new"
 fedora-extract -q -C "$tmpdir/old" "$1"
 fedora-extract -q -C "$tmpdir/new" "$2"
 
-chmod -R u+rw "$tmpdir"
-find "$tmpdir" -type d | xargs -r chmod u+x
+# It would be nice if fedora-extract could do some of the chmods.
+find "$tmpdir"/* -type d -exec chmod u+rx {} ';' # Note: -exec, not xargs here.
+chmod -R u+rw "$tmpdir"/*
 cd "$tmpdir"
 
 # Did the archives uncompress into base dirs?
