@@ -9,7 +9,7 @@ Summary:        Fedora RPM Development Tools
 
 Group:          Development/Tools
 License:        GPL
-URL:            http://www.fedora.us/
+URL:            http://fedora.redhat.com/
 # rpminfo upstream: http://people.redhat.com/twoerner/rpminfo/bin/
 Source0:        %{name}-%{version}.tar.bz2
 Source1:        http://people.redhat.com/nphilipp/spectool/spectool-%{spectool_version}.tar.bz2
@@ -133,6 +133,7 @@ rm -rf $RPM_BUILD_ROOT
 - Own (%%ghost'd) more dirs from the site-lisp dir hierarchies.
 - Drop trigger support pre-FC2 Emacs and XEmacs packages.
 - Drop rpm-spec-mode.el patch, no longer needed for FC2 Emacs and later.
+- Update URL.
 
 * Tue Mar 15 2005 Ville Skyttä <ville.skytta at iki.fi>
 - Make fedora-diffarchive work better with archives containing dirs without
