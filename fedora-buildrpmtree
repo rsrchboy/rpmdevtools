@@ -20,7 +20,7 @@ VER="0.05-030814"
 #	copyright (c) 2002 Owl River Company - Columbus OH
 #	info@owlriver.com -- GPL v.2 
 #
-#       $Id: fedora-buildrpmtree,v 1.3 2003/12/28 18:01:17 scop Exp $
+#       $Id: fedora-buildrpmtree,v 1.4 2004/02/08 19:16:13 scop Exp $
 #
 #	rev 0.05 030814 RPH -- apply NIS extension per 
 #			nate at rj1.org (Nathan Owen)
@@ -74,6 +74,14 @@ ISTOP=`grep -c ^$MFLAGS $RPMMACROS`
 	echo "$MFLAGS  -j3" >> $RPMMACROS
 	}
 #
+ISTOP=`grep -c ^%__arch_install_post $RPMMACROS`
+[ $ISTOP -lt 1 ] && {
+	cat <<EOF >> $RPMMACROS
+%__arch_install_post \
+  /usr/lib/rpm/check-rpaths \
+  /usr/lib/rpm/check-buildroot
+EOF
+}
 [ "x$DEBUG" != "x" ] && {
 	echo "$IAM       $HOMEDIR    $RPMMACROS"
 	echo "$RHDIR     $TOPDIR     $ISTOP"
