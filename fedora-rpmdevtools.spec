@@ -122,6 +122,7 @@ rm -rf $RPM_BUILD_ROOT
 - Add magic encoding comment to rmdevelrpms (bug 1401/Michael Schwendt).
 - Treat automake17 (bug 1401/Michael Schwendt), gcc-g77, gcc-gnat, gcc-java,
   gcc-objc, and gcc34* as devel packages in rmdevelrpms.
+- Add package summary to fedora-pkgannfmt's output (bug 1401).
 
 * Sun Mar 14 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.7-0.fdr.5
 - Ensure that the correct kmodhelper is tested and executable during build
