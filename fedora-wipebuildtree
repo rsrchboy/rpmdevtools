@@ -1,58 +1,27 @@
 #!/bin/sh
 #
 # fedora-wipebuildtree
-# Erases all files within ~/redhat and/or ~/rpmbuild
+# Erases all files within the rpm build dir
 #
 # Author:  Warren Togami <warren@togami.com>
 # License: GPL
-# $Id: fedora-wipebuildtree,v 1.4 2003/12/06 22:46:06 scop Exp $
+# $Id: fedora-wipebuildtree,v 1.5 2005/02/05 22:52:38 scop Exp $
 
 # Sanity Check: Forbid root user
-if [ "`/usr/bin/whoami`" = "root" ]; then
+if [ $(id -u) -eq 0 ]; then
     echo
-    echo "ERROR: You should not be building RPMS as root!"
-    echo "Please use fedora-buildrpmtree as a non-root user and build"
+    echo "ERROR: You should not be building RPMS as the superuser!"
+    echo "Please use fedora-buildrpmtree as a normal user and build"
     echo "packages as that user.  If package building fails, then"
     echo "the package is improper and needs fixing."
     echo
     exit 255
 fi
 
-# Sanity Check: ~/.rpmmacros exists?
-if [ ! -f ~/.rpmmacros ]; then
-    echo
-    echo "ERROR: ~/.rpmmacros does not exist.  Please use fedora-buildrpmtree"
-    echo "in order to configure your non-root RPM build environment."
-    echo
-    exit 1
-fi
-
-# Sanity Check: Validate ~/.rpmmacros build environment
-unset builddir
-cat ~/.rpmmacros |grep _topdir|grep \/redhat > /dev/null 2> /dev/null
-if [ "$?" = "0" ]; then export builddir=redhat; fi
-cat ~/.rpmmacros |grep _topdir|grep \/rpmbuild > /dev/null 2> /dev/null
-if [ "$?" = "0" ]; then export builddir=rpmbuild; fi
-if ! test $builddir; then
-    echo
-    echo "ERROR: ~/.rpmmacros does not seem to specify a non-root builddir."
-    echo "Run fedora-buildrpmtree to correct this problem."
-    echo
-    exit 2
-fi
-if [ ! -d ~/$builddir/ ]; then
-    echo
-    echo "ERROR: The build directory specified in .rpmmacros does not exist."
-    echo "Run fedora-buildrpmtree to correct this problem."
-    echo
-    exit 3
-fi
-
 # Wipe RPM Build Directory clean
-echo "Removing all files from ~/$builddir/..."
-rm -rf ~/$builddir/BUILD/*
-rm -rf ~/$builddir/SOURCES/*
-rm -rf ~/$builddir/SRPMS/*
-rm -rf ~/$builddir/SPECS/*
-rm -f $(find ~/$builddir -name "*.rpm")
-unset builddir
+echo "Removing all build files..."
+rm -rf $(rpm --eval "%{_builddir}")/*
+rm -rf $(rpm --eval "%{_sourcedir}")/*
+rm -rf $(rpm --eval "%{_srcrpmdir}")/*
+rm -rf $(rpm --eval "%{_specdir}")/*
+find $(rpm --eval "%{_rpmdir}") -name "*.rpm" | xargs rm -f

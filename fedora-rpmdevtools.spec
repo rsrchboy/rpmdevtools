@@ -2,7 +2,7 @@
 %define xemacs_sitestart_d %{_prefix}/lib/xemacs/xemacs-packages/lisp/site-start.d %{_prefix}/lib64/xemacs/site-packages/lisp/site-start.d %{_datadir}/xemacs/site-packages/lisp/site-start.d
 
 Name:           fedora-rpmdevtools
-Version:        0.3.0
+Version:        0.3.1
 Release:        1
 Epoch:          0
 Summary:        Fedora RPM Development Tools
@@ -129,6 +129,10 @@ fi
 
 
 %changelog
+* Sun Feb  6 2005 Ville Skyttä <ville.skytta at iki.fi> - 0:0.3.1-1
+- Make buildrpmtree and wipebuildtree less dependent on a specific
+  configuration (#147014, Ignacio Vazquez-Abrams).
+
 * Tue Jan 18 2005 Ville Skyttä <ville.skytta at iki.fi> - 0:0.3.0-1
 - Remove 0.fdr. prefixes and epoch 0's from all spec templates.
 - Add try-restart action to init script template.
