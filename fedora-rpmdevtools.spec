@@ -134,8 +134,6 @@ rm -rf $RPM_BUILD_ROOT
 - Update URLs.
 - Drop developer GPG keys from the package, add Fedora Extras key.
 - Drop fedora-pkgannfmt, it's no longer relevant.
-
-* Tue Mar 15 2005 Ville Skyttä <ville.skytta at iki.fi>
 - Make fedora-diffarchive work better with archives containing dirs without
   read/execute permissions.
 - Sync "Epoch: 0" drops with Fedora Extras CVS.
