@@ -130,6 +130,8 @@ fi
   fedora-unrpm (bug 1401, bug 1953, Thorsten Leemhuis and Pekka Pietikainen).
 - Fold -emacs into the main package, use triggers to install the site-start.d
   snippets.
+- Don't use distutils.sysconfig.get_python_version() in python spec template,
+  it's available in Python >= 2.3 only.
 
 * Sun May  2 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.8-0.fdr.1
 - New script: Thomas Woerner's rpminfo (included here as fedora-rpminfo).

@@ -1,4 +1,3 @@
-%define pyver %(%{__python} -c "from distutils.sysconfig import get_python_version; print get_python_version()")
 %{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 %{!?python_sitearch: %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
@@ -16,7 +15,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      
 BuildRequires:  python-devel
-Requires:       python-abi = %{pyver}
+Requires:   python-abi = %(%{__python} -c "import sys ; print sys.version[:3]")
 
 %description
 
