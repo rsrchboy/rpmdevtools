@@ -26,7 +26,8 @@ Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" %{__perl} Makefile.PL INSTALLDIRS=vendor
-make %{?_smp_mflags} OPTIMIZE="$RPM_OPT_FLAGS" LD_RUN_PATH=
+%{__perl} -pi -e 's/^\tLD_RUN_PATH=[^\s]+\s*/\t/' Makefile
+make %{?_smp_mflags} OPTIMIZE="$RPM_OPT_FLAGS"
 
 
 %install
