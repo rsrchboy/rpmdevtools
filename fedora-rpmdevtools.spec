@@ -1,6 +1,6 @@
 Name:           fedora-rpmdevtools
 Version:        0.0.16
-Release:        0.fdr.2
+Release:        0.fdr.3
 Epoch:          0
 Summary:        Fedora RPM Development Tools
 
@@ -14,7 +14,8 @@ BuildArch:      noarch
 # Required for tool operations
 Requires:       rpm-python, python, cpio, sed
 # Minimal RPM build requirements
-Requires:       rpm-build, gcc, gcc-c++, redhat-rpm-config
+Requires:       rpm-build, gcc, gcc-c++, redhat-rpm-config, make, tar, patch
+Requires:       diffutils
 
 %description
 Scripts to aid in development of Fedora RPM packages.  These
@@ -99,6 +100,9 @@ rm -rf $RPM_BUILD_ROOT
 #---------------------------------------------------------------------
 
 %changelog
+* Tue Jul 22 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.0.16-0.fdr.3
+- Require diffutils, make, patch and tar (bug 492).
+
 * Sat Jul 12 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.0.16-0.fdr.2
 - One more typo fix for init script template.
 
