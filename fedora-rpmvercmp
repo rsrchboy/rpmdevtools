@@ -1,0 +1,50 @@
+#!/usr/bin/python
+#Seth Vidal - yadda yadda yadda GPL Yadda yadda yadda Use at own risk
+import rpm
+import sys
+
+def usage():
+    print """
+    rpmvercmp epoch1, ver1, release1, epoch2, ver2, release2
+    or just let it ask you.
+    """
+
+def vercmp((e1, v1, r1), (e2, v2, r2)):
+   rc = rpm.labelCompare((e1, v1, r1), (e2, v2, r2))
+   return rc
+
+
+def askforstuff(thingname):
+    thing = raw_input('%s :' % thingname)
+    return thing
+
+def main():
+    if len(sys.argv) > 1 and sys.argv[1] in ['-h', '--help', '-help', '--usage']:
+        usage()
+        sys.exit(0)
+    elif len(sys.argv) < 7:
+        e1 = askforstuff('Epoch1')
+        v1 = askforstuff('Version1')
+        r1 = askforstuff('Release1')        
+        e2 = askforstuff('Epoch2')
+        v2 = askforstuff('Version2')
+        r2 = askforstuff('Release2')
+    else:
+        (e1, v1, r1, e2, v2, r2) = sys.argv[1:]
+    
+    rc = vercmp((e1, v1, r1), (e2, v2, r2))
+    if rc > 0:
+        print "%s:%s-%s is newer" % (e1, v1, r1)
+    elif rc == 0:
+        print "These are Equal"
+    elif rc < 0:
+        print "%s:%s-%s is newer" % (e2, v2, r2)
+
+if __name__ == "__main__":
+    main()
+
+        
+
+
+    
+

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if [ -f newpackage.spec ]; then
+    echo "newpackage.spec already exists.  Exiting."
+else
+    echo "RPM spec template has been copied to newpackage.spec."
+    cp /etc/fedora-rpmdevtools/spectemplate.spec newpackage.spec
+fi

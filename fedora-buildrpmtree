@@ -1,0 +1,64 @@
+#!/bin/sh
+#
+#	Set up a 'plain userid' SRPM build environment
+#
+#	See also: http://freshrpms.net/docs/fight.html
+#
+#		based on a post:
+#	Date: Tue, 30 Jul 2002 17:00:21 +0200
+#	From: Ralf Ertzinger <ralf@camperquake.de>
+#	Reply-To: rpm-list@freshrpms.net
+#
+VER="0.03-021210"
+#	copyright (c) 2002 Owl River Company - Columbus OH
+#	info@owlriver.com -- GPL v.2 
+#
+#	rev 0.03 021210 RPH -- put the home in the right place 
+#		automatically
+#	rev 0.02 021207 RPH -- add %make macro for people using 
+#		Mandrake .spec files on non-Mandrake platforms
+#	initial 0.01 020731 RPH - initial release
+#
+[ "x$1" = "x-d" ] && {
+	DEBUG="y"
+	export DEBUG
+	shift 1
+	}
+#
+IAM=`id -un`
+# 	returns bare username
+#
+HOMEDIR=`grep ^$IAM: /etc/passwd | awk -F":" '{print $6}'`
+#	and home directory
+#
+#
+RHDIR="$HOMEDIR/redhat"
+#
+RPMMACROS="$HOMEDIR/.rpmmacros"
+touch $RPMMACROS
+#
+TOPDIR="%_topdir"
+ISTOP=`grep -c ^$TOPDIR $RPMMACROS`
+[ $ISTOP -lt 1 ] && {
+	echo "%_topdir      %(echo $HOME)/redhat" >> $RPMMACROS
+	}
+#
+MAKE="%make "
+ISTOP=`grep -c ^$MAKE $RPMMACROS`
+[ $ISTOP -lt 1 ] && {
+	echo "$MAKE  make" >> $RPMMACROS
+	}
+#
+[ "x$DEBUG" != "x" ] && {
+	echo "$IAM       $HOMEDIR    $RPMMACROS"
+	echo "$RHDIR     $TOPDIR     $ISTOP"
+	}
+#
+[ ! -d $RHDIR ] && mkdir -p $RHDIR
+cd $RHDIR 
+for i in RPMS SOURCES SPECS SRPMS BUILD ; do 
+	[ ! -d ./$i ] && mkdir ./$i 
+done
+#
+exit
+#

@@ -1,0 +1,19 @@
+#!/bin/sh
+#
+# fedora-wipebuildtree
+# Erases all files within ~/redhat
+#
+# Author:  Warren Togami <warren@togami.com>
+# License: GPL
+
+if [ ! -d ~/redhat ]; then
+    echo "~/redhat does not exist, unable to wipe clean."
+    exit 1
+fi
+
+echo "Removing all files from ~/redhat/..."
+rm -rf ~/redhat/BUILD/*
+rm -rf ~/redhat/SOURCES/*
+rm -rf ~/redhat/SRPMS/*
+rm -rf ~/redhat/SPECS/*
+rm -f `find ~/redhat |grep rpm` 
