@@ -105,7 +105,7 @@ for dir in %{xemacs_sitestart_d} ; do
   if [ -d $dir ] ; then
     ln -sf %{_datadir}/fedora/emacs/fedora-init.el $dir
   fi
-fi
+done
 
 %triggerun -- emacs
 [ $2 -eq 0 ] && rm -f %{emacs_sitestart_d}/fedora-init.{el,elc} || :
