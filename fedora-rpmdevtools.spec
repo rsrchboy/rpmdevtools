@@ -1,5 +1,5 @@
 %define emacs_sitestart_d  %{_datadir}/emacs/site-lisp/site-start.d
-%define xemacs_sitestart_d %{_datadir}/xemacs/site-packages/lisp/site-start.d
+%define xemacs_sitestart_d %{_libdir}/xemacs/xemacs-packages/lisp/site-start.d %{_datadir}/xemacs/site-packages/lisp/site-start.d
 
 Name:           fedora-rpmdevtools
 Version:        0.1.9
@@ -101,15 +101,21 @@ if [ -d %{emacs_sitestart_d} ] ; then
 fi
 
 %triggerin -- xemacs
-if [ -d %{xemacs_sitestart_d} ] ; then
-  ln -sf %{_datadir}/fedora/emacs/fedora-init.el %{xemacs_sitestart_d}
+for dir in %{xemacs_sitestart_d} ; do
+  if [ -d $dir ] ; then
+    ln -sf %{_datadir}/fedora/emacs/fedora-init.el $dir
+  fi
 fi
 
 %triggerun -- emacs
 [ $2 -eq 0 ] && rm -f %{emacs_sitestart_d}/fedora-init.{el,elc} || :
 
 %triggerun -- xemacs
-[ $2 -eq 0 ] && rm -f %{xemacs_sitestart_d}/fedora-init.{el,elc} || :
+if [ $2 -eq 0 ] ; then
+  for dir in %{xemacs_sitestart_d} ; do
+    rm -f $dir/fedora-init.{el,elc} || :
+  done
+fi
 
 
 %files -f %{name}-%{version}.files
