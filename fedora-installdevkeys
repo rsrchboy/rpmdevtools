@@ -121,6 +121,12 @@ echo "     Key fingerprint = FF9F C94A 6DB4 3356 926D  F6E2 6036 8B6E 2EB1 D4BD"
 echo "sub  1024g/D5FBFF09 2003-08-20"
 rpm --root $RPMROOT --import /usr/share/fedora/devgpgkeys/2EB1D4BD
 
+echo "pub  1024D/1B4259B3 2003-02-11 Aurelien BOMPARD (perso) <aurelien.bompard@free.fr>"
+echo "     Key fingerprint = 4832 1239 8C18 F5F3 C466  AE69 21A6 2396 1B42 59B3"
+echo "uid                            Aurelien BOMPARD (perso) <gauret@free.fr>"
+echo "sub  1024g/F1285CAF 2003-02-11"
+rpm --root $RPMROOT --import /usr/share/fedora/devgpgkeys/1B4259B3
+
 echo
 echo "   Installation complete within $RPMROOT.  You may now use the following command:"
 echo "       fedora-rpmchecksig <packages>"
