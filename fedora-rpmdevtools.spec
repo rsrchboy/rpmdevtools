@@ -3,7 +3,7 @@
 %define spectool_version   1.0.4
 
 Name:           fedora-rpmdevtools
-Version:        0.3.1
+Version:        1.0
 Release:        1
 Summary:        Fedora RPM Development Tools
 
@@ -126,7 +126,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Mar 24 2005 Ville Skyttä <ville.skytta at iki.fi>
+* Thu Mar 24 2005 Ville Skyttä <ville.skytta at iki.fi> - 1.0-1
 - Make fedora-diffarchive work better with archives containing dirs without
   read/execute permissions.
 - Sync "Epoch: 0" drops with Fedora Extras CVS.
