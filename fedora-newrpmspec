@@ -1,8 +1,46 @@
-#!/bin/sh
+#!/bin/bash
 
-if [ -f newpackage.spec ]; then
-    echo "newpackage.spec already exists.  Exiting."
+SPEC="/etc/fedora-rpmdevtools/spectemplate.spec"
+
+newrpmspec.help() {
+	echo "fedora-newrpmspec creates a new fedora spec template"
+	echo ""
+	echo "Usage:"
+	echo "fedora-newrpmspec               without parameter creates a spec template"
+	echo "                                called newpackage.spec"
+	echo "fedora-newrpmspec <app name>    creates a spec template for <app name>"
+        echo "                                called <app name>.spec"	
+	echo "fedora-newrpmspec -h|--help     show this usage information"
+	exit 42
+}
+
+newrpmspec.default() {
+
+if [ "$1" = "" ]; then 
+	if [ -f newpackage.spec ]; then
+    		echo "newpackage.spec already exists.  Exiting."
+	else
+    		echo "RPM spec template has been copied to newpackage.spec."
+    		cp $SPEC newpackage.spec
+	fi
 else
-    echo "RPM spec template has been copied to newpackage.spec."
-    cp /etc/fedora-rpmdevtools/spectemplate.spec newpackage.spec
+	if [ -f $1.spec ]; then
+		echo "$1.spec already exists.  Exiting."
+	else
+		cat $SPEC | sed -e "s/<app name>/$1/" > $1.spec
+		echo "RPM spec template has been copied to $1.spec."
+	fi
 fi
+exit 42
+}
+
+case $1 in
+
+-h|--help)
+	newrpmspec.help
+	;;
+*)	
+	newrpmspec.default $1
+	;;
+esac
+

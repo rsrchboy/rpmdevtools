@@ -1,36 +1,40 @@
-# --- For kernel modules ------------------------------------------------------
+Name:           <app name>
+Version:        <app version>
+Release:        0.fdr.x
+Epoch:          0
+Summary:        <summary>
+
+Group:          <group>
+License:        <license>
+URL:            http://
+Source0:        <method>://<primary source>
+#Source99:       <for original Red Hat or other upstream spec>
+#Patch0:         
+#Patch1:         
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+#---For kernel modules------------------------------------------------
 # # "uname -r" output of the kernel to build for, the running one
 # # if none was specified with "--define 'kernel <uname -r>'"
 # %{!?kernel: %{expand: %%define        kernel          %(uname -r)}}
-# 
+#
 # %define       kversion        %(echo %{kernel} | sed -e s/smp// -)
 # %define       krelver         %(echo %{kversion} | tr -s '-' '_')
 # %if %(echo %{kernel} | grep -c smp)
 #       %{expand:%%define ksmp -smp}
 # %endif
-# -----------------------------------------------------------------------------
+#---------------------------------------------------------------------
 
-Summary:        <summary>
-Name:           <app name>
-Version:        <app version>
-Release:        0.fdr.x
-Epoch:          0
-URL:            http://
-License:        <license>
-Group:          <group>
-Source0:        <primary source> 
-#Source99:       <for original Red Hat spec>
-#Patch0:         
-#Patch1:         
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires:
+BuildRequires:  
 Requires:       <requirements>
 #Conflicts:      
 #Obsoletes:      
-#BuildConflicts:  
+#BuildConflicts: 
 #Requires(pre,post): 
 
 %description
+<Long description of package here>
+<Multiple lines are fine>
 
 #%package        devel
 #Summary:        
@@ -38,6 +42,8 @@ Requires:       <requirements>
 #Requires:       %{name} = %{epoch}:%{version}-%{release}
 
 #%description    devel
+#<Long description of sub-package here>
+#<Multiple lines are fine>
 
 # -----------------------------------------------------------------------------
 
@@ -50,27 +56,44 @@ Requires:       <requirements>
 # For QT apps: [ -n "$QTDIR" ] || . %{_sysconfdir}/profile.d/qt.sh
 %configure
 make %{?_smp_mflags}
-  
+
 #make test
 #make check
 
 # -----------------------------------------------------------------------------
 
 %install
-rm -rf %{buildroot}
+rm -rf $RPM_BUILD_ROOT
 %makeinstall
 %find_lang %{name}
+
+rm -f $RPM_BUILD_ROOT%{_infodir}/dir
+find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
 
 # -----------------------------------------------------------------------------
 
 %clean
-rm -rf %{buildroot}
+rm -rf $RPM_BUILD_ROOT
 
 # -----------------------------------------------------------------------------
 
-%post -p /sbin/ldconfig
+# ldconfig's for packages that install %{_libdir}/*.so.*
+# -> Don't forget Requires(post,postun): /sbin/ldconfig
+# ...and install-info's for ones that install %{_infodir}/*.info*
+# -> Don't forget Requires(post,preun): /sbin/install-info
 
-%postun -p /sbin/ldconfig
+%post
+/sbin/ldconfig
+/sbin/install-info %{_infodir}/%{name}.info %{_infodir}/dir 2>/dev/null || :
+
+%preun
+if [ $1 = 0 ]; then
+  /sbin/install-info --delete %{_infodir}/%{name}.info \
+    %{_infodir}/dir 2>/dev/null || :
+fi
+
+%postun
+/sbin/ldconfig
 
 # -----------------------------------------------------------------------------
 
@@ -89,11 +112,8 @@ rm -rf %{buildroot}
 #%{_libdir}/*.so
 #%{_mandir}/man3/*
 
-%exclude %{_libdir}/*.la
-%exclude %{_infodir}/dir
-
 # -----------------------------------------------------------------------------
 
 %changelog
-* Fri Apr 04 2003 Your Name <you[AT]your.domain> - epoch:version-release
+* Fri May 03 2003 Your Name <you[AT]your.domain> - epoch:version-release
 - Initial RPM release.

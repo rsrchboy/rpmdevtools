@@ -1,12 +1,12 @@
 Summary:        Fedora RPM Development Tools
 Name:           fedora-rpmdevtools
 Epoch:          0
-Version:        0.0.9
-Release:        0.fdr.1
-URL:            http://www.fedora.us/tools
+Version:        0.0.12
+Release:        0.fdr.2
+URL:            http://www.fedora.us/
 License:        GPL
 Group:          Development/Tools
-Source0:        fedora-rpmdevtools-0.0.9.tar.bz2
+Source0:        %{name}-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 # Required for tool operations
 Requires:       rpm-python, python, cpio, sed
@@ -26,52 +26,98 @@ fedora-rpmsigcheck	Check package sigs using alterate RPM keyring
 fedora-wipebuildtree	Erases all files within ~/redhat
 fedora-unrpm		Extract a RPM, "tar zxvf"-style
 
-#---------------------------------------------------------------------
+%package        emacs
+Summary:        (X)Emacs support for Fedora RPM Development Tools
+Group:          Development/Tools
+Requires:       %{name} = %{epoch}:%{version}-%{release}
+
+%description    emacs
+(X)Emacs support for Fedora RPM Development Tools.
+
+# -----------------------------------------------------------------------------
 
 %prep
 %setup -q
 
-#---------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 %build
 
-#---------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 %install
-rm -rf %{buildroot}
-mkdir -p %{buildroot}%{_bindir}
-mkdir -p %{buildroot}%{_sysconfdir}/fedora-rpmdevtools/devgpgkeys/
-cp -p fedora-newrpmspec      %{buildroot}%{_bindir}
-cp -p fedora-rpmvercmp       %{buildroot}%{_bindir}
-cp -p fedora-buildrpmtree    %{buildroot}%{_bindir}
-cp -p fedora-rmdevelrpms     %{buildroot}%{_bindir}
-cp -p fedora-installdevkeys  %{buildroot}%{_bindir}
-cp -p fedora-rpmchecksig     %{buildroot}%{_bindir}
-cp -p fedora-wipebuildtree   %{buildroot}%{_bindir}
-cp -p fedora-unrpm           %{buildroot}%{_bindir}
-cp -p devgpgkeys/*           %{buildroot}%{_sysconfdir}/fedora-rpmdevtools/devgpgkeys/
-cp -p spectemplate.spec      %{buildroot}%{_sysconfdir}/fedora-rpmdevtools/
-cp -p develrpms.conf         %{buildroot}%{_sysconfdir}/fedora-rpmdevtools/
+rm -rf $RPM_BUILD_ROOT
 
-#---------------------------------------------------------------------
+mkdir -p $RPM_BUILD_ROOT%{_bindir}
+cp -p fedora-newrpmspec      $RPM_BUILD_ROOT%{_bindir}
+cp -p fedora-rpmvercmp       $RPM_BUILD_ROOT%{_bindir}
+cp -p fedora-buildrpmtree    $RPM_BUILD_ROOT%{_bindir}
+cp -p fedora-rmdevelrpms     $RPM_BUILD_ROOT%{_bindir}
+cp -p fedora-installdevkeys  $RPM_BUILD_ROOT%{_bindir}
+cp -p fedora-rpmchecksig     $RPM_BUILD_ROOT%{_bindir}
+cp -p fedora-wipebuildtree   $RPM_BUILD_ROOT%{_bindir}
+cp -p fedora-unrpm           $RPM_BUILD_ROOT%{_bindir}
+
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/fedora-rpmdevtools/devgpgkeys
+cp -p devgpgkeys/* $RPM_BUILD_ROOT%{_sysconfdir}/fedora-rpmdevtools/devgpgkeys
+
+cp -p spectemplate*.spec $RPM_BUILD_ROOT%{_sysconfdir}/fedora-rpmdevtools
+cp -p develrpms.conf $RPM_BUILD_ROOT%{_sysconfdir}/fedora-rpmdevtools
+
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/emacs/site-lisp/site-start.d
+cp -p emacs/fedora-init.el \
+  $RPM_BUILD_ROOT%{_datadir}/emacs/site-lisp/site-start.d
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/xemacs/site-packages/lisp/site-start.d
+cp -p emacs/fedora-init.el \
+  $RPM_BUILD_ROOT%{_datadir}/xemacs/site-packages/lisp/site-start.d
+
+# -----------------------------------------------------------------------------
 
 %clean
-rm -rf %{buildroot}
+rm -rf $RPM_BUILD_ROOT
 
-#---------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 %files
 %defattr(0644,root,root,0755)
+%doc COPYING
 %attr(0755,root,root) %{_bindir}/*
 %dir %{_sysconfdir}/fedora-rpmdevtools
 %config(noreplace) %{_sysconfdir}/fedora-rpmdevtools/develrpms.conf
-%config %{_sysconfdir}/fedora-rpmdevtools/spectemplate.spec
+%config %{_sysconfdir}/fedora-rpmdevtools/spectemplate*.spec
 %dir %{_sysconfdir}/fedora-rpmdevtools/devgpgkeys
 %config %{_sysconfdir}/fedora-rpmdevtools/devgpgkeys/*
+
+%files emacs
+%defattr(0644,root,root,0755)
+%doc emacs/*.patch
+%{_datadir}/emacs/site-lisp/site-start.d
+%{_datadir}/xemacs/site-packages/lisp/site-start.d
 
 #---------------------------------------------------------------------
 
 %changelog
+* Wed May 14 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.0.12-0.fdr.2
+- Make install-info in spec template silent for --excludedocs (#234).
+
+* Tue May 13 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.0.12-0.fdr.1
+- Include a minimal spec template for use with editors (#234).
+- Split (X)Emacs stuff into -emacs subpackage (#234).
+
+* Wed May  7 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.0.11-0.fdr.1
+- #234 add (post,preun) install-info scriptlets to spec template.
+- Install Fedora rpm-spec-mode (X)Emacs init stuff.  Needs a patched
+  rpm-spec-mode.el (patch included in docs).
+- Include a copy of the GPL.
+
+* Sat May 03 2003 Warren Togami <warren@togami.com> - 0:0.0.10-0.fdr.1
+- Added Enrico's key 0xE421D146
+- #234 fedora-develrpms added docbook-utils-pdf, tetex-dvips
+- #234 Most of Thomas' spec changes
+- #234 %{buildroot} --> $RPM_BUILD_ROOT
+- #234 Ville + Adrian's BuildRoot
+- #234 Adrian's improved newrpmspec
+
 * Sat Apr 26 2003 Warren Togami <warren@togami.com> - 0:0.0.9-0.fdr.1
 - #224 fedora-installdevkeys added RH's key and beta key
 - #224 RH8 has redhat-rpm-config too

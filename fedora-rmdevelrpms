@@ -18,7 +18,7 @@
 # persist the setting in the system-wide configuration file
 # /etc/fedora-rpmdevtools/develrpms.conf or a per-user ~/.develrpmsrc.
 
-DEVPKGS="bison byacc compat-gcc compat-gcc-c++ compface djbfft flex gettext glade glade2 kernel-source libgcj nasm texinfo"
+DEVPKGS="bison byacc compat-gcc compat-gcc-c++ compface djbfft flex gettext glade glade2 kernel-source libgcj nasm texinfo docbook-utils-pdf tetex-dvips"
 
 if [ -r /etc/fedora-rpmdevtools/develrpms.conf ]; then
     . /etc/fedora-rpmdevtools/develrpms.conf

@@ -67,7 +67,10 @@ echo "pub  1024D/69886CC7 2001-09-16 Seth Vidal <skvidal@phy.duke.edu>"
 echo "     Key fingerprint = CB55 05F9 8868 0962 DF52  F6A6 D408 F7C7 6988 6CC7"
 echo "sub  2048g/65B66ED3 2001-09-16"
 rpm --root $RPMROOT --import /etc/fedora-rpmdevtools/devgpgkeys/69886CC7
-
+echo "pub  1024D/E421D146 2002-06-12 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de>"
+echo "     Key fingerprint = DFE1 5168 F3BC 0A58 6119  3190 196F A845 E421 D146"
+echo "sub  4096g/C6C7982E 2002-06-12 [expires: 2004-06-11]"
+rpm --root $RPMROOT --import /etc/fedora-rpmdevtools/devgpgkeys/E421D146
 
 echo
 echo "   Installation complete within $RPMROOT.  You may now use the following command:"
