@@ -71,10 +71,10 @@ case "$1" in
     status)
         fdr_status
         ;;
-    condrestart)
+    condrestart|try-restart)
   	[ ! -f $lockfile ] || restart
 	;;
     *)
-        echo $"Usage: $0 {start|stop|status|restart|condrestart|reload|force-reload}"
+        echo $"Usage: $0 {start|stop|status|restart|try-restart|reload|force-reload}"
         exit 2
 esac

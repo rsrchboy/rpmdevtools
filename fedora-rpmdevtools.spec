@@ -133,6 +133,7 @@ fi
 %changelog
 * Sat Dec 11 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.3.0-1
 - Remove 0.fdr. prefixes from all spec templates.
+- Add try-restart action to init script template.
 
 * Thu Oct  7 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.2.0-0.fdr.1
 - New generalized replacements for fedora-unrpm and fedora-diffrpm:
