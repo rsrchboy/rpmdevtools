@@ -22,6 +22,8 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+# $Id: fedora-kmodhelper,v 1.2 2003/12/28 18:05:30 scop Exp $
+
 myprog="fedora-kmodhelper"
 myver="0.9.5"
 variants='\(BOOT\|\(big\|huge\)mem\|debug\|enterprise\|smp\|uml\)'
