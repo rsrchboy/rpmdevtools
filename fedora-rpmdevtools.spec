@@ -127,6 +127,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Mon Mar 21 2005 Ville Skyttä <ville.skytta at iki.fi>
+- Make fedora-diffarchive work better with archives containing dirs without
+  read/execute permissions.
+- Sync "Epoch: 0" drops with Fedora Extras CVS.
 - Include Nils Philippsen's spectool.
 - Own (%%ghost'd) more dirs from the site-lisp dir hierarchies.
 - Drop trigger support pre-FC2 Emacs and XEmacs packages.
@@ -134,9 +137,7 @@ rm -rf $RPM_BUILD_ROOT
 - Update URLs.
 - Drop developer GPG keys from the package, add Fedora Extras key.
 - Drop fedora-pkgannfmt, it's no longer relevant.
-- Make fedora-diffarchive work better with archives containing dirs without
-  read/execute permissions.
-- Sync "Epoch: 0" drops with Fedora Extras CVS.
+- Remove pre-FC2 compatibility stuff from Perl spec template.
 
 * Sun Feb  6 2005 Ville Skyttä <ville.skytta at iki.fi> - 0:0.3.1-1
 - Make buildrpmtree and wipebuildtree less dependent on a specific
