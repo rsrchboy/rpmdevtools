@@ -17,8 +17,8 @@
 
 while test "$1"; do
     case "$1" in
-	--help)		echo $"Usage: fedora-md5 <package>+"; exit 0;;
-	--version)	echo $"fedora-md5 0.2"; exit 0;;
+	--help)		echo $"Usage: fedora-md5 <package>"; exit 0;;
+	--version)	echo $"fedora-md5 0.3"; exit 0;;
 	--)		shift; break;;
 	*)		break
     esac
@@ -31,8 +31,13 @@ test "$1" || {
 }
 
 
-cd `dirname -- "$1"`
-  md5sum -- `basename -- "$1"`
-cd -
+tmp=`mktemp -d /var/tmp/fedmd5.XXXXXX`
+trap "rm -rf $tmp" EXIT
 
-rpm -qp --nosignature --qf '[%{filemd5s}  %{filenames}\n]' -- "$1" | sort
+rpm2cpio - <"$1" | ( cd $tmp; cpio -i --quiet )
+
+cd -- `dirname -- "$1"`
+md5sum -- `basename -- "$1"`
+
+cd $tmp
+md5sum *
