@@ -3,7 +3,7 @@
 
 Name:           
 Version:        
-Release:        0.fdr.1
+Release:        1
 Epoch:          0
 Summary:        
 
@@ -50,12 +50,12 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %doc
-%{_mandir}/man3/*.3*
-# For noarch packages:
+# For noarch packages: vendorlib
 %{perl_vendorlib}/*
-# For arch-specific packages:
+# For arch-specific packages: vendorarch
 %{perl_vendorarch}/auto/*
 %{perl_vendorarch}/everything-except-"auto"
+%{_mandir}/man3/*.3*
 
 
 %changelog

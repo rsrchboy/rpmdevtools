@@ -1,6 +1,6 @@
 Name:           <app name>
 Version:        <app version>
-Release:        0.fdr.x
+Release:        x
 Epoch:          0
 Summary:        <summary>
 

@@ -2,8 +2,8 @@
 %define xemacs_sitestart_d %{_libdir}/xemacs/xemacs-packages/lisp/site-start.d %{_datadir}/xemacs/site-packages/lisp/site-start.d
 
 Name:           fedora-rpmdevtools
-Version:        0.2.0
-Release:        0.fdr.1
+Version:        0.3.0
+Release:        1
 Epoch:          0
 Summary:        Fedora RPM Development Tools
 
@@ -131,6 +131,9 @@ fi
 
 
 %changelog
+* Sat Dec 11 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.3.0-1
+- Remove 0.fdr. prefixes from all spec templates.
+
 * Thu Oct  7 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.2.0-0.fdr.1
 - New generalized replacements for fedora-unrpm and fedora-diffrpm:
   fedora-extract and fedora-diffarchive.

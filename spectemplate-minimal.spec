@@ -1,6 +1,6 @@
 Name:           
 Version:        
-Release:        0.fdr.1
+Release:        1
 Epoch:          0
 Summary:        
 
