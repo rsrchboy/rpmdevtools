@@ -1,5 +1,6 @@
 %define emacs_sitestart_d  %{_datadir}/emacs/site-lisp/site-start.d
 %define xemacs_sitestart_d %{_datadir}/xemacs/site-packages/lisp/site-start.d
+%define spectool_version   1.0.4
 
 Name:           fedora-rpmdevtools
 Version:        0.3.1
@@ -11,10 +12,12 @@ License:        GPL
 URL:            http://www.fedora.us/
 # rpminfo upstream: http://people.redhat.com/twoerner/rpminfo/bin/
 Source0:        %{name}-%{version}.tar.bz2
+Source1:        http://people.redhat.com/nphilipp/spectool/spectool-%{spectool_version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
 Provides:       %{name}-emacs = %{version}-%{release}
+Provides:       spectool = %{spectool_version}
 Obsoletes:      %{name}-emacs < 0.1.9
 # Required for tool operations
 Requires:       rpm-python, python, cpio, sed, perl
@@ -38,11 +41,13 @@ fedora-rpminfo          Prints information about executables and libraries
 fedora-rpmvercmp        RPM version comparison checker
 fedora-extract          Extract various archives, "tar xvf" style
 fedora-diffarchive      Diff contents of two archives
-fedora-wipebuildtree    Erases all files within dirs created by buildrpmtree
+fedora-wipebuildtree    Erase all files within dirs created by buildrpmtree
+spectool                Expand and download sources and patches in specfiles
 
 
 %prep
-%setup -q
+%setup -q -a 1
+cp -p spectool*/README README.spectool
 
 
 %build
@@ -65,6 +70,7 @@ install -pm 755 fedora-extract         $RPM_BUILD_ROOT%{_bindir}
 install -pm 755 fedora-diffarchive     $RPM_BUILD_ROOT%{_bindir}
 install -pm 755 fedora-rpmvercmp       $RPM_BUILD_ROOT%{_bindir}
 install -pm 755 fedora-wipebuildtree   $RPM_BUILD_ROOT%{_bindir}
+install -pm 755 spectool*/spectool     $RPM_BUILD_ROOT%{_bindir}
 
 install -dm 755 $RPM_BUILD_ROOT%{_prefix}/lib/rpm
 install -pm 755 check-buildroot check-rpaths* \
@@ -112,16 +118,18 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc COPYING
+%doc COPYING README*
 %config(noreplace) %{_sysconfdir}/fedora
 %{_datadir}/fedora
 %{_bindir}/fedora-*
+%{_bindir}/spectool
 %{_prefix}/lib/rpm/check-*
 %ghost %{_datadir}/*emacs
 
 
 %changelog
 * Sun Mar 20 2005 Ville Skyttä <ville.skytta at iki.fi>
+- Include Nils Philippsen's spectool.
 - Own (%%ghost'd) more dirs from the site-lisp dir hierarchies.
 - Drop trigger support pre-FC2 Emacs and XEmacs packages.
 - Drop rpm-spec-mode.el patch, no longer needed for FC2 Emacs and later.
