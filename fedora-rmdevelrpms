@@ -1,81 +1,199 @@
-#!/bin/sh
+#!/usr/bin/python -tt
 
-#
 # fedora-rmdevelrpms -- Find (and optionally remove) "development" RPMs
 #
 # Author:  Ville Skyttä <ville.skytta at iki.fi>
 # License: GPL
-# $Id: fedora-rmdevelrpms,v 1.5 2003/10/02 20:38:12 scop Exp $
+# Credits: Seth Vidal (yum), Thomas Vander Stichele (mach)
+# $Id: fedora-rmdevelrpms,v 1.6 2003/10/31 18:54:46 scop Exp $
 #
-# This script is useful in cleaning up development RPMs from your system,
-# eg. when starting to make a new RPM package.
+# This script is useful hack in cleaning up development RPMs from your
+# system, eg. before starting to build a new RPM package.
 #
 # Currently, "development RPMs" include:
 # - Any package whose %{NAME} ends with "-devel", except gcc requirements.
-# - Ones listed in $DEVPKGS below.
-# - Ones in $ADDITIONAL_DEVEL_RPMS (see below).
+# - Ones listed in def_devpkgs below.
+# - Ones in devpkgs (see below).
 #
 # If you want to keep some devel RPMs around, put their names into the
-# $KEEP_DEVEL_RPMS environment variable, separated by space.  The opposite
-# of this is provided by $ADDITIONAL_DEVEL_RPMS.
+# nondevpkgs list in the configuration file.  The opposite of this is
+# provided by devpkgs.
 #
-# You can persist these settings in the system-wide configuration file
-# /etc/fedora/develrpms.conf or a per-user ~/.develrpmsrc.
+# The configuration files are /etc/fedora/rmdevelrpms.conf and
+# ~/.rmdevelrpmsrc, and are written in Python.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Library General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-if [ -r /etc/fedora/develrpms.conf ]; then
-    . /etc/fedora/develrpms.conf
-fi
-if [ -r $HOME/.develrpmsrc ]; then
-    . $HOME/.develrpmsrc
-fi
 
-DEVPKGS="autoconf autoconf213 automake automake14 automake15 automake16 bison byacc compat-gcc compat-gcc-c++ compface dev86 djbfft docbook-utils-pdf doxygen flex gettext glade glade2 kernel-source libgcj libtool nasm qt-designer swig texinfo $ADDITIONAL_DEVEL_RPMS"
+import getopt, os, re, rpm, stat, sys, types
 
-# Find -devel RPMs.
 
-echo "Finding development RPMs..."
-for rpm in `rpm -qa --qf "%{NAME}\n" | grep '\-devel$'`; do
-    if [ -z "`rpm -q --whatrequires $rpm | grep '^gcc'`" ]; then
-        devels="$rpm $devels"
-    fi
-done
+__version__ = "0.9.1"
 
-# Check if we have some common others that are primarily for building.
 
-for rpm in `LANG=C rpm -q --qf "%{NAME}\n" $DEVPKGS | grep -v 'not installed'`; do
-    devels="$rpm $devels"
-done
+dev_re  = re.compile("-devel$")
+lib_re1 = re.compile("^lib.+")
+lib_re2 = re.compile("-libs?$")
+a_re    = re.compile("\w\.a$")
+so_re   = re.compile("\w\.so(?:\.\d+)*$")
 
-# Filter out what we want to keep.
-for k in $KEEP_DEVEL_RPMS; do
-    devels=$(echo "$devels" | sed "s| *\\b$k\\b||")
-done
-devels=$(echo "$devels" | sed "s|^ *||")
 
-# Remove, if the user wishes so.
+def_devpkgs =\
+("autoconf", "autoconf213", "automake", "automake14", "automake15",
+ "automake16", "bison", "byacc", "compat-gcc", "compat-gcc-c++",
+ "compface", "dev86", "djbfft", "docbook-utils-pdf", "doxygen",
+ "flex", "gettext", "glade", "glade2", "kernel-source", "libgcj",
+ "libtool", "nasm", "pkgconfig", "qt-designer", "swig", "texinfo",
+ )
 
-if [ -n "$devels" ]; then
+def_nondevpkgs =\
+("glibc-devel", "libstdc++-devel")
 
-    echo "Development RPMs found: $devels"
-    if [ "$(whoami)" = "root" ]; then
-	if [ "z$1" = "z-y" ]; then
-	    REPLY=y
-	else
-            echo -n "Remove them? (y/N): "
-            read
-	fi
-        case "$REPLY" in
-            y|Y)
-                echo "Removing: rpm -e --allmatches $devels"
-                rpm -e --allmatches $devels
-                ;;
-            *)
-                echo "Not removed."
-                ;;
-        esac
-    else
-        echo "Not running as root, skipping remove."
-    fi
-else
-    echo "No development RPMs found."
-fi
+
+devpkgs = ()
+nondevpkgs = ()
+
+
+def isDevelPkg(hdr):
+    """
+    Decides whether a package is a devel one, based on name, configuration
+    and contents.
+    """
+    if not hdr: return 0
+    name = hdr[rpm.RPMTAG_NAME]
+    if not name: return 0
+    if name in nondevpkgs: return 0
+    if name in devpkgs: return 1
+    if name in def_nondevpkgs: return 0
+    if name in def_devpkgs: return 1
+    if dev_re.search(name): return 1
+    if lib_re1.search(name) or lib_re2.search(name):
+        # Heuristics for lib*, *-lib and *-libs packages (kludgy...)
+        a_found = so_found = 0
+        fnames = hdr[rpm.RPMTAG_FILENAMES]
+        fmodes = hdr[rpm.RPMTAG_FILEMODES]
+        for i in range(len(fnames)):
+            # Peek into the files in the package.
+            if not (stat.S_ISLNK(fmodes[i]) or stat.S_ISREG(fmodes[i])):
+                # Not a file or a symlink: ignore.
+                pass
+            fn = fnames[i]
+            if so_re.search(fn):
+                # *.so or a *.so.*: cannot be sure, treat pkg as non-devel.
+                so_found = 1
+                break
+            if not a_found and a_re.search(fn):
+                # A *.a: mmm... this has potential, let's look further...
+                a_found = 1
+        # If we have a *.a but no *.so or *.so.*, assume devel.
+        return a_found and not so_found
+
+
+def callback(what, bytes, total, h, user):
+    "Callback called during rpm transaction."
+    sys.stdout.write(".")
+    sys.stdout.flush()
+
+
+def main():
+    "Da meat."
+    try:
+        # TODO: implement -r|--root for checking a specified rpm root
+        opts, args = getopt.getopt(sys.argv[1:], "yv", ["yes", "version"])
+    except getopt.GetoptError:
+        print "Usage: %s [-v|--version] [-y|--yes]" % sys.argv[0]
+        sys.exit(2)
+    confirm = 1
+    for o, a in opts:
+        if (o in ("-v", "--version")):
+            print "fedora-rmdeverpms version %s" % __version__
+            sys.exit(0)
+        elif (o in ("-y", "--yes")):
+            confirm = 0
+    ts = rpm.TransactionSet("/")
+    ts.setVSFlags(~(rpm._RPMVSF_NOSIGNATURES|rpm._RPMVSF_NODIGESTS))
+    for pkg in ts.dbMatch():
+        if isDevelPkg(pkg):
+            # addErase behaves like "--allmatches"
+            ts.addErase(pkg[rpm.RPMTAG_NAME])
+    ts.order()
+    pkgs = []
+    try:
+        te = ts.next()
+        while te:
+            pkgs.append(te.NEVR())
+            te = ts.next()
+    except StopIteration:
+        pass
+    try:
+        if len(pkgs) > 0:
+            print "Found %d devel packages:" % len(pkgs)
+            for pkg in pkgs:
+                print "  %s" % pkg
+            unresolved = ts.check()
+            if unresolved:
+                print "...but removal would cause unresolved dependencies:"
+                for t in unresolved:
+                    dep = t[1][0]
+                    if t[1][1]:
+                        dep = dep + " "
+                        if t[2] & rpm.RPMSENSE_LESS:
+                            dep = dep + "<"
+                        if t[2] & rpm.RPMSENSE_GREATER:
+                            dep = dep + ">"
+                        if t[2] & rpm.RPMSENSE_EQUAL:
+                            dep = dep + "="
+                        dep = dep + " " + t[1][1]
+                    if t[4] == rpm.RPMDEP_SENSE_CONFLICTS:
+                        dep = "conflicts with " + dep
+                    elif t[4] == rpm.RPMDEP_SENSE_REQUIRES:
+                        dep = "requires " + dep
+                    print "  %s-%s-%s %s" % (t[0][0], t[0][1], t[0][2], dep)
+                print "Skipped."
+            elif os.geteuid() == 0:
+                if confirm:
+                    proceed = raw_input("Remove them? [y/N] ")
+                else:
+                    proceed = "y"
+                if (proceed in ("Y", "y")):
+                    sys.stdout.write("Removing...")
+                    errors = ts.run(callback, "")
+                    print "Done."
+                    if errors:
+                        for error in errors:
+                            print error
+                        sys.exit(1)
+                else:
+                    print "Not removed."
+            else:
+                print "Not running as root, skipping remove."
+        else:
+            print "No devel packages found."
+    finally:
+        ts.closeDB()
+        del ts
+
+
+for conf in ("/etc/fedora/rmdevelrpms.conf",
+             os.path.join(os.environ["HOME"], ".rmdevelrpmsrc")):
+    try:
+        execfile(conf)
+    except IOError:
+        pass
+    if type(devpkgs) == types.StringType:
+        devpkgs = devpkgs.split()
+    if type(nondevpkgs) == types.StringType:
+        nondevpkgs = nondevpkgs.split()
+main()

@@ -5,16 +5,19 @@
 #
 # Author:  Warren Togami <warren@togami.com>
 # License: GPL
-# $Id: fedora-wipebuildtree,v 1.2 2003/08/15 20:25:45 scop Exp $
+# $Id: fedora-wipebuildtree,v 1.3 2003/10/31 18:54:46 scop Exp $
 
-if [ ! -d ~/redhat ]; then
-    echo "~/redhat does not exist, unable to wipe clean."
-    exit 1
-fi
+for builddir in redhat rpmbuild; do
 
-echo "Removing all files from ~/redhat/..."
-rm -rf ~/redhat/BUILD/*
-rm -rf ~/redhat/SOURCES/*
-rm -rf ~/redhat/SRPMS/*
-rm -rf ~/redhat/SPECS/*
-rm -f `find ~/redhat |grep rpm` 
+    if [ ! -d ~/$builddir ]; then
+        echo "~/$builddir does not exist, unable to wipe clean."
+    else
+        echo "Removing all files from ~/$builddir/..."
+        rm -rf ~/$builddir/BUILD/*
+        rm -rf ~/$builddir/SOURCES/*
+        rm -rf ~/$builddir/SRPMS/*
+        rm -rf ~/$builddir/SPECS/*
+        rm -f $(find ~/$builddir -name "*.rpm")
+    fi
+
+done

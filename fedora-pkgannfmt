@@ -1,0 +1,15 @@
+#!/bin/sh
+#
+# fedora-pkgannfmt
+# Produces output from packages that is suitable for fedora-package-announce
+#
+# Author:  Ville Skyttä <ville.skytta at iki.fi>
+# License: GPL
+# $Id: fedora-pkgannfmt,v 1.1 2003/10/31 18:54:46 scop Exp $
+
+pkg=
+if [ -f "$1" ]; then
+  pkg=p
+fi
+
+rpm -q$pkg --qf "Name   : %{name}\nVersion: %{version}\nRelease: %{release}\nLicense: %{license}\nURL    : %{url}\n\n%{description}\n\n" --changelog "$1" | perl -pe 's|^(Release:.*)\.rh\d+|$1|'

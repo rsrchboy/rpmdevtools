@@ -1,5 +1,5 @@
 Name:           fedora-rpmdevtools
-Version:        0.0.22
+Version:        0.1.3
 Release:        0.fdr.1
 Epoch:          0
 Summary:        Fedora RPM Development Tools
@@ -12,7 +12,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
 # Required for tool operations
-Requires:       rpm-python, python, cpio, sed
+Requires:       rpm-python, python, cpio, sed, perl
 # Minimal RPM build requirements
 Requires:       rpm-build, gcc, gcc-c++, redhat-rpm-config, make, tar, patch
 Requires:       diffutils, gzip, bzip2
@@ -28,6 +28,7 @@ fedora-installdevkeys   Install developer keys in alternate RPM keyring
 fedora-rpmsigcheck      Check package sigs using alterate RPM keyring
 fedora-wipebuildtree    Erases all files within ~/redhat
 fedora-unrpm            Extract a RPM, "tar zxvf"-style
+fedora-pkgannfmt        Produce output for fedora-package-announce
 
 %package        emacs
 Summary:        (X)Emacs support for Fedora RPM Development Tools
@@ -57,13 +58,14 @@ cp -p fedora-installdevkeys  $RPM_BUILD_ROOT%{_bindir}
 cp -p fedora-rpmchecksig     $RPM_BUILD_ROOT%{_bindir}
 cp -p fedora-wipebuildtree   $RPM_BUILD_ROOT%{_bindir}
 cp -p fedora-unrpm           $RPM_BUILD_ROOT%{_bindir}
+cp -p fedora-pkgannfmt       $RPM_BUILD_ROOT%{_bindir}
 
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/fedora/devgpgkeys
 cp -p spectemplate*.spec template.init $RPM_BUILD_ROOT%{_datadir}/fedora
 cp -p devgpgkeys/* $RPM_BUILD_ROOT%{_datadir}/fedora/devgpgkeys
 
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/fedora
-cp -p develrpms.conf $RPM_BUILD_ROOT%{_sysconfdir}/fedora
+cp -p rmdevelrpms.conf $RPM_BUILD_ROOT%{_sysconfdir}/fedora
 
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/emacs/site-lisp/site-start.d
 cp -p emacs/fedora-init.el \
@@ -92,6 +94,25 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Oct 31 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.3-0.fdr.1
+- Add Nils Olav Selåsdal's key into devgpgkeys (bug 783).
+- fedora-wipebuildtree now cleans up both ~/redhat and ~/rpmbuild for
+  consistency with fedora-buildrpmtree and backwards compatibility (bug 783).
+- Treat pkgconfig as a devel package in fedora-rmdevelrpms (bug 783).
+- New script: fedora-pkgannfmt (bug 783).
+- Make fedora-rmdevelrpms tolerate strings in devpkgs and nondevpkgs (bug 783).
+
+* Sat Oct 18 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.2-0.fdr.1
+- Skip removing packages in fedora-rmdevelrpms if it would cause
+  unresolved dependencies (bug 783).
+
+* Wed Oct  8 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.1-0.fdr.1
+- Unobfuscate new devel pkg heuristics in fedora-rmdevelrpms (bug 783).
+
+* Wed Oct  8 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.0-0.fdr.1
+- Rewrite fedora-rmdevelrpms in Python.
+  Note: configuration files have moved and changed format.
+
 * Sun Sep 28 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.0.22-0.fdr.1
 - Remove tetex-dvips from rmdevelrpms (bug 525).
 
