@@ -117,6 +117,7 @@ rm -rf $RPM_BUILD_ROOT
 - Add Aurelien Bompard's and Erik S. LaBianca's keys to devgpgkeys (bug 1401).
 - Include a trimmed-down version of my key, BCD241CB (bug 1401).
 - Improvements to Perl and Python spec templates (bug 1401, bug 1525).
+- Improvements to check-rpaths* (bug 1401/Enrico Scholz).
 
 * Sun Mar 14 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.7-0.fdr.5
 - Ensure that the correct kmodhelper is tested and executable during build
