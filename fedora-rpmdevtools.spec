@@ -1,6 +1,6 @@
 Name:           fedora-rpmdevtools
 Version:        0.1.7
-Release:        0.fdr.3
+Release:        0.fdr.4
 Epoch:          0
 Summary:        Fedora RPM Development Tools
 
@@ -111,6 +111,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Feb 22 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.7-0.fdr.4
+- Ignore *.py[co], *.elc and .packlist in check-buildroot (bug 1167).
+
 * Mon Feb  9 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.7-0.fdr.3
 - Revert back to the original fedora-md5 version which uses md5sum to
   calculate the checksums instead of using the rpm headers (bug 1167).
