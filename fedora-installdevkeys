@@ -34,6 +34,10 @@ echo "     Key fingerprint = 17E8 543D 1D4A A5FA A96A  7E9F FD37 2689 897D A07A"
 echo "sub  1024g/9E774FDD 2002-03-15"
 rpm --root $RPMROOT --import /usr/share/fedora/devgpgkeys/BETA-RPM-GPG-KEY
 
+echo "pub  1024D/E418E3AA 2003-08-20 Red Hat, Inc. automated build signing key (2003) <rawhide@redhat.com>"
+echo "     Key fingerprint = A4ED 786E 361F 3A86 7FFD  193F 94CD 5742 E418 E3AA"
+rpm --root $RPMROOT --import /usr/share/fedora/devgpgkeys/E418E3AA
+
 echo "pub  1024D/54A2ACF1 2002-11-25 Warren Togami (Linux) <warren@togami.com>"
 echo "     Key fingerprint = 785A 304B 08C1 F291 F54F  9A68 6BDD FE8E 54A2 ACF1"
 echo "sub  2048g/4AD75982 2002-11-25 [expires: 2007-11-24]"
@@ -93,6 +97,11 @@ echo "pub  1024D/B8AF1C54 1998-07-23 Michael Schwendt <mschwendt@users.sf.net>"
 echo "     Key fingerprint = DBAB 0EC0 5A00 F457 8B6C  88C4 D223 1572 B8AF 1C54"
 echo "sub  1024g/4FC3B4A8 1998-07-23"
 rpm --root $RPMROOT --import /usr/share/fedora/devgpgkeys/B8AF1C54
+
+echo "pub  1024D/C58CF1CB 2003-02-12 Andreas Bierfert <andreas.bierfert@lowlatency.de>"
+echo "     Key fingerprint = 6991 E12E 38AA 08EE 7D99  CFDE 4044 323E C58C F1CB"
+echo "sub  1024g/A18A2AC7 2003-02-12"
+rpm --root $RPMROOT --import /usr/share/fedora/devgpgkeys/C58CF1CB
 
 echo
 echo "   Installation complete within $RPMROOT.  You may now use the following command:"
