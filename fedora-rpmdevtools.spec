@@ -1,6 +1,6 @@
 Name:           fedora-rpmdevtools
 Version:        0.1.7
-Release:        0.fdr.2
+Release:        0.fdr.3
 Epoch:          0
 Summary:        Fedora RPM Development Tools
 
@@ -111,6 +111,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Feb  9 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.7-0.fdr.3
+- Revert back to the original fedora-md5 version which uses md5sum to
+  calculate the checksums instead of using the rpm headers (bug 1167).
+
 * Sun Feb  8 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.7-0.fdr.2
 - Include more $TNV suggestions from bug 1167:
 - Include GConf schema installation examples in spectemplate.spec (bug 1178).
