@@ -113,7 +113,8 @@ rm -rf $RPM_BUILD_ROOT
 * Sun May  2 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.8-0.fdr.1
 - Split Requires(pre,postun) into two in spec template due to
   https://bugzilla.redhat.com/118780 (bug 1401/Michael Schwendt).
-- Make fedora-diffrpm work on < FC1 (bug 1401).
+- Make fedora-diffrpm work on < FC1, as well as with two different packages
+  with the same NVR (bug 1401).
 - Add Aurelien Bompard's and Erik S. LaBianca's keys to devgpgkeys (bug 1401).
 - Include a trimmed-down version of my key, BCD241CB (bug 1401).
 - Improvements to Perl and Python spec templates (bug 1401, bug 1525).
