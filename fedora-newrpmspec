@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# $Id: fedora-newrpmspec,v 1.3 2003/08/15 20:25:45 scop Exp $
+# $Id: fedora-newrpmspec,v 1.4 2005/03/24 16:32:39 scop Exp $
 
-SPEC="/usr/share/fedora/spectemplate.spec"
+SPEC="/usr/share/fedora/spectemplate-minimal.spec"
 
 newrpmspec.help() {
-	echo "fedora-newrpmspec creates a new fedora spec template"
+	echo "fedora-newrpmspec creates a new Fedora spec template"
 	echo ""
 	echo "Usage:"
 	echo "fedora-newrpmspec               without parameter creates a spec template"
@@ -29,7 +29,7 @@ else
 	if [ -f $1.spec ]; then
 		echo "$1.spec already exists.  Exiting."
 	else
-		cat $SPEC | sed -e "s/<app name>/$1/" > $1.spec
+		cat $SPEC | sed -e "s/^\\(Name:\\s*\\)/\\1$1/" > $1.spec
 		echo "RPM spec template has been copied to $1.spec."
 	fi
 fi

@@ -139,6 +139,7 @@ rm -rf $RPM_BUILD_ROOT
 - Drop fedora-pkgannfmt, it's no longer relevant.
 - Remove pre-FC2 compatibility stuff from Perl spec template.
 - Don't try to remove gcc-java and related packages by default in rmdevelrpms.
+- Remove "full featured" spec template, convert newrpmspec to use -minimal.
 
 * Sun Feb  6 2005 Ville Skyttä <ville.skytta at iki.fi> - 0:0.3.1-1
 - Make buildrpmtree and wipebuildtree less dependent on a specific
