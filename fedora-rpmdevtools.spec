@@ -3,7 +3,7 @@
 
 Name:           fedora-rpmdevtools
 Version:        0.1.9
-Release:        0.fdr.2
+Release:        0.fdr.3
 Epoch:          0
 Summary:        Fedora RPM Development Tools
 
@@ -128,6 +128,9 @@ fi
 
 
 %changelog
+* Mon Aug 30 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.9-0.fdr.3
+- Make kmodhelper detect RH/FC 2.6 kernels (bug 1401, Thorsten Leemhuis).
+
 * Mon Aug 16 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.9-0.fdr.2
 - Treat perl-ExtUtils-* and perl-Module-Build as devel packages in rmdevelrpms.
 - Minor Perl spec template improvements.

@@ -23,10 +23,10 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# $Id: fedora-kmodhelper,v 1.6 2004/08/13 14:16:16 scop Exp $
+# $Id: fedora-kmodhelper,v 1.7 2004/08/30 20:04:42 scop Exp $
 
 myprog="fedora-kmodhelper"
-myver="0.9.9"
+myver="0.9.10"
 variants='\(BOOT\|\(big\|huge\)mem\|debug\|enterprise\|smp\|uml\)'
 var=
 
@@ -120,7 +120,7 @@ get_srcdir ()
     then
       get_cpu  || return $?
       get_variant  || return $?
-      local check_dirs="/usr/lib/kernel-module-devel/${uname}-${cpu}/ /lib/modules/${uname}/build /lib/modules/${uname}"
+      local check_dirs="/usr/lib/kernel-module-devel/${uname}-${cpu}/ /lib/modules/${uname}/build"
       for dir in ${check_dirs}; do
         if [ -d "${dir}" -o -h "${dir}" ] ; then
           if [ -e "${dir}/include/linux" ] ; then
@@ -155,12 +155,17 @@ get_srcdir ()
 }
 get_rhkernel ()
 {
-  get_srcdir || return $?
   if is_kernel26
   then
-      # no special things needed ATM, so always 0
-      rhkernel=0
+      get_uname || return $?
+      if [[ -e "/boot/vmlinuz-${uname}" ]] && rpm -qf "/boot/vmlinuz-${uname}" &>/dev/null
+      then
+        rhkernel=1
+      else
+        rhkernel=0
+      fi
   else
+    get_srcdir || return $?
     if grep rhconfig\\.h "${srcdir}/include/linux/autoconf.h" &>/dev/null ; then
       rhkernel=1
     else
