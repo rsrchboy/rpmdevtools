@@ -65,9 +65,6 @@ install -pm 755 fedora-extract         $RPM_BUILD_ROOT%{_bindir}
 install -pm 755 fedora-diffarchive     $RPM_BUILD_ROOT%{_bindir}
 install -pm 755 fedora-rpmvercmp       $RPM_BUILD_ROOT%{_bindir}
 install -pm 755 fedora-wipebuildtree   $RPM_BUILD_ROOT%{_bindir}
-# Deprecated, will be removed in the next "major" release (0.3.0?)
-install -pm 755 fedora-unrpm           $RPM_BUILD_ROOT%{_bindir}
-install -pm 755 fedora-diffrpm         $RPM_BUILD_ROOT%{_bindir}
 
 install -dm 755 $RPM_BUILD_ROOT%{_libdir}/rpm
 install -pm 755 check-buildroot check-rpaths* $RPM_BUILD_ROOT%{_libdir}/rpm
@@ -130,9 +127,10 @@ fi
 
 
 %changelog
-* Wed Dec 15 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.3.0-1
+* Fri Dec 17 2004 Ville Skyttä <ville.skytta at iki.fi> - 0.3.0-1
 - Remove 0.fdr. prefixes and epoch 0's from all spec templates (and here).
 - Add try-restart action to init script template.
+- Remove deprecated fedora-diffrpm and fedora-unrpm.
 
 * Thu Oct  7 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.2.0-0.fdr.1
 - New generalized replacements for fedora-unrpm and fedora-diffrpm:
