@@ -3,7 +3,7 @@
 
 Name:           fedora-rpmdevtools
 Version:        0.1.9
-Release:        0.fdr.1
+Release:        0.fdr.2
 Epoch:          0
 Summary:        Fedora RPM Development Tools
 
@@ -128,6 +128,10 @@ fi
 
 
 %changelog
+* Mon Aug 16 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.9-0.fdr.2
+- Treat perl-ExtUtils-* and perl-Module-Build as devel packages in rmdevelrpms.
+- Minor Perl spec template improvements.
+
 * Mon Aug  9 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.9-0.fdr.1
 - Treat gcc35, gcc35-c++, kernel-sourcecode, and any package matching
   "-devel\b" or "-debuginfo\b" (for version-in-name stuff) as devel
