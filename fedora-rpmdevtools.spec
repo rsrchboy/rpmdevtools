@@ -1,7 +1,5 @@
-# $Id: fedora-rpmdevtools.spec,v 1.5 2003/08/15 20:25:45 scop Exp $
-
 Name:           fedora-rpmdevtools
-Version:        0.0.18
+Version:        0.0.21
 Release:        0.fdr.1
 Epoch:          0
 Summary:        Fedora RPM Development Tools
@@ -94,6 +92,15 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 14 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.0.21-0.fdr.1
+- Add the new Rawhide package signing key.
+
+* Thu Sep 11 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.0.20-0.fdr.1
+- Use "make install DESTDIR=..." instead of %%makeinstall in spec templates.
+
+* Thu Sep  4 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.0.19-0.fdr.1
+- Add Andreas Bierfert's key to devgpgkeys.
+
 * Fri Aug 15 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.0.18-0.fdr.1
 - Change fallback case to exit 2 in init script template (bug 525).
 - Sync fedora-buildrpmtree with Russ's latest version (bug 594).
