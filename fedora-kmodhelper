@@ -1,0 +1,271 @@
+#!/bin/bash
+
+# fedora-kmodhelper - Helper script for building kernel module RPMs
+# Copyright (c) 2003 Ville Skyttä <ville.skytta@iki.fi>
+#
+# Permission is hereby granted, free of charge, to any person obtaining
+# a copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to
+# the following conditions:
+#
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+myprog="fedora-kmodhelper"
+myver="0.9.5"
+variants='\(BOOT\|\(big\|huge\)mem\|debug\|enterprise\|smp\|uml\)'
+var=
+
+cc=
+config=
+cflags=
+cpu=
+modflags=
+rhkernel=
+rhmodflags=
+srcdir=
+uname=
+variant=
+verrel=
+version=
+
+get_uname ()
+{
+  [ -n "${uname}" ] || uname=`uname -r`
+}
+get_cpu ()
+{
+  [ -z "${cpu}" ] || return 0
+  get_uname || return $?
+  cpu=`rpm -q --queryformat '%{ARCH}' "kernel-${uname}" 2>/dev/null`
+  [ $? -eq 0 ] || cpu=
+  # Note: calling get_cflags here will result in a loop if $config is not set.
+  if [ -z "${cpu}" -a -n "${config}" ] ; then
+    get_cflags || return $?
+    cpu=`echo ${cflags} | sed 's/^.*-march=\([^[:space:]]*\).*$/\1/'`
+    [ "${cpu}" != "${cflags}" ] || cpu=
+  fi
+  [ -n "${cpu}" ] || cpu=`uname -m`
+}
+get_verrel ()
+{
+  [ -z "${verrel}" ] || return 0
+  get_uname || return $?
+  verrel=`echo "${uname}" | sed 's/'${variants}'$//'`
+}
+get_version ()
+{
+  [ -z "${version}" ] || return 0
+  get_uname || return $?
+  version=`echo "${uname}" | sed 's/-[^-]*$//'`
+}
+get_variant ()
+{
+  [ -z "${variant}" ] || return 0
+  get_uname || return $?
+  local kv=`echo ${uname} | sed 's/^.*'${variants}'$/\1/'`
+  [ "${kv}" = "${uname}" ] || variant="${kv}"
+}
+get_srcdir ()
+{
+  if [ -n "${srcdir}" ] ; then
+    if [ ! -d "${srcdir}" -a ! -h "${srcdir}" ] ; then
+      echo $"Error: source dir '${srcdir}' not found." >&2
+      return 1
+    fi
+  else
+    get_verrel || return $?
+    get_uname # || return $?
+    for dir in "/usr/src/linux-${verrel}" "/lib/modules/${uname}/build"; do
+      if [ -d "${dir}" -o -h "${dir}" ] ; then
+        if [ -e "${dir}/include/linux/version.h" ] ; then
+          srcdir="${dir}"
+          return 0
+        else
+          echo $"Warning: dir '${dir}' doesn't look like a source dir." >&2
+        fi
+      else
+        echo $"Warning: source dir '${dir}' not found." >&2
+      fi
+    done
+    echo $"Error: could not find a source dir." >&2
+    return 1
+  fi
+}
+get_rhkernel ()
+{
+  get_srcdir || return $?
+  if grep rhconfig\\.h "${srcdir}/include/linux/autoconf.h" &>/dev/null ; then
+    rhkernel=true
+  fi
+}
+get_config ()
+{
+  if [ -n "${config}" ] ; then
+    if [ ! -e "${config}" ] ; then
+      echo $"Error: config file '${config}' does not exist." >&2
+      return 1
+    fi
+  else
+    get_variant || return $?
+    get_cpu || return $?
+    get_srcdir || return $?
+    get_version || return $?
+    config="${srcdir}/configs/kernel-${version}-${cpu}${variant:+-${variant}}.config"
+    if [ ! -e "${config}" ] ; then
+      echo $"Warning: config file doesn't exist: '${config}'." >&2
+      get_uname || return $?
+      config="/boot/config-${uname}"
+      echo $"Warning: falling back to '${config}'." >&2
+    fi
+    if [ ! -e "${config}" ] ; then
+      echo $"Warning: config file doesn't exist: '${config}'." >&2
+      config="${srcdir}/.config"
+      echo $"Warning: falling back to '${config}'." >&2
+    fi
+    if [ ! -e "${config}" ] ; then
+      echo $"Warning: config file doesn't exist: '${config}'." >&2
+      echo $"Error: could not find a config file." >&2
+      unset config
+      return 1
+    fi
+  fi
+}
+get_cc ()
+{
+  get_config || return $?
+  get_srcdir || return $?
+  cd "${srcdir}" && \
+  cc=`( sed 's|\.config\b|'${config}'|g' Makefile && \
+    echo -e '\n'${myprog}'-cc:\n\t@echo $(CC)\n' ) \
+  | make -f - ${myprog}-cc` && \
+  cd -
+}
+get_cflags ()
+{
+  get_config || return $?
+  get_srcdir || return $?
+  cd "${srcdir}" && \
+  cflags=`( sed 's|\.config\b|'${config}'|g' Makefile && \
+    echo -e '\n'${myprog}'-cflags:\n\t@echo $(CFLAGS)\n' ) \
+  | make -f - ${myprog}-cflags` && \
+  cd -
+}
+get_modflags ()
+{
+  get_config || return $?
+  get_srcdir || return $?
+  cd "${srcdir}" && \
+  modflags=`( sed 's|\.config\b|'${config}'|g' Makefile && \
+    echo -e '\n'${myprog}'-modflags:\n\t@echo $(MODFLAGS)\n' ) \
+  | make -f - ${myprog}-modflags` && \
+  cd -
+}
+get_rhmodflags ()
+{
+  [ -z "${rhmodflags}" ] || return 0
+  get_rhkernel || return $?
+  [ -n "${rhkernel}" ] || return 0
+  get_variant || return $?
+  get_cpu || return $?
+  local rhvariant=`echo ${variant:-UP} | tr a-z A-Z`
+  rhmodflags="-D__BOOT_KERNEL_H_ -D__MODULE_KERNEL_${cpu}=1 -D__BOOT_KERNEL_${rhvariant}=1"
+}
+get_allcflags ()
+{
+  get_cflags || return $?
+  get_modflags || return $?
+  get_rhmodflags || return $?
+  echo "${cflags} ${modflags} ${rhmodflags}" | sed 's/[[:space:]]*$//'
+}
+usage ()
+{
+  echo $"Usage: ${myprog} <command> <option>+"
+  echo $" Commands:"
+  echo $"  cc                 - Get compiler."
+  echo $"  config             - Get config file name."
+  echo $"  cpu                - Get target CPU."
+  echo $"  cflags             - Get kernel CFLAGS."
+  echo $"  modflags           - Get module CFLAGS."
+  echo $"  rhmodflags         - Get RH/FC specific module CFLAGS."
+  echo $"  allcflags          - Get all CFLAGS (cflags, modflags, rhmodflags)."
+  echo $"  srcdir             - Get source dir."
+  echo $"  uname              - Get uname."
+  echo $"  variant            - Get variant (bigmem, smp etc)."
+  echo $"  verrel             - Get \"base\" version-release."
+  echo $"  version            - Get \"base\" version."
+  echo $"  rhkernel           - Return \"true\" if the source tree is a RH/FC one."
+  echo $" Options:"
+  echo $"  -s|--srcdir <dir>  - Source directory."
+  echo $"  -p|--cpu <cpu>     - Target CPU. The default is resolved based"
+  echo $"                       on the running kernel."
+  echo $"  -u|--uname <uname> - Target uname.  The default is \`uname -r\`."
+  echo $"  -f|--config <file> - Configuration file."
+  echo $"                       If set, CPU and uname are ignored."
+  echo $"  -h|-?|--help       - Output this help and exit."
+  echo $"  -V|--version       - Output version number and exit."
+}
+
+while [ "${1}" ] ; do
+  case "${1}" in
+    allcflags|cc|cflags|config|cpu|modflags|rhkernel|rhmodflags|srcdir|uname|variant|verrel|version)
+      var="${1}"
+      ;;
+    -s|--srcdir)
+      shift
+      srcdir="${1}"
+      ;;
+    -p|--cpu)
+      shift
+      cpu="${1}"
+      ;;
+    -u|--uname)
+      shift
+      uname="${1}"
+      ;;
+    -f|--config)
+      shift
+      config="${1}"
+      ;;
+    -h|--help|-?)
+      usage >&2
+      exit 0
+      ;;
+    -V|--version)
+      echo "${myprog} ${myver}"
+      exit 0
+      ;;
+    *)
+      usage >&2
+      exit 2
+      ;;
+  esac
+  shift
+done
+
+if [ -z "${var}" ] ; then
+  echo $"Error: command not specified." >&2
+  usage >&2
+  exit 2
+fi
+
+get_"${var}" || exit $?
+[ -z "${!var}" ] || echo "${!var}"
+
+# Local variables:
+# mode: sh
+# sh-indentation: 2
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et
