@@ -2,8 +2,8 @@
 %define xemacs_sitestart_d %{_libdir}/xemacs/xemacs-packages/lisp/site-start.d %{_datadir}/xemacs/site-packages/lisp/site-start.d
 
 Name:           fedora-rpmdevtools
-Version:        0.1.9
-Release:        0.fdr.3
+Version:        0.2.0
+Release:        0.fdr.1
 Epoch:          0
 Summary:        Fedora RPM Development Tools
 
@@ -37,8 +37,8 @@ fedora-rmdevelrpms      Find (and optionally remove) "development" RPMs
 fedora-rpmchecksig      Check package signatures using alternate RPM keyring
 fedora-rpminfo          Prints information about executables and libraries
 fedora-rpmvercmp        RPM version comparison checker
-fedora-unrpm            Extract an RPM, "tar xvf" style
-fedora-diffrpm          Diff contents of two RPMs
+fedora-extract          Extract various archives, "tar xvf" style
+fedora-diffarchive      Diff contents of two archives
 fedora-wipebuildtree    Erases all files within dirs created by buildrpmtree
 
 
@@ -62,10 +62,13 @@ install -pm 755 fedora-pkgannfmt       $RPM_BUILD_ROOT%{_bindir}
 install -pm 755 fedora-rmdevelrpms     $RPM_BUILD_ROOT%{_bindir}
 install -pm 755 fedora-rpmchecksig     $RPM_BUILD_ROOT%{_bindir}
 install -pm 755 %{SOURCE1}             $RPM_BUILD_ROOT%{_bindir}/fedora-rpminfo
+install -pm 755 fedora-extract         $RPM_BUILD_ROOT%{_bindir}
+install -pm 755 fedora-diffarchive     $RPM_BUILD_ROOT%{_bindir}
 install -pm 755 fedora-rpmvercmp       $RPM_BUILD_ROOT%{_bindir}
+install -pm 755 fedora-wipebuildtree   $RPM_BUILD_ROOT%{_bindir}
+# Deprecated, will be removed in the next "major" release (0.3.0?)
 install -pm 755 fedora-unrpm           $RPM_BUILD_ROOT%{_bindir}
 install -pm 755 fedora-diffrpm         $RPM_BUILD_ROOT%{_bindir}
-install -pm 755 fedora-wipebuildtree   $RPM_BUILD_ROOT%{_bindir}
 
 install -dm 755 $RPM_BUILD_ROOT%{_libdir}/rpm
 install -pm 755 check-buildroot check-rpaths* $RPM_BUILD_ROOT%{_libdir}/rpm
@@ -128,6 +131,12 @@ fi
 
 
 %changelog
+* Thu Oct  7 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.2.0-0.fdr.1
+- New generalized replacements for fedora-unrpm and fedora-diffrpm:
+  fedora-extract and fedora-diffarchive.
+- Treat gcc4, gcc4-c++ and gcc4-gfortran as devel packages in rmdevelrpms.
+- Cosmetic spec template improvements.
+
 * Sat Sep 11 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.9-0.fdr.3
 - Make kmodhelper detect RH/FC 2.6 kernels (bug 1401, Thorsten Leemhuis).
 - Remove obsolete kernel module stuff from spectemplate.spec (bug 1401,
