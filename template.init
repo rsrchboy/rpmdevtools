@@ -1,0 +1,80 @@
+#!/bin/sh
+#
+# <daemonname> <summary>
+#
+# chkconfig:   <default runlevel(s)> <start> <stop>
+# description: <description, split multiple lines with \
+#              a backslash>
+# processname: <daemonname>
+# config:      </path/to/conffile1>
+# config:      </path/to/conffile2>
+# pidfile:     </path/to/pidfile>
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# Source networking configuration.
+. /etc/sysconfig/network
+
+# Check that networking is up.
+[ "$NETWORKING" = "no" ] && exit 0
+
+exec="/path/to/<daemonname>"
+prog=$(basename $exec)
+
+[ -e /etc/sysconfig/$prog ] && . /etc/sysconfig/$prog
+
+lockfile=/var/lock/subsys/$prog
+
+start() {
+    echo -n $"Starting $prog: "
+    # start it up here, usually something like "daemon $exec"
+    retval=$?
+    echo
+    [ $retval -eq 0 ] && touch $lockfile
+    return $retval
+}
+
+stop() {
+    echo -n $"Stopping $prog: "
+    # stop it here, often "killproc $prog"
+    retval=$?
+    echo
+    [ $retval -eq 0 ] && rm -f $lockfile
+    return $retval
+}
+
+restart() {
+    stop
+    start
+}
+
+reload() {
+    restart
+}
+
+force_reload() {
+    restart
+}
+
+fdr_status() {
+    status $prog
+}
+
+case "$1" in
+    start|stop|restart|reload)
+        $1
+        ;;
+    force-reload)
+        force_reload
+        ;;
+    status)
+        fdr_status
+        ;;
+    condrestart)
+  	[ ! -f $lockfile ] || restart
+	;;
+    *)
+        echo $"Usage: $0 {start|stop|status|restart|condrestart|reload|force-reload}"
+        exit 3
+esac
