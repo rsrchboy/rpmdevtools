@@ -1,5 +1,5 @@
 Name:           fedora-rpmdevtools
-Version:        0.0.21
+Version:        0.0.22
 Release:        0.fdr.1
 Epoch:          0
 Summary:        Fedora RPM Development Tools
@@ -92,6 +92,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 28 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.0.22-0.fdr.1
+- Remove tetex-dvips from rmdevelrpms (bug 525).
+
 * Sun Sep 14 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.0.21-0.fdr.1
 - Add the new Rawhide package signing key.
 
