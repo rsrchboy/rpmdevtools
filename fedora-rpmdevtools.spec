@@ -128,6 +128,7 @@ fi
   packages in rmdevelrpms.
 - Prevent $CDPATH/cd from producing unexpected output in fedora-md5 and
   fedora-unrpm (bug 1401, bug 1953, Thorsten Leemhuis and Pekka Pietikainen).
+- Update kmodhelper to work with 2.6 kernels (bug 1401, Thorsten Leemhuis).
 - Fold -emacs into the main package, use triggers to install the site-start.d
   snippets.
 - Don't use distutils.sysconfig.get_python_version() in python spec template,

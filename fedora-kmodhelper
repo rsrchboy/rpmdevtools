@@ -23,10 +23,10 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# $Id: fedora-kmodhelper,v 1.5 2004/02/08 19:23:18 scop Exp $
+# $Id: fedora-kmodhelper,v 1.6 2004/08/13 14:16:16 scop Exp $
 
 myprog="fedora-kmodhelper"
-myver="0.9.8"
+myver="0.9.9"
 variants='\(BOOT\|\(big\|huge\)mem\|debug\|enterprise\|smp\|uml\)'
 var=
 
@@ -34,7 +34,10 @@ cc=
 config=
 cflags=
 cpu=
+kernel24=
+kernel26=
 modflags=
+modutilpath=
 rhkernel=
 rhmodflags=
 srcdir=
@@ -54,17 +57,25 @@ get_unamefromsrc ()
     echo "At least srcdir (-s) and config (-f) needed, aborting."
     return 1
   fi
-  cd "${srcdir}" && \
-  unamefromsrc=`( sed 's|\.config\b|'${config}'|g' Makefile && \
-    echo -e '\n'${myprog}'-kernelrel:\n\t@echo $(KERNELRELEASE)\n' ) \
-  | make -f - ${myprog}-kernelrel` && \
-  cd -
+  if grep "PATCHLEVEL = 6" "${srcdir}"/Makefile &> /dev/null ; then
+     cd "${srcdir}" > /dev/null && \
+     unamefromsrc=`( cat Makefile && \
+       echo -e '\n'${myprog}'-kernelrel:\n\t@echo $(KERNELRELEASE)\n' ) \
+       | make -f - ${myprog}-kernelrel` && \
+     cd - > /dev/null
+  else
+     cd "${srcdir}" >/dev/null && \
+     unamefromsrc=`( sed 's|\.config\b|'${config}'|g' Makefile && \
+       echo -e '\n'${myprog}'-kernelrel:\n\t@echo $(KERNELRELEASE)\n' ) \
+       | make -f - ${myprog}-kernelrel` && \
+     cd - > /dev/null
+  fi
 }
 get_cpu ()
 {
   [ -z "${cpu}" ] || return 0
   get_uname || return $?
-  cpu=`rpm -q --queryformat '%{ARCH}' "kernel-${uname}" 2>/dev/null`
+  cpu=`rpm -qf --queryformat '%{ARCH}' "/boot/vmlinuz-${uname}" 2>/dev/null`
   [ $? -eq 0 ] || cpu=
   # Note: calling get_cflags here will result in a loop if $config is not set.
   if [ -z "${cpu}" -a -n "${config}" ] ; then
@@ -104,18 +115,40 @@ get_srcdir ()
   else
     get_verrel || return $?
     get_uname # || return $?
-    for dir in "/usr/src/linux-${verrel}" "/lib/modules/${uname}/build"; do
-      if [ -d "${dir}" -o -h "${dir}" ] ; then
-        if [ -e "${dir}/include/linux" ] ; then
-          srcdir="${dir}"
-          return 0
-        else
-          echo "Warning: dir '${dir}' doesn't look like a source dir." >&2
+
+    if is_kernel26
+    then
+      get_cpu  || return $?
+      get_variant  || return $?
+      local check_dirs="/usr/lib/kernel-module-devel/${uname}-${cpu}/ /lib/modules/${uname}/build /lib/modules/${uname}"
+      for dir in ${check_dirs}; do
+        if [ -d "${dir}" -o -h "${dir}" ] ; then
+          if [ -e "${dir}/include/linux" ] ; then
+            srcdir="${dir}"
+            return 0
+          else
+            echo "Warning: dir '${dir}' doesn't look like a source dir." >&2
+          fi
         fi
-      else
-        echo "Warning: source dir '${dir}' not found." >&2
-      fi
-    done
+      done
+      echo "Warning: source dir not found. Looked in:" >&2
+      for dir in ${check_dirs}; do
+        echo "   ${dir}"  >&2
+      done
+    else
+      for dir in "/usr/src/linux-${verrel}/" "/lib/modules/${uname}/build"; do
+        if [ -d "${dir}" -o -h "${dir}" ] ; then
+          if [ -e "${dir}/include/linux" ] ; then
+            srcdir="${dir}"
+            return 0
+          else
+            echo "Warning: dir '${dir}' doesn't look like a source dir." >&2
+          fi
+        else
+          echo "Warning: source dir '${dir}' not found." >&2
+        fi
+      done
+    fi
     echo "Error: could not find a source dir." >&2
     return 1
   fi
@@ -123,17 +156,75 @@ get_srcdir ()
 get_rhkernel ()
 {
   get_srcdir || return $?
-  if grep rhconfig\\.h "${srcdir}/include/linux/autoconf.h" &>/dev/null ; then
-    rhkernel=1
+  if is_kernel26
+  then
+      # no special things needed ATM, so always 0
+      rhkernel=0
   else
-    rhkernel=0
+    if grep rhconfig\\.h "${srcdir}/include/linux/autoconf.h" &>/dev/null ; then
+      rhkernel=1
+    else
+      rhkernel=0
+    fi
   fi
 }
+get_kernel24 ()
+{
+  [[ "${kernel24}" ]] && return 0 
+  get_uname || return $?
+  if [[ "${uname:0:3}" = "2.4" ]]
+  then
+    kernel24=1
+  else
+    kernel24=0
+  fi
+}
+get_kernel26 ()
+{
+  [[ "${kernel26}" ]] && return 0 
+  get_uname || return $?
+  if [[ "${uname:0:3}" = "2.6" ]]
+  then
+    kernel26=1
+  else
+    kernel26=0
+  fi
+}
+is_kernel24()
+{
+   get_kernel24 
+   if [[ "${kernel24}" -eq 1 ]]
+   then
+      return 0
+   else
+      return 1
+   fi	
+}
+is_kernel26()
+{
+   get_kernel26 
+   if [[ "${kernel26}" -eq 1 ]]
+   then
+      return 0
+   else
+      return 1
+   fi	
+}
+
 get_config ()
 {
   if [ -n "${config}" ] ; then
     if [ ! -e "${config}" ] ; then
       echo "Error: config file doesn't exist: '${config}'." >&2
+      return 1
+    fi
+  elif is_kernel26 ; then
+    get_srcdir || return $?
+    config="${srcdir}/.config"
+    if [ ! -e "${config}" ] ; then
+      echo "Warning: config file doesn't exist: '${config}'." >&2
+      echo "Error: could not find a config file." >&2
+      unset config
       return 1
     fi
   else
@@ -169,43 +260,83 @@ get_config ()
 }
 get_cc ()
 {
-  get_config || return $?
   get_srcdir || return $?
-  cd "${srcdir}" && \
-  cc=`( sed 's|\.config\b|'${config}'|g' Makefile && \
-    echo -e '\n'${myprog}'-cc:\n\t@echo $(CC)\n' ) \
-  | make -f - ${myprog}-cc` && \
-  cd -
+  if is_kernel26 ; then
+    cd "${srcdir}" > /dev/null && \
+    cc=`( cat Makefile && \
+      echo -e '\n'${myprog}'-cc:\n\t@echo $(CC)\n' ) \
+    | make -f - ${myprog}-cc` && \
+    cd - > /dev/null
+  else
+    cd "${srcdir}" > /dev/null && \
+    cc=`( sed 's|\.config\b|'${config}'|g' Makefile && \
+      echo -e '\n'${myprog}'-cc:\n\t@echo $(CC)\n' ) \
+    | make -f - ${myprog}-cc` && \
+    cd - > /dev/null
+  fi
 }
 get_cflags ()
 {
   get_config || return $?
   get_srcdir || return $?
-  cd "${srcdir}" && \
-  cflags=`( sed 's|\.config\b|'${config}'|g' Makefile && \
-    echo -e '\n'${myprog}'-cflags:\n\t@echo $(CFLAGS)\n' ) \
-  | make -f - ${myprog}-cflags` && \
-  cd -
+  if is_kernel26  ; then
+    cd "${srcdir}" > /dev/null && \
+    cflags=`( cat Makefile && \
+      echo -e '\n'${myprog}'-cflags:\n\t@echo $(CFLAGS)\n' ) \
+    | make -f - ${myprog}-cflags` && \
+    cd - > /dev/null
+  else
+    cd "${srcdir}" > /dev/null && \
+    cflags=`( sed 's|\.config\b|'${config}'|g' Makefile && \
+      echo -e '\n'${myprog}'-cflags:\n\t@echo $(CFLAGS)\n' ) \
+    | make -f - ${myprog}-cflags` && \
+    cd - > /dev/null
+  fi
 }
 get_modflags ()
 {
   get_config || return $?
   get_srcdir || return $?
-  cd "${srcdir}" && \
-  modflags=`( sed 's|\.config\b|'${config}'|g' Makefile && \
-    echo -e '\n'${myprog}'-modflags:\n\t@echo $(MODFLAGS)\n' ) \
-  | make -f - ${myprog}-modflags` && \
-  cd -
+  cd "${srcdir}" > /dev/null && \
+  if is_kernel26  &> /dev/null ; then
+    modflags=`( cat Makefile && \
+      echo -e '\n'${myprog}'-modflags:\n\t@echo $(MODFLAGS)\n' ) \
+    | make -f - ${myprog}-modflags` && \
+    cd - > /dev/null
+  else
+    modflags=`( sed 's|\.config\b|'${config}'|g' Makefile && \
+      echo -e '\n'${myprog}'-modflags:\n\t@echo $(MODFLAGS)\n' ) \
+    | make -f - ${myprog}-modflags` && \
+    cd - > /dev/null
+  fi
+}
+get_modutilpath ()
+{
+  if is_kernel26
+  then
+      modutilpath="/etc/modprobe.conf"
+  elif is_kernel24
+  then
+      modutilpath="/etc/modules.conf"
+  else
+      modutilpath=""
+      return 1
+  fi
+  return 0
 }
 get_rhmodflags ()
 {
-  [ -z "${rhmodflags}" ] || return 0
-  get_rhkernel || return $?
-  [ -n "${rhkernel}" ] || return 0
-  get_variant || return $?
-  get_cpu || return $?
-  local rhvariant=`echo ${variant:-UP} | tr a-z A-Z`
-  rhmodflags="-D__BOOT_KERNEL_H_ -D__MODULE_KERNEL_${cpu}=1 -D__BOOT_KERNEL_${rhvariant}=1"
+  if is_kernel26 ; then
+    rhmodflags=""
+  else
+    [ -z "${rhmodflags}" ] || return 0
+    get_rhkernel || return $?
+    [ -n "${rhkernel}" ] || return 0
+    get_variant || return $?
+    get_cpu || return $?
+    local rhvariant=`echo ${variant:-UP} | tr a-z A-Z`
+    rhmodflags="-D__BOOT_KERNEL_H_ -D__MODULE_KERNEL_${cpu}=1 -D__BOOT_KERNEL_${rhvariant}=1"
+  fi
 }
 get_allcflags ()
 {
@@ -264,7 +395,7 @@ EOF
   get_unamefromsrc
 
   if [ "${rhkernel}" = "1" ] ; then
-    if [ "${unamefromsrc%%custom}" != "${verrel}" ] ; then
+    if is_kernel24 && [ "${unamefromsrc%%custom}" != "${verrel}" ] ; then
       cat <<EOF >&2
 Error: resolved "verrel" (${verrel}) and the uname resolved from sources
 (${unamefromsrc%%custom}) do not match.  Please provide the correct
@@ -364,6 +495,8 @@ Usage: ${myprog} <command> <option>+
   verrel             - Get "base" version-release.
   version            - Get "base" version.
   rhkernel           - 1 if the source tree is a RH/FC one, 0 otherwise.
+  kernel2[46]        - 1 if the source tree is a 2.[46], 0 otherwise.
+  modutilpath        - Returns modutils config file
   diag               - Check settings and output a brief overview.
  Options:
   -s|--srcdir <dir>  - Source directory.
@@ -381,7 +514,7 @@ EOF
 invocation="$(basename ${0}) $@"
 while [ "${1}" ] ; do
   case "${1}" in
-    allcflags|cc|cflags|config|cpu|diag|modflags|rhkernel|rhmodflags|srcdir|uname|variant|verrel|version)
+    allcflags|cc|cflags|config|cpu|diag|kernel24|kernel26|modflags|modutilpath|rhkernel|rhmodflags|srcdir|uname|variant|verrel|version)
       var="${1}"
       ;;
     -s|--srcdir)
