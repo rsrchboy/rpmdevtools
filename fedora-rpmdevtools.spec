@@ -1,30 +1,32 @@
-Summary:        Fedora RPM Development Tools
 Name:           fedora-rpmdevtools
-Epoch:          0
-Version:        0.0.12
+Version:        0.0.16
 Release:        0.fdr.2
-URL:            http://www.fedora.us/
-License:        GPL
+Epoch:          0
+Summary:        Fedora RPM Development Tools
+
 Group:          Development/Tools
+License:        GPL
+URL:            http://www.fedora.us/
 Source0:        %{name}-%{version}.tar.bz2
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch:      noarch
+
 # Required for tool operations
 Requires:       rpm-python, python, cpio, sed
 # Minimal RPM build requirements
 Requires:       rpm-build, gcc, gcc-c++, redhat-rpm-config
-BuildArch:      noarch
 
 %description
 Scripts to aid in development of Fedora RPM packages.  These
 tools are designed for Red Hat Linux 8 and higher.
-fedora-newrpmspec	Creates new .spec from template
-fedora-rpmvercmp	RPM version comparison checker
-fedora-buildrpmtree	Create RPM build tree within user homedir
-fedora-rmdevelrpms	Find (and optionally remove) "development" RPMs
-fedora-installdevkeys	Install developer keys in alternate RPM keyring
-fedora-rpmsigcheck	Check package sigs using alterate RPM keyring
-fedora-wipebuildtree	Erases all files within ~/redhat
-fedora-unrpm		Extract a RPM, "tar zxvf"-style
+fedora-newrpmspec       Creates new .spec from template
+fedora-rpmvercmp        RPM version comparison checker
+fedora-buildrpmtree     Create RPM build tree within user homedir
+fedora-rmdevelrpms      Find (and optionally remove) "development" RPMs
+fedora-installdevkeys   Install developer keys in alternate RPM keyring
+fedora-rpmsigcheck      Check package sigs using alterate RPM keyring
+fedora-wipebuildtree    Erases all files within ~/redhat
+fedora-unrpm            Extract a RPM, "tar zxvf"-style
 
 %package        emacs
 Summary:        (X)Emacs support for Fedora RPM Development Tools
@@ -61,8 +63,8 @@ cp -p fedora-unrpm           $RPM_BUILD_ROOT%{_bindir}
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/fedora-rpmdevtools/devgpgkeys
 cp -p devgpgkeys/* $RPM_BUILD_ROOT%{_sysconfdir}/fedora-rpmdevtools/devgpgkeys
 
-cp -p spectemplate*.spec $RPM_BUILD_ROOT%{_sysconfdir}/fedora-rpmdevtools
-cp -p develrpms.conf $RPM_BUILD_ROOT%{_sysconfdir}/fedora-rpmdevtools
+cp -p spectemplate*.spec develrpms.conf template.init \
+  $RPM_BUILD_ROOT%{_sysconfdir}/fedora-rpmdevtools
 
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/emacs/site-lisp/site-start.d
 cp -p emacs/fedora-init.el \
@@ -85,8 +87,8 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_sysconfdir}/fedora-rpmdevtools
 %config(noreplace) %{_sysconfdir}/fedora-rpmdevtools/develrpms.conf
 %config %{_sysconfdir}/fedora-rpmdevtools/spectemplate*.spec
-%dir %{_sysconfdir}/fedora-rpmdevtools/devgpgkeys
-%config %{_sysconfdir}/fedora-rpmdevtools/devgpgkeys/*
+%config %{_sysconfdir}/fedora-rpmdevtools/template.init
+%config %{_sysconfdir}/fedora-rpmdevtools/devgpgkeys
 
 %files emacs
 %defattr(0644,root,root,0755)
@@ -97,6 +99,23 @@ rm -rf $RPM_BUILD_ROOT
 #---------------------------------------------------------------------
 
 %changelog
+* Sat Jul 12 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.0.16-0.fdr.2
+- One more typo fix for init script template.
+
+* Sat Jul 12 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.0.16-0.fdr.1
+- Fix force-reload in init script template.
+
+* Thu Jul 10 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.0.15-0.fdr.1
+- Address init script issues in bug 342, comment 9.
+
+* Tue Jul  8 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.0.14-0.fdr.1
+- Add init script template.
+
+* Fri Jun 27 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.0.13-0.fdr.1
+- Address issues in #342:
+- Add Michael Schwendt's (0xB8AF1C54) and Adrian Reber's (0x3ED6F034) keys.
+- Treat libtool and qt-designer as devel packages in fedora-rmdevelrpms.
+
 * Wed May 14 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.0.12-0.fdr.2
 - Make install-info in spec template silent for --excludedocs (#234).
 
