@@ -6,7 +6,7 @@
 #
 # Author:  Ville Skyttä <ville.skytta at iki.fi>
 # License: GPL
-# $Id: fedora-diffrpm,v 1.1 2004/01/29 18:14:30 scop Exp $
+# $Id: fedora-diffrpm,v 1.2 2004/01/29 19:00:39 scop Exp $
 
 set -e
 
@@ -24,7 +24,7 @@ usage()
 {
     cat <<EOF
 Usage: `basename $0` [diff-options] from-RPM to-RPM
-  diff-options  Options passed to diff(1), in addition to -r (default: -u).
+  diff-options  Options passed to diff(1), in addition to -r (default: -Nu).
                 The first argument not starting with a '-' ends diff-options.
 EOF
 }
@@ -42,9 +42,7 @@ if [ $# -lt 2 ] ; then
 fi
 
 tmpdir=`mktemp -d`
-fedora-unrpm -qC "$tmpdir" "$1"
-fedora-unrpm -qC "$tmpdir" "$2"
+d1=`fedora-unrpm -qC "$tmpdir" "$1"`
+d2=`fedora-unrpm -qC "$tmpdir" "$2"`
 cd "$tmpdir"
-diff -r ${diffopts:--u} `ls -1td * | head -n 2`
-cd -
-rm -rf "$tmpdir"
+diff -r ${diffopts:--Nu} "$d1" "$d2"
