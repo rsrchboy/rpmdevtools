@@ -5,7 +5,7 @@
 # Author:  Ville Skyttä <ville.skytta at iki.fi>
 # License: GPL
 # Credits: Seth Vidal (yum), Thomas Vander Stichele (mach)
-# $Id: fedora-rmdevelrpms,v 1.7 2003/12/06 22:46:06 scop Exp $
+# $Id: fedora-rmdevelrpms,v 1.8 2004/01/29 18:58:48 scop Exp $
 #
 # This script is useful hack in cleaning up development RPMs from your
 # system, eg. before starting to build a new RPM package.
@@ -13,7 +13,8 @@
 # Currently, "development RPMs" include:
 # - Any package whose %{NAME} ends with "-devel", except gcc requirements.
 # - Any package whose %{NAME} ends with "-debuginfo".
-# - Any package whose %{NAME} starts with "perl-Test-".
+# - Any package whose %{NAME} starts with "perl-(Devel|Test)-".
+# - Any package whose %{NAME} starts with "compat-gcc".
 # - Ones listed in def_devpkgs below.
 # - Ones in devpkgs (see below).
 #
@@ -42,23 +43,24 @@
 import getopt, os, re, rpm, stat, sys, types
 
 
-__version__ = "0.9.2"
+__version__ = "0.9.3"
 
 
 dev_re  = re.compile("-de(?:buginfo|vel)$")
-test_re = re.compile("^perl-Test-")
+test_re = re.compile("^perl-(?:Devel|Test)-")
 lib_re1 = re.compile("^lib.+")
 lib_re2 = re.compile("-libs?$")
 a_re    = re.compile("\w\.a$")
 so_re   = re.compile("\w\.so(?:\.\d+)*$")
+comp_re = re.compile("^compat-gcc")
 
 
 def_devpkgs =\
 ("autoconf", "autoconf213", "automake", "automake14", "automake15",
- "automake16", "bison", "byacc", "compat-gcc", "compat-gcc-c++", "gcc32",
- "compface", "dev86", "djbfft", "docbook-utils-pdf", "doxygen", "m4",
- "flex", "gettext", "glade", "glade2", "kernel-source", "libgcj",
- "libtool", "nasm", "pkgconfig", "qt-designer", "swig", "texinfo",
+ "automake16", "bison", "byacc", "compface", "dev86", "djbfft",
+ "docbook-utils-pdf", "doxygen", "flex", "gcc32", "gettext", "glade", "glade2",
+ "kernel-source", "libgcj", "libtool", "m4", "nasm", "pkgconfig",
+ "qt-designer", "swig", "texinfo",
  )
 
 def_nondevpkgs =\
@@ -83,6 +85,7 @@ def isDevelPkg(hdr):
     if name in def_devpkgs: return 1
     if dev_re.search(name): return 1
     if test_re.search(name): return 1
+    if comp_re.search(name): return 1
     if lib_re1.search(name) or lib_re2.search(name):
         # Heuristics for lib*, *-lib and *-libs packages (kludgy...)
         a_found = so_found = 0
