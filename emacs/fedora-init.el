@@ -1,4 +1,4 @@
-;; $Id: fedora-init.el,v 1.3 2003/12/06 22:46:06 scop Exp $
+;; $Id: fedora-init.el,v 1.4 2004/02/08 19:19:12 scop Exp $
 
 (defun fedora-new-rpm-spec-file-init ()
   (delete-region (point-min) (point-max))
@@ -10,10 +10,18 @@
                (file-name-sans-extension buffer-file-name)))
              (cpandist
               (if (string-match "^perl-\\(.*\\)$" pkgname)
-                  (match-string 1 pkgname) nil)))
-        (if cpandist
-            (insert-file-contents "/usr/share/fedora/spectemplate-perl.spec")
-          (insert-file-contents "/usr/share/fedora/spectemplate-minimal.spec"))
+                  (match-string 1 pkgname) nil))
+             (pythonpkg (string-match "^python-" pkgname)))
+        (cond
+         (cpandist
+          (insert-file-contents
+           "/usr/share/fedora/spectemplate-perl.spec"))
+         (pythonpkg
+          (insert-file-contents
+           "/usr/share/fedora/spectemplate-python.spec"))
+         (t
+          (insert-file-contents
+           "/usr/share/fedora/spectemplate-minimal.spec")))
         (goto-char (point-min))
         (and (re-search-forward "^\\(Name:\\s-*\\).*$" nil t)
              (replace-match (concat (match-string 1) pkgname) t))
