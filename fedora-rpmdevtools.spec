@@ -4,7 +4,6 @@
 Name:           fedora-rpmdevtools
 Version:        0.3.1
 Release:        1
-Epoch:          0
 Summary:        Fedora RPM Development Tools
 
 Group:          Development/Tools
@@ -15,8 +14,8 @@ Source0:        %{name}-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
-Provides:       %{name}-emacs = %{epoch}:%{version}-%{release}
-Obsoletes:      %{name}-emacs < 0:0.1.9
+Provides:       %{name}-emacs = %{version}-%{release}
+Obsoletes:      %{name}-emacs < 0.1.9
 # Required for tool operations
 Requires:       rpm-python, python, cpio, sed, perl
 # Minimal RPM build requirements
@@ -129,6 +128,9 @@ fi
 
 
 %changelog
+* Tue Mar 15 2005 Ville Skyttä <ville.skytta at iki.fi>
+- Sync "Epoch: 0" drops with Fedora Extras CVS.
+
 * Sun Feb  6 2005 Ville Skyttä <ville.skytta at iki.fi> - 0:0.3.1-1
 - Make buildrpmtree and wipebuildtree less dependent on a specific
   configuration (#147014, Ignacio Vazquez-Abrams).
