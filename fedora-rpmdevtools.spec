@@ -1,6 +1,6 @@
 Name:           fedora-rpmdevtools
-Version:        0.1.4
-Release:        0.fdr.2
+Version:        0.1.5
+Release:        0.fdr.1
 Epoch:          0
 Summary:        Fedora RPM Development Tools
 
@@ -9,13 +9,13 @@ License:        GPL
 URL:            http://www.fedora.us/
 Source0:        %{name}-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildArch:      noarch
 
+BuildArch:      noarch
 # Required for tool operations
 Requires:       rpm-python, python, cpio, sed, perl
 # Minimal RPM build requirements
 Requires:       rpm-build, gcc, gcc-c++, redhat-rpm-config, make, tar, patch
-Requires:       diffutils, gzip, bzip2
+Requires:       diffutils, gzip, bzip2, unzip
 
 %description
 Scripts to aid in development of Fedora RPM packages.  These
@@ -29,6 +29,7 @@ fedora-rpmsigcheck      Check package sigs using alterate RPM keyring
 fedora-wipebuildtree    Erases all files within ~/redhat
 fedora-unrpm            Extract a RPM, "tar zxvf"-style
 fedora-pkgannfmt        Produce output for fedora-package-announce
+fedora-md5              Display the md5sum of all files in a RPM
 
 %package        emacs
 Summary:        (X)Emacs support for Fedora RPM Development Tools
@@ -59,6 +60,7 @@ cp -p fedora-rpmchecksig     $RPM_BUILD_ROOT%{_bindir}
 cp -p fedora-wipebuildtree   $RPM_BUILD_ROOT%{_bindir}
 cp -p fedora-unrpm           $RPM_BUILD_ROOT%{_bindir}
 cp -p fedora-pkgannfmt       $RPM_BUILD_ROOT%{_bindir}
+cp -p fedora-md5             $RPM_BUILD_ROOT%{_bindir}
 
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/fedora/devgpgkeys
 cp -p spectemplate*.spec template.init $RPM_BUILD_ROOT%{_datadir}/fedora
@@ -82,7 +84,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(0644,root,root,0755)
 %doc COPYING
-%attr(0755,root,root) %{_bindir}/*
+%attr(0755,root,root) %{_bindir}/fedora-*
 %config(noreplace) %{_sysconfdir}/fedora
 %{_datadir}/fedora
 
@@ -94,6 +96,15 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Dec  6 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.5-0.fdr.1
+- Incorporate $TNV suggestions from bug 1010:
+- Add unzip into the list of "assumed present" packages.
+- Treat gcc32, m4, *-debuginfo and perl-Test-* as development packages
+  in rmdevelrpms.
+- Add sanity checks to fedora-wipebuildtree.
+- New tool: fedora-md5.
+- Include perl spec file template and add (X)Emacs support for it.
+
 * Sat Nov  8 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.4-0.fdr.2
 - Remove duplicate rawhide 2003 automated build key.
 

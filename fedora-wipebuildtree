@@ -1,23 +1,58 @@
 #!/bin/sh
 #
 # fedora-wipebuildtree
-# Erases all files within ~/redhat
+# Erases all files within ~/redhat and/or ~/rpmbuild
 #
 # Author:  Warren Togami <warren@togami.com>
 # License: GPL
-# $Id: fedora-wipebuildtree,v 1.3 2003/10/31 18:54:46 scop Exp $
+# $Id: fedora-wipebuildtree,v 1.4 2003/12/06 22:46:06 scop Exp $
 
-for builddir in redhat rpmbuild; do
+# Sanity Check: Forbid root user
+if [ "`/usr/bin/whoami`" = "root" ]; then
+    echo
+    echo "ERROR: You should not be building RPMS as root!"
+    echo "Please use fedora-buildrpmtree as a non-root user and build"
+    echo "packages as that user.  If package building fails, then"
+    echo "the package is improper and needs fixing."
+    echo
+    exit 255
+fi
 
-    if [ ! -d ~/$builddir ]; then
-        echo "~/$builddir does not exist, unable to wipe clean."
-    else
-        echo "Removing all files from ~/$builddir/..."
-        rm -rf ~/$builddir/BUILD/*
-        rm -rf ~/$builddir/SOURCES/*
-        rm -rf ~/$builddir/SRPMS/*
-        rm -rf ~/$builddir/SPECS/*
-        rm -f $(find ~/$builddir -name "*.rpm")
-    fi
+# Sanity Check: ~/.rpmmacros exists?
+if [ ! -f ~/.rpmmacros ]; then
+    echo
+    echo "ERROR: ~/.rpmmacros does not exist.  Please use fedora-buildrpmtree"
+    echo "in order to configure your non-root RPM build environment."
+    echo
+    exit 1
+fi
 
-done
+# Sanity Check: Validate ~/.rpmmacros build environment
+unset builddir
+cat ~/.rpmmacros |grep _topdir|grep \/redhat > /dev/null 2> /dev/null
+if [ "$?" = "0" ]; then export builddir=redhat; fi
+cat ~/.rpmmacros |grep _topdir|grep \/rpmbuild > /dev/null 2> /dev/null
+if [ "$?" = "0" ]; then export builddir=rpmbuild; fi
+if ! test $builddir; then
+    echo
+    echo "ERROR: ~/.rpmmacros does not seem to specify a non-root builddir."
+    echo "Run fedora-buildrpmtree to correct this problem."
+    echo
+    exit 2
+fi
+if [ ! -d ~/$builddir/ ]; then
+    echo
+    echo "ERROR: The build directory specified in .rpmmacros does not exist."
+    echo "Run fedora-buildrpmtree to correct this problem."
+    echo
+    exit 3
+fi
+
+# Wipe RPM Build Directory clean
+echo "Removing all files from ~/$builddir/..."
+rm -rf ~/$builddir/BUILD/*
+rm -rf ~/$builddir/SOURCES/*
+rm -rf ~/$builddir/SRPMS/*
+rm -rf ~/$builddir/SPECS/*
+rm -f $(find ~/$builddir -name "*.rpm")
+unset builddir
