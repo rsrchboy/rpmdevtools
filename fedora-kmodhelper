@@ -23,10 +23,10 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# $Id: fedora-kmodhelper,v 1.4 2004/01/29 20:40:10 scop Exp $
+# $Id: fedora-kmodhelper,v 1.5 2004/02/08 19:23:18 scop Exp $
 
 myprog="fedora-kmodhelper"
-myver="0.9.6"
+myver="0.9.8"
 variants='\(BOOT\|\(big\|huge\)mem\|debug\|enterprise\|smp\|uml\)'
 var=
 
@@ -59,12 +59,6 @@ get_unamefromsrc ()
     echo -e '\n'${myprog}'-kernelrel:\n\t@echo $(KERNELRELEASE)\n' ) \
   | make -f - ${myprog}-kernelrel` && \
   cd -
-  get_rhkernel || return $?
-  get_verrel || return $?
-  # If it's a RH/FC kernel and verrel doesn't end with "custom", strip it.
-  if [ "${rhkernel}" = "true" ] && ! echo "${verrel}" | grep -q 'custom$'; then
-    unamefromsrc="${unamefromsrc%%custom}"
-  fi
 }
 get_cpu ()
 {
@@ -85,6 +79,7 @@ get_verrel ()
   [ -z "${verrel}" ] || return 0
   get_uname || return $?
   verrel=`echo "${uname}" | sed 's/'${variants}'$//'`
+  verrel=${verrel%%custom}
 }
 get_version ()
 {
@@ -129,9 +124,9 @@ get_rhkernel ()
 {
   get_srcdir || return $?
   if grep rhconfig\\.h "${srcdir}/include/linux/autoconf.h" &>/dev/null ; then
-    rhkernel=true
+    rhkernel=1
   else
-    rhkernel=false
+    rhkernel=0
   fi
 }
 get_config ()
@@ -146,7 +141,7 @@ get_config ()
     get_srcdir || return $?
     get_version || return $?
     get_rhkernel || return $?
-    if [ "${rhkernel}" = "true" ] ; then
+    if [ "${rhkernel}" = "1" ] ; then
       get_variant || return $?
       config="${srcdir}/configs/kernel-${version}-${cpu}${variant:+-${variant}}.config"
       if [ ! -e "${config}" ] ; then
@@ -210,7 +205,7 @@ get_rhmodflags ()
   get_variant || return $?
   get_cpu || return $?
   local rhvariant=`echo ${variant:-UP} | tr a-z A-Z`
-  rhmodflags="-DMODULE=1 -D__BOOT_KERNEL_H_ -D__MODULE_KERNEL_${cpu}=1 -D__BOOT_KERNEL_${rhvariant}=1"
+  rhmodflags="-D__BOOT_KERNEL_H_ -D__MODULE_KERNEL_${cpu}=1 -D__BOOT_KERNEL_${rhvariant}=1"
 }
 get_allcflags ()
 {
@@ -234,7 +229,9 @@ EOF
 # End
 
 Please provide the source dir with the -s option and/or provide the kernel
-uname with the -u option.
+uname with the -u option.  If you are building am RPM, the corresponding
+arguments to rpmbuild are usually '--define "ksrc </path/to/your/source/tree>"'
+and '--define "kernel <your_uname>'.
 
 Aborting.
 
@@ -262,21 +259,41 @@ EOF
     return 128
   fi
 
+  get_rhkernel
   get_verrel
   get_unamefromsrc
-  if [ "${unamefromsrc}" != "${verrel}" ] ; then
-    cat <<EOF >&2
+
+  if [ "${rhkernel}" = "1" ] ; then
+    if [ "${unamefromsrc%%custom}" != "${verrel}" ] ; then
+      cat <<EOF >&2
 Error: resolved "verrel" (${verrel}) and the uname resolved from sources
-(${unamefromsrc}) do not match.  Please provide the correct uname with the
--u option.
+(${unamefromsrc%%custom}) do not match.  Please provide the correct
+uname with the -u option.  If you are building a RPM, this is usually the
+'--define "kernel <your_uname>"' option to rpmbuild.
 
 Aborting.
 
 EOF
-    return 1
+      return 1
+    fi
+  else
+    if [ "${unamefromsrc}" != "${uname}" ] ; then
+      cat <<EOF >&2
+Error: provided "uname" (${uname}) and the uname resolved from sources
+(${unamefromsrc}) do not match.  Please provide the correct uname with the
+-u option and/or the correct source dir with the -s option.  If you are
+building a RPM, the corresponding options to rpmbuild are usually
+'--define "kernel <your_uname>"' and
+'--define "ksrc </path/to/your/source/tree>"'.
+
+Aborting.
+
+EOF
+      return 1
+    fi
   fi
 
-  if get_rhkernel && [ "${rhkernel}" = "true" ] ; then
+  if [ "${rhkernel}" = "1" ] ; then
     local providedcpu="${cpu}"
     cpu=""
     get_cpu
@@ -292,7 +309,7 @@ EOF
     unset providedcpu
   fi
 
-  for i in variant version config cc rhmodflags variant ; do
+  for i in variant version config cc cflags modflags rhmodflags variant ; do
     get_"${i}"
     local errorlevel=$?
     if [ $errorlevel -gt 0 ] ; then
@@ -304,23 +321,25 @@ EOF
   cat <<EOF
 Modules will be built with these settings, make sure they are correct:
 
-Version:                        ${version}
-Uname:                          ${uname}
-Kernel Compiler:                ${cc}
-Target CPU:                     ${cpu}
-Kernel Source dir:              ${srcdir}
+Version:                 ${version}
+Uname:                   ${uname}
+Kernel compiler:         ${cc}
+Target CPU:              ${cpu}
+Kernel source dir:       ${srcdir}
+Kernel CFLAGS:           ${cflags}
+Kernel MODFLAGS:         ${modflags}
 EOF
   if [ "${config}" = "${config##${srcdir}}" ] ; then
-    echo "Config File Name:               ${config}"
+    echo "Config file:             ${config}"
   else
-    echo "Config File Name:               \$srcdir${config##${srcdir}}"
+    echo "Config file:             \$srcdir${config##${srcdir}}"
   fi
-  echo "Redhat/Fedora Kernel:           ${rhkernel}"
-  if [ "${rhkernel}" = "true" ] ; then
+  echo "RH/FC kernel:            ${rhkernel}"
+  if [ "${rhkernel}" = "1" ] ; then
     cat <<EOF
-Redhat/Fedora Kernel Release:   ${verrel}
-Redhat/Fedora Kernel Variant:   ${variant:-(none -- kernel is UP)}
-Redhat/Fedora special MODFLAGS: ${rhmodflags}
+RH/FC kernel release:    ${verrel}
+RH/FC kernel variant:    ${variant:-(none -- kernel is UP)}
+RH/FC specific MODFLAGS: ${rhmodflags}
 EOF
   fi
   echo
@@ -328,7 +347,7 @@ EOF
 usage ()
 {
   cat <<EOF
-You called: $(basename ${0}) ${invocation}
+You called: ${invocation}
 
 Usage: ${myprog} <command> <option>+
  Commands:
@@ -344,7 +363,7 @@ Usage: ${myprog} <command> <option>+
   variant            - Get variant (bigmem, smp etc).
   verrel             - Get "base" version-release.
   version            - Get "base" version.
-  rhkernel           - "true" if the source tree is a RH/FC one.
+  rhkernel           - 1 if the source tree is a RH/FC one, 0 otherwise.
   diag               - Check settings and output a brief overview.
  Options:
   -s|--srcdir <dir>  - Source directory.
@@ -353,7 +372,7 @@ Usage: ${myprog} <command> <option>+
   -u|--uname <uname> - Target uname.  The default is $(uname -r).
   -f|--config <file> - Configuration file.
                        If set, CPU and uname are ignored.
-     --nowait        - Do not wait if "diag" fins something unusual.
+     --nowait        - Do not wait if "diag" finds something unusual.
   -h|-?|--help       - Output this help and exit.
   -V|--version       - Output version number and exit.
 EOF
@@ -381,8 +400,8 @@ while [ "${1}" ] ; do
       shift
       config="${1}"
       ;;
-    -h|--help|-?)
-      usage >&2
+    -h|--help|-\?)
+      usage
       exit 0
       ;;
     -V|--version)
@@ -393,6 +412,7 @@ while [ "${1}" ] ; do
       nowait="true"
       ;;
     *)
+      echo "Error: Unknown option '${1}'." >&2
       usage >&2
       exit 2
       ;;
@@ -414,4 +434,4 @@ get_"${var}" || exit $?
 # sh-indentation: 2
 # indent-tabs-mode: nil
 # End:
-# ex: ts=4 sw=4 et
+# ex: ts=2 sw=2 et
