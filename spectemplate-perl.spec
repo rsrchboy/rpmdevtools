@@ -1,3 +1,6 @@
+%{!?perl_vendorlib:  %define perl_vendorlib  %(eval "`%{__perl} -V:installvendorlib`"; echo $installvendorlib)}
+%{!?perl_vendorarch: %define perl_vendorarch %(eval "`%{__perl} -V:installvendorarch`"; echo $installvendorarch)}
+
 Name:           
 Version:        
 Release:        0.fdr.1
@@ -10,7 +13,9 @@ URL:
 Source0:        
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+BuildArch:      
 BuildRequires:  
+Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description
 
@@ -46,8 +51,12 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %doc
-%{_libdir}/perl*/*
 %{_mandir}/man3/*.3*
+# For noarch packages:
+%{perl_vendorlib}/*
+# For arch-specific packages:
+%{perl_vendorarch}/auto/*
+%{perl_vendorarch}/everything-except-"auto"
 
 
 %changelog

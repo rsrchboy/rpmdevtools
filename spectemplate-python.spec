@@ -1,4 +1,5 @@
-%{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
+%{!?python_sitelib:  %define python_sitelib  %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
+%{!?python_sitearch: %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:           
 Version:        
@@ -12,8 +13,13 @@ URL:
 Source0:        
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+BuildArch:      
 BuildRequires:  python-devel
-Requires:       python, %{python_sitelib}
+Requires:       python
+# For noarch packages:
+Requires:       %{python_sitelib}
+# For arch-dependent packages:
+Requires:       %{python_sitearch}
 
 %description
 
@@ -38,7 +44,8 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %doc
-# Include files and dirs below %{python_sitelib} as appropriate, and mark
+# Include files and dirs below %{python_sitelib} (for noarch packages) and
+# %{python_sitearch} (for arch-dependent packages) as appropriate, and mark
 # *.pyo as %ghost (do not include in package).
 
 
