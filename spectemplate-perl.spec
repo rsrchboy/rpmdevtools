@@ -1,4 +1,4 @@
-%{!?perl_vendorlib:  %define perl_vendorlib  %(eval "`%{__perl} -V:installvendorlib`"; echo $installvendorlib)}
+%{!?perl_vendorlib: %define perl_vendorlib %(eval "`%{__perl} -V:installvendorlib`"; echo $installvendorlib)}
 %{!?perl_vendorarch: %define perl_vendorarch %(eval "`%{__perl} -V:installvendorarch`"; echo $installvendorarch)}
 
 Name:           
@@ -14,7 +14,7 @@ Source0:
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      
-BuildRequires:  
+BuildRequires:  perl >= 1:5.6.1
 Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description
@@ -31,10 +31,8 @@ make %{?_smp_mflags} OPTIMIZE="$RPM_OPT_FLAGS"
 
 %install
 rm -rf $RPM_BUILD_ROOT
-make install \
-  PERL_INSTALL_ROOT=$RPM_BUILD_ROOT \
-  INSTALLARCHLIB=$RPM_BUILD_ROOT%{perl_archlib}
-find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
+find $RPM_BUILD_ROOT -type f -a \( -name .packlist \
   -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
