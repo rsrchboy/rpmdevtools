@@ -5,7 +5,7 @@
 # Author:  Warren Togami <warren@togami.com>
 # License: GPL
 
-echo "Fedora Trusted Developer Key Installer"
+echo "Fedora.us Trusted Developer Key Installer"
 echo "   This script will install trusted developer keys into an alternate RPM keyring."
 echo "   This allows you to easily check signatures of packages without the risk of "
 echo "   installing extra keys in your system RPM keyring."
