@@ -1,6 +1,9 @@
+%define emacs_sitestart_d  %{_datadir}/emacs/site-lisp/site-start.d
+%define xemacs_sitestart_d %{_datadir}/xemacs/site-packages/lisp/site-start.d
+
 Name:           fedora-rpmdevtools
-Version:        0.1.8
-Release:        0.fdr.2
+Version:        0.1.9
+Release:        0.fdr.1
 Epoch:          0
 Summary:        Fedora RPM Development Tools
 
@@ -12,6 +15,8 @@ Source1:        http://people.redhat.com/twoerner/rpminfo/bin/rpminfo
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
+Provides:       %{name}-emacs = %{epoch}:%{version}-%{release}
+Obsoletes:      %{name}-emacs < 0:0.1.9
 # Required for tool operations
 Requires:       rpm-python, python, cpio, sed, perl
 # Minimal RPM build requirements
@@ -19,8 +24,9 @@ Requires:       rpm-build, gcc, gcc-c++, redhat-rpm-config, make, tar, patch
 Requires:       diffutils, gzip, bzip2, unzip
 
 %description
-Scripts to aid in development of Fedora RPM packages.  These
-tools are designed for Red Hat Linux 8.0 and higher.
+This package contains scripts and (X)Emacs support files to aid in
+development of Fedora RPM packages.  These tools are designed for Red
+Hat Linux 8.0 and higher.
 fedora-buildrpmtree     Create RPM build tree within user's home directory
 fedora-installdevkeys   Install developer keys in alternate RPM keyring
 fedora-kmodhelper       Helper script for building kernel module RPMs
@@ -34,14 +40,6 @@ fedora-rpmvercmp        RPM version comparison checker
 fedora-unrpm            Extract an RPM, "tar xvf" style
 fedora-diffrpm          Diff contents of two RPMs
 fedora-wipebuildtree    Erases all files within dirs created by buildrpmtree
-
-%package        emacs
-Summary:        (X)Emacs support for Fedora RPM Development Tools
-Group:          Development/Tools
-Requires:       %{name} = %{epoch}:%{version}-%{release}
-
-%description    emacs
-(X)Emacs support for Fedora RPM Development Tools.
 
 
 %prep
@@ -77,16 +75,17 @@ install -pm 644 spectemplate*.spec template.init \
   $RPM_BUILD_ROOT%{_datadir}/fedora
 install -pm 644 devgpgkeys/* $RPM_BUILD_ROOT%{_datadir}/fedora/devgpgkeys
 
+install -dm 755 $RPM_BUILD_ROOT%{_datadir}/fedora/emacs
+install -pm 644 emacs/fedora-init.el $RPM_BUILD_ROOT%{_datadir}/fedora/emacs
+for dir in %{emacs_sitestart_d} %{xemacs_sitestart_d} ; do
+  install -dm 755 $RPM_BUILD_ROOT$dir
+  ln -s %{_datadir}/fedora/emacs/fedora-init.el $RPM_BUILD_ROOT$dir
+  touch $RPM_BUILD_ROOT$dir/fedora-init.elc
+  echo "%ghost $dir/fedora-init.el*" >> %{name}-%{version}.files
+done
+
 install -dm 755 $RPM_BUILD_ROOT%{_sysconfdir}/fedora
 install -pm 644 rmdevelrpms.conf $RPM_BUILD_ROOT%{_sysconfdir}/fedora
-
-install -dm 755 $RPM_BUILD_ROOT%{_datadir}/emacs/site-lisp/site-start.d
-install -pm 644 emacs/fedora-init.el \
-  $RPM_BUILD_ROOT%{_datadir}/emacs/site-lisp/site-start.d
-install -dm 755 \
-  $RPM_BUILD_ROOT%{_datadir}/xemacs/site-packages/lisp/site-start.d
-install -pm 644 emacs/fedora-init.el \
-  $RPM_BUILD_ROOT%{_datadir}/xemacs/site-packages/lisp/site-start.d
 
 
 %check || :
@@ -96,27 +95,39 @@ env PATH="$RPM_BUILD_ROOT%{_bindir}:$PATH" sh test/fedora-kmodhelper-test.sh
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%triggerin -- emacs
+if [ -d %{emacs_sitestart_d} ] ; then
+  ln -sf %{_datadir}/fedora/emacs/fedora-init.el %{emacs_sitestart_d}
+fi
 
-%files
+%triggerin -- xemacs
+if [ -d %{xemacs_sitestart_d} ] ; then
+  ln -sf %{_datadir}/fedora/emacs/fedora-init.el %{xemacs_sitestart_d}
+fi
+
+%triggerun -- emacs
+[ $2 -eq 0 ] && rm -f %{emacs_sitestart_d}/fedora-init.{el,elc} || :
+
+%triggerun -- xemacs
+[ $2 -eq 0 ] && rm -f %{xemacs_sitestart_d}/fedora-init.{el,elc} || :
+
+
+%files -f %{name}-%{version}.files
 %defattr(-,root,root,-)
-%doc COPYING
+%doc COPYING emacs/*.patch
 %config(noreplace) %{_sysconfdir}/fedora
 %{_datadir}/fedora
 %{_bindir}/fedora-*
 %{_libdir}/rpm/check-*
 
-%files emacs
-%defattr(-,root,root,-)
-%doc emacs/*.patch
-%{_datadir}/emacs/site-lisp/site-start.d
-%{_datadir}/xemacs/site-packages/lisp/site-start.d
-
 
 %changelog
-* Sat Aug  7 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.8-0.fdr.2
+* Mon Aug  9 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.9-0.fdr.1
 - Treat gcc35, gcc35-c++, kernel-sourcecode, and any package matching
   "-devel\b" or "-debuginfo\b" (for version-in-name stuff) as devel
   packages in rmdevelrpms.
+- Fold -emacs into the main package, use triggers to install the site-start.d
+  snippets.
 
 * Sun May  2 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.1.8-0.fdr.1
 - New script: Thomas Woerner's rpminfo (included here as fedora-rpminfo).
