@@ -25,7 +25,10 @@ fi
 tmp=$(mktemp /tmp/cbr.XXXXXX)
 trap "rm -f $tmp" EXIT
 
-find "$RPM_BUILD_ROOT" -type f -print0 | LANG=C xargs -0r grep "$RPM_BUILD_ROOT" >$tmp
+find "$RPM_BUILD_ROOT" \! \( \
+    -name '*.pyo' -o -name '*.pyc' -o -name '*.elc' -o -name '.packlist' \
+    \) -type f -print0 | \
+    LANG=C xargs -0r grep "$RPM_BUILD_ROOT" >$tmp
 
 test -s "$tmp" && {
     cat "$tmp"
