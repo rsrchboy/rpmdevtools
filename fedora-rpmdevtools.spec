@@ -1,6 +1,8 @@
+# $Id: fedora-rpmdevtools.spec,v 1.5 2003/08/15 20:25:45 scop Exp $
+
 Name:           fedora-rpmdevtools
-Version:        0.0.16
-Release:        0.fdr.3
+Version:        0.0.18
+Release:        0.fdr.1
 Epoch:          0
 Summary:        Fedora RPM Development Tools
 
@@ -15,7 +17,7 @@ BuildArch:      noarch
 Requires:       rpm-python, python, cpio, sed
 # Minimal RPM build requirements
 Requires:       rpm-build, gcc, gcc-c++, redhat-rpm-config, make, tar, patch
-Requires:       diffutils
+Requires:       diffutils, gzip, bzip2
 
 %description
 Scripts to aid in development of Fedora RPM packages.  These
@@ -37,16 +39,13 @@ Requires:       %{name} = %{epoch}:%{version}-%{release}
 %description    emacs
 (X)Emacs support for Fedora RPM Development Tools.
 
-# -----------------------------------------------------------------------------
 
 %prep
 %setup -q
 
-# -----------------------------------------------------------------------------
 
 %build
 
-# -----------------------------------------------------------------------------
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -61,11 +60,12 @@ cp -p fedora-rpmchecksig     $RPM_BUILD_ROOT%{_bindir}
 cp -p fedora-wipebuildtree   $RPM_BUILD_ROOT%{_bindir}
 cp -p fedora-unrpm           $RPM_BUILD_ROOT%{_bindir}
 
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/fedora-rpmdevtools/devgpgkeys
-cp -p devgpgkeys/* $RPM_BUILD_ROOT%{_sysconfdir}/fedora-rpmdevtools/devgpgkeys
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/fedora/devgpgkeys
+cp -p spectemplate*.spec template.init $RPM_BUILD_ROOT%{_datadir}/fedora
+cp -p devgpgkeys/* $RPM_BUILD_ROOT%{_datadir}/fedora/devgpgkeys
 
-cp -p spectemplate*.spec develrpms.conf template.init \
-  $RPM_BUILD_ROOT%{_sysconfdir}/fedora-rpmdevtools
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/fedora
+cp -p develrpms.conf $RPM_BUILD_ROOT%{_sysconfdir}/fedora
 
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/emacs/site-lisp/site-start.d
 cp -p emacs/fedora-init.el \
@@ -74,22 +74,17 @@ mkdir -p $RPM_BUILD_ROOT%{_datadir}/xemacs/site-packages/lisp/site-start.d
 cp -p emacs/fedora-init.el \
   $RPM_BUILD_ROOT%{_datadir}/xemacs/site-packages/lisp/site-start.d
 
-# -----------------------------------------------------------------------------
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-# -----------------------------------------------------------------------------
 
 %files
 %defattr(0644,root,root,0755)
 %doc COPYING
 %attr(0755,root,root) %{_bindir}/*
-%dir %{_sysconfdir}/fedora-rpmdevtools
-%config(noreplace) %{_sysconfdir}/fedora-rpmdevtools/develrpms.conf
-%config %{_sysconfdir}/fedora-rpmdevtools/spectemplate*.spec
-%config %{_sysconfdir}/fedora-rpmdevtools/template.init
-%config %{_sysconfdir}/fedora-rpmdevtools/devgpgkeys
+%config(noreplace) %{_sysconfdir}/fedora
+%{_datadir}/fedora
 
 %files emacs
 %defattr(0644,root,root,0755)
@@ -97,9 +92,23 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/emacs/site-lisp/site-start.d
 %{_datadir}/xemacs/site-packages/lisp/site-start.d
 
-#---------------------------------------------------------------------
 
 %changelog
+* Fri Aug 15 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.0.18-0.fdr.1
+- Change fallback case to exit 2 in init script template (bug 525).
+- Sync fedora-buildrpmtree with Russ's latest version (bug 594).
+- Add CVS Id keywords to applicable files.
+
+* Tue Aug  5 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.0.17-0.fdr.1
+- Require gzip and bzip2 (bug 525).
+- Read configs first in fedora-rmdevelrpms to prevent overriding internals.
+- Add autoconf, autoconf213, automake, automake14, automake15, automake16,
+  dev86, doxygen and swig to packages treated as devel in rmdevelrpms.
+- Make rmdevelrpms work with non-English locales (bug 544).
+- 2 empty lines instead of # --------- separators in spec templates (bug 525).
+- Move non-config files under %%{_datadir}/fedora.
+- Change %%{_sysconfdir}/fedora-rpmdevtools to %%{_sysconfdir}/fedora.
+
 * Tue Jul 22 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.0.16-0.fdr.3
 - Require diffutils, make, patch and tar (bug 492).
 

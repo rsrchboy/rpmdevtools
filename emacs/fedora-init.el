@@ -1,8 +1,10 @@
+;; $Id: fedora-init.el,v 1.2 2003/08/15 20:25:45 scop Exp $
+
 (defun fedora-new-rpm-spec-file-init ()
   (delete-region (point-min) (point-max))
   (set (make-local-variable 'indent-tabs-mode) nil)
   (set (make-local-variable 'buffer-file-coding-system) 'utf-8)
-  (insert-file "/etc/fedora-rpmdevtools/spectemplate-minimal.spec")
+  (insert-file "/usr/share/fedora/spectemplate-minimal.spec")
   (setq pt (point-min))
   (when buffer-file-name
     (let ((pkgname

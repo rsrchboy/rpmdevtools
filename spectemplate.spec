@@ -45,12 +45,10 @@ Requires:       <requirements>
 #<Long description of sub-package here>
 #<Multiple lines are fine>
 
-# -----------------------------------------------------------------------------
 
 %prep
 %setup -q
 
-# -----------------------------------------------------------------------------
 
 %build
 # For QT apps: [ -n "$QTDIR" ] || . %{_sysconfdir}/profile.d/qt.sh
@@ -60,7 +58,6 @@ make %{?_smp_mflags}
 #make test
 #make check
 
-# -----------------------------------------------------------------------------
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -70,12 +67,10 @@ rm -rf $RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
 
-# -----------------------------------------------------------------------------
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-# -----------------------------------------------------------------------------
 
 # ldconfig's for packages that install %{_libdir}/*.so.*
 # -> Don't forget Requires(post,postun): /sbin/ldconfig
@@ -95,7 +90,6 @@ fi
 %postun
 /sbin/ldconfig
 
-# -----------------------------------------------------------------------------
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
@@ -112,7 +106,6 @@ fi
 #%{_libdir}/*.so
 #%{_mandir}/man3/*
 
-# -----------------------------------------------------------------------------
 
 %changelog
 * Fri May 03 2003 Your Name <you[AT]your.domain> - epoch:version-release

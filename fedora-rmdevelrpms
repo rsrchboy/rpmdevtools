@@ -5,32 +5,36 @@
 #
 # Author:  Ville Skyttä <ville.skytta at iki.fi>
 # License: GPL
+# $Id: fedora-rmdevelrpms,v 1.4 2003/08/15 20:25:45 scop Exp $
 #
 # This script is useful in cleaning up development RPMs from your system,
 # eg. when starting to make a new RPM package.
 #
 # Currently, "development RPMs" include:
 # - Any package whose %{NAME} ends with "-devel", except gcc requirements.
-# - The ones listed in $DEVPKGS below.
+# - Ones listed in $DEVPKGS below.
+# - Ones in $ADDITIONAL_DEVEL_RPMS (see below).
 #
 # If you want to keep some devel RPMs around, put their names into the
-# KEEP_DEVEL_RPMS environment variable, separated by space.  You can
-# persist the setting in the system-wide configuration file
-# /etc/fedora-rpmdevtools/develrpms.conf or a per-user ~/.develrpmsrc.
+# $KEEP_DEVEL_RPMS environment variable, separated by space.  The opposite
+# of this is provided by $ADDITIONAL_DEVEL_RPMS.
+#
+# You can persist these settings in the system-wide configuration file
+# /etc/fedora/develrpms.conf or a per-user ~/.develrpmsrc.
 
-DEVPKGS="bison byacc compat-gcc compat-gcc-c++ compface djbfft flex gettext glade glade2 kernel-source libgcj nasm texinfo docbook-utils-pdf tetex-dvips libtool qt-designer"
-
-if [ -r /etc/fedora-rpmdevtools/develrpms.conf ]; then
-    . /etc/fedora-rpmdevtools/develrpms.conf
+if [ -r /etc/fedora/develrpms.conf ]; then
+    . /etc/fedora/develrpms.conf
 fi
 if [ -r $HOME/.develrpmsrc ]; then
     . $HOME/.develrpmsrc
 fi
 
+DEVPKGS="autoconf autoconf213 automake automake14 automake15 automake16 bison byacc compat-gcc compat-gcc-c++ compface dev86 djbfft docbook-utils-pdf doxygen flex gettext glade glade2 kernel-source libgcj libtool nasm qt-designer swig tetex-dvips texinfo $ADDITIONAL_DEVEL_RPMS"
+
 # Find -devel RPMs.
 
 echo "Finding development RPMs..."
-for rpm in `rpm -qa --queryformat "%{NAME}\n" | grep '\-devel$'`; do
+for rpm in `rpm -qa --qf "%{NAME}\n" | grep '\-devel$'`; do
     if [ -z "`rpm -q --whatrequires $rpm | grep '^gcc'`" ]; then
         devels="$rpm $devels"
     fi
@@ -38,7 +42,7 @@ done
 
 # Check if we have some common others that are primarily for building.
 
-for rpm in `rpm -q --queryformat "%{NAME}\n" $DEVPKGS | grep -v 'not installed'`; do
+for rpm in `LANG=C rpm -q --qf "%{NAME}\n" $DEVPKGS | grep -v 'not installed'`; do
     devels="$rpm $devels"
 done
 

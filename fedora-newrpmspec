@@ -1,6 +1,8 @@
 #!/bin/bash
 
-SPEC="/etc/fedora-rpmdevtools/spectemplate.spec"
+# $Id: fedora-newrpmspec,v 1.3 2003/08/15 20:25:45 scop Exp $
+
+SPEC="/usr/share/fedora/spectemplate.spec"
 
 newrpmspec.help() {
 	echo "fedora-newrpmspec creates a new fedora spec template"

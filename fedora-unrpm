@@ -6,6 +6,7 @@
 #
 # Author:  Ville Skyttä <ville.skytta at iki.fi>
 # License: GPL
+# $Id: fedora-unrpm,v 1.2 2003/08/15 20:25:45 scop Exp $
 
 usage()
 {

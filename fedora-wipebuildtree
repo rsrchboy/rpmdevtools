@@ -5,6 +5,7 @@
 #
 # Author:  Warren Togami <warren@togami.com>
 # License: GPL
+# $Id: fedora-wipebuildtree,v 1.2 2003/08/15 20:25:45 scop Exp $
 
 if [ ! -d ~/redhat ]; then
     echo "~/redhat does not exist, unable to wipe clean."
