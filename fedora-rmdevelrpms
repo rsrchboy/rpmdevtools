@@ -1,11 +1,12 @@
 #!/usr/bin/python -tt
+# -*- coding: utf-8 -*-
 
 # fedora-rmdevelrpms -- Find (and optionally remove) "development" RPMs
 #
 # Author:  Ville Skyttä <ville.skytta at iki.fi>
 # License: GPL
 # Credits: Seth Vidal (yum), Thomas Vander Stichele (mach)
-# $Id: fedora-rmdevelrpms,v 1.8 2004/01/29 18:58:48 scop Exp $
+# $Id: fedora-rmdevelrpms,v 1.9 2004/05/16 13:19:33 scop Exp $
 #
 # This script is useful hack in cleaning up development RPMs from your
 # system, eg. before starting to build a new RPM package.
@@ -43,7 +44,7 @@
 import getopt, os, re, rpm, stat, sys, types
 
 
-__version__ = "0.9.3"
+__version__ = "0.9.4"
 
 
 dev_re  = re.compile("-de(?:buginfo|vel)$")
@@ -57,9 +58,10 @@ comp_re = re.compile("^compat-gcc")
 
 def_devpkgs =\
 ("autoconf", "autoconf213", "automake", "automake14", "automake15",
- "automake16", "bison", "byacc", "compface", "dev86", "djbfft",
- "docbook-utils-pdf", "doxygen", "flex", "gcc32", "gettext", "glade", "glade2",
- "kernel-source", "libgcj", "libtool", "m4", "nasm", "pkgconfig",
+ "automake16", "automake17", "bison", "byacc", "compface", "dev86", "djbfft",
+ "docbook-utils-pdf", "doxygen", "flex", "gcc-g77", "gcc-gnat", "gcc-java",
+ "gcc-objc", "gcc32", "gcc34", "gcc34-c++", "gcc34-java", "gettext", "glade",
+ "glade2", "kernel-source", "libgcj", "libtool", "m4", "nasm", "pkgconfig",
  "qt-designer", "swig", "texinfo",
  )
 
