@@ -1,0 +1,132 @@
+#!/bin/bash
+
+#
+# fedora-extract
+# Extract various archives, "tar xvf" style
+#
+# Author:  Ville Skyttä <ville.skytta at iki.fi>
+# License: GPL
+# $Id: fedora-extract,v 1.1 2004/10/07 19:05:03 scop Exp $
+
+# TODO: *.arc
+# TODO: file(1) archive type detection
+
+set -e
+unset CDPATH
+quiet=
+force=
+dir=
+
+usage()
+{
+    echo "Usage: `basename $0` [-qf] [-C dir] ARCHIVE..."
+    echo "  -q        Suppress output."
+    echo "  -f        Force overwriting existing files."
+    echo "  -C dir    Change to directory 'dir' before extracting."
+}
+
+unarch()
+{
+    case "$1" in
+        /*) f="$1" ;;
+        *) f="$PWD/$1" ;;
+    esac
+    cd "$2"
+    case "$f" in
+        *.tar.bz2|*.tbz)
+            [ -n "$force" ] && o= || o=k
+            tar jxv${o}f "$f"
+            ;;
+        *.tar.gz|*.tgz|*.tar.Z)
+            [ -n "$force" ] && o= || o=k
+            tar zxv${o}f "$f"
+            ;;
+        *.tar)
+            [ -n "$force" ] && o= || o=k
+            tar xv${o}f "$f"
+            ;;
+        *.zip|*.jar|*.ear|*.war)
+            [ -n "$force" ] && o=-o || o=-n
+            unzip $o "$f"
+            ;;
+        *.rar)
+            [ -n "$force" ] && o=-o+ || o=-o-
+            unrar x $o -y "$f"
+            ;;
+        *.cab)
+            # force not supported, it's always on (as of cabextract 1.0)
+            cabextract -f "$f"
+            ;;
+        *.rpm)
+            [ -n "$force" ] && o=u || o=
+            name=`rpm -qp --qf "%{NAME}-%{VERSION}-%{RELEASE}" "$f"`
+            mkdir -p "$name"
+            cd "$name"
+            rpm2cpio "$f" \
+            | cpio --quiet --no-absolute-filenames -id${o}mv 2>&1 \
+            | sed "s|^\(\./\)\?|$name/|"
+            cd ..
+            ;;
+        *.cpio)
+            [ -n "$force" ] && o=u || o=
+            cpio --quiet --no-absolute-filenames -id${o}mv < "$f"
+            ;;
+        *.cpio.gz|*.cpio.Z|*.cgz)
+            [ -n "$force" ] && o=u || o=
+            gzip -dc "$f" | cpio --quiet --no-absolute-filenames -id${o}mv
+            ;;
+        *.cpio.bz2|*.cbz)
+            [ -n "$force" ] && o=u || o=
+            bzip2 -dc "$f" | cpio --quiet --no-absolute-filenames -id${o}mv
+            ;;
+        *.a|*.deb)
+            # force not supported, it's always on
+            ar xvo "$f"
+            ;;
+        *.ace)
+            [ -n "$force" ] && o=+ || o=-
+            unace x -o$o -y "$f"
+            ;;
+        *.arj)
+            # force not supported, it's always off (as of unarj 2.6[35])
+            # it will also return an error if some files already exist :(
+            unarj x "$f"
+            ;;
+        *.zoo)
+            [ -n "$force" ] && o=OOS || o=
+            zoo x$o "$f"
+            ;;
+        *.lhz)
+            [ -n "$force" ] && o=f || o=
+            lha x$o "$f" </dev/null
+            ;;
+        *)
+            echo "Error: unrecognized archive: '$f'" >&2
+            exit 1
+            ;;
+    esac
+    cd - >/dev/null 2>&1
+}
+
+dir="$PWD"
+
+while getopts "qfC:" key ; do
+    case "$key" in
+        q) quiet=1 ;;
+        f) force=1 ;;
+        C) dir="$OPTARG" ;;
+        *) usage ; exit 1 ;;
+    esac
+done
+shift $(( $OPTIND -1 ))
+
+for file in "$@" ; do
+    # Not that fancy at the moment, but -q is for backwards compatibility
+    # and in case we need to do more fine-grained stuff for some unarchivers
+    # later.
+    if [ -n "$quiet" ] ; then
+        unarch "$file" "$dir" >/dev/null
+    else
+        unarch "$file" "$dir"
+    fi
+done

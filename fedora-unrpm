@@ -6,62 +6,11 @@
 #
 # Author:  Ville Skyttä <ville.skytta at iki.fi>
 # License: GPL
-# $Id: fedora-unrpm,v 1.6 2004/09/11 18:52:38 scop Exp $
+# $Id: fedora-unrpm,v 1.7 2004/10/07 19:05:03 scop Exp $
 
-usage()
-{
-    echo "Usage: `basename $0` [-qQ] [-C dir] RPMFILE..."
-    echo "  -q        Quiet, only output extract directory basename(s)."
-    echo "  -Q        Quiet, really."
-    echo "  -C dir    Change to directory 'dir' before extracting."
-}
+cat <<EOF >&2
+Warning: fedora-unrpm is deprecated, use fedora-extract instead.
+EOF
+sleep 2
 
-extract()
-{
-    name=$(rpm -qp --qf "%{NAME}-%{VERSION}-%{RELEASE}" "$1")
-    [ $? -ne 0 ] && echo "$name" && return 1
-
-    (mkdir -p "$name" && \
-    cd "$name" && \
-    rpm2cpio "$1" \
-    | cpio --quiet -idum$verbose 2>&1 \
-    | sed "s|^\(\./\)\?|$name/|" && \
-    cd ..)
-    [ -z "$echodir" ] || echo "$name"
-}
-
-if [ -z "$*" ]; then
-    usage
-    exit 1
-fi
-
-
-unset CDPATH
-oldpwd="$PWD"
-outputdir="$PWD"
-verbose=v
-echodir=
-
-while getopts "qQC:" key ; do
-    case "$key" in
-        q) verbose= ; echodir=y ;;
-        Q) verbose= ;;
-        C) outputdir="$OPTARG" ;;
-        *) usage ; exit 1 ;;
-    esac
-done
-shift $(( $OPTIND - 1 ))
-
-if [ -n "$outputdir" -a "$outputdir" != "$PWD" ] ; then
-    if ! cd "$outputdir" ; then
-        usage
-        exit 1
-    fi
-fi
-
-for file in "$@"; do
-    if ! echo "$file" | grep -q "^/" - ; then
-        file="$oldpwd/$file"
-    fi
-    extract "$file"
-done
+fedora-extract "$@"
