@@ -126,6 +126,8 @@ fi
 - Treat gcc35, gcc35-c++, kernel-sourcecode, and any package matching
   "-devel\b" or "-debuginfo\b" (for version-in-name stuff) as devel
   packages in rmdevelrpms.
+- Prevent $CDPATH/cd from producing unexpected output in fedora-md5 and
+  fedora-unrpm (bug 1401, bug 1953, Thorsten Leemhuis and Pekka Pietikainen).
 - Fold -emacs into the main package, use triggers to install the site-start.d
   snippets.
 

@@ -6,7 +6,7 @@
 #
 # Author:  Ville Skyttä <ville.skytta at iki.fi>
 # License: GPL
-# $Id: fedora-unrpm,v 1.4 2004/01/29 18:33:05 scop Exp $
+# $Id: fedora-unrpm,v 1.5 2004/08/09 19:08:28 scop Exp $
 
 usage()
 {
@@ -36,6 +36,7 @@ if [ -z "$*" ]; then
 fi
 
 
+unset CDPATH
 oldpwd="$PWD"
 outputdir="$PWD"
 verbose=v
