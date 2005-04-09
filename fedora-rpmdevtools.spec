@@ -126,6 +126,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Apr  9 2005 Ville Skyttä <ville.skytta at iki.fi>
+- Drop more pre-FC2 compat stuff from Perl spec template.
+
 * Thu Mar 24 2005 Ville Skyttä <ville.skytta at iki.fi> - 1.0-1
 - Make fedora-diffarchive work better with archives containing dirs without
   read/execute permissions.
