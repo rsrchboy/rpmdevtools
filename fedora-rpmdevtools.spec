@@ -27,8 +27,8 @@ Requires:       diffutils, gzip, bzip2, unzip
 
 %description
 This package contains scripts and (X)Emacs support files to aid in
-development of Fedora RPM packages.  These tools are designed for Red
-Hat Linux 8.0 and higher.
+development of Fedora RPM packages.  These tools are designed for Fedora
+Core 2 and later.
 fedora-buildrpmtree     Create RPM build tree within user's home directory
 fedora-installdevkeys   Install GPG keys in alternate RPM keyring
 fedora-kmodhelper       Helper script for building kernel module RPMs
