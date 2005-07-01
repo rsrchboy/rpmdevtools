@@ -128,7 +128,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Sat Apr 16 2005 Ville Skyttä <ville.skytta at iki.fi>
 - Drop more pre-FC2 compat stuff from Perl spec template.
-- Treat gcc-gfortran as devel package in rmdevelrpms.
+- Treat gcc-gfortran as a devel package in rmdevelrpms.
 
 * Thu Mar 24 2005 Ville Skyttä <ville.skytta at iki.fi> - 1.0-1
 - Make fedora-diffarchive work better with archives containing dirs without
