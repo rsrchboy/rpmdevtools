@@ -3,7 +3,7 @@
 %define spectool_version   1.0.4
 
 Name:           fedora-rpmdevtools
-Version:        1.0
+Version:        1.1
 Release:        1
 Summary:        Fedora RPM Development Tools
 
@@ -126,7 +126,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sat Apr 16 2005 Ville Skyttä <ville.skytta at iki.fi>
+* Fri Jul  8 2005 Ville Skyttä <ville.skytta at iki.fi> - 1.1-1
 - Drop more pre-FC2 compat stuff from Perl spec template.
 - Treat gcc-gfortran as a devel package in rmdevelrpms.
 
