@@ -4,7 +4,7 @@
 
 Name:           fedora-rpmdevtools
 Version:        1.1
-Release:        1
+Release:        1%{?dist}
 Summary:        Fedora RPM Development Tools
 
 Group:          Development/Tools
