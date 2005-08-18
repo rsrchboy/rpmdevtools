@@ -126,6 +126,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Aug 18 2005 Ville Skyttä <ville.skytta at iki.fi>
+- Update FSF's address in copyright notices.
+
 * Fri Jul  8 2005 Ville Skyttä <ville.skytta at iki.fi> - 1.1-1
 - Drop more pre-FC2 compat stuff from Perl spec template.
 - Treat gcc-gfortran as a devel package in rmdevelrpms.
