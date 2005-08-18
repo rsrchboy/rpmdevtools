@@ -127,6 +127,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Thu Aug 18 2005 Ville Skyttä <ville.skytta at iki.fi>
+- check-buildroot: grep for buildroot as a fixed string, not a regexp.
 - Update FSF's address in copyright notices.
 
 * Fri Jul  8 2005 Ville Skyttä <ville.skytta at iki.fi> - 1.1-1
