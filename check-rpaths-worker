@@ -1,5 +1,5 @@
 #! /bin/bash
-# $Id: check-rpaths-worker,v 1.5 2005/08/18 05:49:16 scop Exp $
+# $Id: check-rpaths-worker,v 1.6 2005/10/03 05:35:40 scop Exp $
 
 # Copyright (C) 2004 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de>
 #  
@@ -19,6 +19,47 @@
 
 fail=
 IFS=:
+already_shown=0
+
+function showHint()
+{
+    test "$already_shown" -eq 0 || return
+    already_shown=1
+    
+    cat <<EOF >&2
+*******************************************************************************
+*
+* WARNING: 'check-rpaths' detected a broken RPATH and will cause 'rpmbuild'
+*          to fail. To ignore these errors, you can set the '\$QA_RPATHS'
+*          environment variable which is a bitmask allowing the values
+*          below. The current value of QA_RPATHS is $(printf '0x%04x' $QA_RPATHS).
+*
+*    0x0001 ... standard RPATHs (e.g. /usr/lib); such RPATHs are a minor
+*               issue but are introducing redundant searchpaths without
+*               providing a benefit. They can also cause errors in multilib
+*               environments.
+*    0x0002 ... invalid RPATHs; these are RPATHs which are neither absolute
+*               nor relative filenames and can therefore be a SECURITY risk
+*    0x0004 ... insecure RPATHs; these are relative RPATHs which are a
+*               SECURITY risk
+*    0x0008 ... the special '\$ORIGIN' RPATHs are appearing after other
+*               RPATHs; this is just a minor issue but usually unwanted
+*    0x0010 ... the RPATH is empty; there is no reason for such RPATHs
+*               and they cause unneeded work while loading libraries
+*
+*          
+*
+* Examples:
+* - to ignore standard and empty RPATHs, execute 'rpmbuild' like
+*   \$ QA_RPATHS=\$[ 0x0001|0x0010 ] rpmbuild my-package.src.rpm
+* - to check existing files, set \$RPM_BUILD_ROOT and execute check-rpaths like
+*   \$ RPM_BUILD_ROOT=<top-dir> /usr/lib/rpm/check-rpaths
+*  
+* 'check-rpaths' is part of 'fedora-rpmdevtools'.
+*
+*******************************************************************************
+EOF
+}
 
 function msg()
 {
@@ -32,6 +73,7 @@ function msg()
     if test $[ $val & ~$QA_RPATHS ] -eq 0; then
 	msg=WARNING
     else
+	showHint
 	msg=ERROR
 	fail=1
     fi
@@ -51,7 +93,11 @@ for i; do
     tmp=aux:$rpath:/lib/aux || :
     set -- $tmp
     shift
+
+    allow_ORIGIN=1
     for j; do
+	new_allow_ORIGIN=0
+
 	if test -z "$j"; then
 	    badness=16
 	else
@@ -61,8 +107,12 @@ for i; do
 	        (/lib64/*|/usr/lib64/*|/usr/X11R6/lib64/*|/usr/local/lib64/*)
 		    badness=0;;
 
-		(\$ORIGIN|\${ORIGINX})
-		    test $pos -ne 0 && badness=8 || badness=0 ;;
+		(\$ORIGIN|\${ORIGINX}|\$ORIGIN/*|\${ORIGINX}/*)
+		    test $allow_ORIGIN -eq 0 && badness=8 || {
+			badness=0
+			new_allow_ORIGIN=1
+		    }
+		    ;;
 		(/*\$PLATFORM*|/*\${PLATFORM}*|/*\$LIB*|/*\${LIB}*)
 		    badness=0;;
 	    	
@@ -73,9 +123,11 @@ for i; do
 	    	
 	        (.*)
 		    badness=4;;
-	        *)  badness=2;;
+	        (*) badness=2;;
 	    esac
 	fi
+
+	allow_ORIGIN=$new_allow_ORIGIN
 
 	base=${i##$RPM_BUILD_ROOT}
 	msg "$badness"  1 "file '$base' contains a standard rpath '$j' in [$rpath]"  || fail=1

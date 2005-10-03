@@ -126,9 +126,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Aug 18 2005 Ville Skyttä <ville.skytta at iki.fi>
+* Mon Oct  3 2005 Ville Skyttä <ville.skytta at iki.fi>
 - check-buildroot: grep for buildroot as a fixed string, not a regexp.
 - Update FSF's address in copyright notices.
+- check-rpaths-worker: allow multiple $ORIGIN paths in an RPATH and allow
+  RPATHs which are relative to $ORIGIN (#169298, Enrico Scholz).
+- check-rpaths-worker: give out an hint about usage and the detected issues
+  at the first detected error (Enrico Scholz).
 
 * Fri Jul  8 2005 Ville Skyttä <ville.skytta at iki.fi> - 1.1-1
 - Drop more pre-FC2 compat stuff from Perl spec template.
