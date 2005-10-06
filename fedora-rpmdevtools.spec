@@ -135,6 +135,7 @@ rm -rf $RPM_BUILD_ROOT
   at the first detected error (Enrico Scholz).
 - Remove some redundancy from the Perl spec template.
 - Teach fedora-newrpmspec to detect and use different specfile variants.
+- Use fedora-newrpmspec in fedora-init.el.
 
 * Fri Jul  8 2005 Ville Skyttä <ville.skytta at iki.fi> - 1.1-1
 - Drop more pre-FC2 compat stuff from Perl spec template.
