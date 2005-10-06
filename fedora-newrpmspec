@@ -1,48 +1,91 @@
 #!/bin/bash
 
-# $Id: fedora-newrpmspec,v 1.4 2005/03/24 16:32:39 scop Exp $
+# $Id: fedora-newrpmspec,v 1.5 2005/10/06 16:03:53 scop Exp $
 
-SPEC="/usr/share/fedora/spectemplate-minimal.spec"
+SPECDIR="/usr/share/fedora"
+DEFTYPE="minimal"
+DEFSPEC="newpackage.spec"
 
-newrpmspec.help() {
-	echo "fedora-newrpmspec creates a new Fedora spec template"
-	echo ""
-	echo "Usage:"
-	echo "fedora-newrpmspec               without parameter creates a spec template"
-	echo "                                called newpackage.spec"
-	echo "fedora-newrpmspec <app name>    creates a spec template for <app name>"
-        echo "                                called <app name>.spec"	
-	echo "fedora-newrpmspec -h|--help     show this usage information"
-	exit 42
+usage() {
+    ret=${1:-0}
+    cat <<EOF
+Usage: fedora-newrpmspec [option]... [appname]
+
+Options:
+  -o FILE  Output the specfile to FILE.  "-" means stdout.  The default is
+           "<appname>.spec", or "$DEFSPEC" if appname is not given.
+  -t TYPE  Force use of the TYPE spec template.  The default is "$DEFTYPE",
+           see $SPECDIR/spectemplate-*.spec for available types.
+  -h       Show this usage message
+EOF
+    exit $ret
 }
 
-newrpmspec.default() {
+appname=
+specfile=
+spectype=
 
-if [ "$1" = "" ]; then 
-	if [ -f newpackage.spec ]; then
-    		echo "newpackage.spec already exists.  Exiting."
-	else
-    		echo "RPM spec template has been copied to newpackage.spec."
-    		cp $SPEC newpackage.spec
-	fi
-else
-	if [ -f $1.spec ]; then
-		echo "$1.spec already exists.  Exiting."
-	else
-		cat $SPEC | sed -e "s/^\\(Name:\\s*\\)/\\1$1/" > $1.spec
-		echo "RPM spec template has been copied to $1.spec."
-	fi
+while [ -n "$1" ] ; do
+    case "$1" in
+        -t|--type)
+            shift
+            spectype="$1"
+            ;;
+        -o|--output)
+            shift
+            specfile="$1"
+            ;;
+        -h|--help)
+            usage 0
+            ;;
+        *.spec)
+            [ -z "$specfile" ] && specfile="$1"
+            [ -z "$appname"  ] && appname="$(basename $1 .spec)"
+            ;;
+        *)
+            appname="$1"
+            [ -z "$specfile" ] && specfile="$appname.spec"
+            ;;
+    esac
+    shift
+done
+
+specfilter=
+if [ -z "$spectype" ] ; then
+    case "$appname" in
+        perl-*)
+            spectype=perl
+            cpandist="${appname##perl-}"
+            specfilter="; s/^%setup.*/%setup -q -n $cpandist-%{version}/ \
+               ; s|^\\(URL:\\s*\\).*|\1http://search.cpan.org/dist/$cpandist/|"
+            ;;
+        [Pp]y*)
+            spectype=python
+            ;;
+        *)
+            spectype=$DEFTYPE
+            ;;
+    esac
 fi
-exit 42
-}
 
-case $1 in
+tempspec="$SPECDIR/spectemplate-$spectype.spec"
 
--h|--help)
-	newrpmspec.help
-	;;
-*)	
-	newrpmspec.default $1
-	;;
-esac
+if [ ! -f "$tempspec" ] ; then
+    echo "Template \"$tempspec\" not found, exiting."
+    exit 1
+fi
 
+[ -z "$specfile" ] && specfile="$DEFSPEC"
+if [ -f "$specfile" ] ; then
+    echo "Output file \"$specfile\" already exists, exiting."
+    exit 2
+elif [ "$specfile" = "-" ] ; then
+    specfile=/dev/stdout
+fi
+
+cat "$tempspec" | sed -e "s/^\\(Name:\\s*\\)/\\1$appname/ $specfilter" \
+  > "$specfile"
+
+if [ "$specfile" != "/dev/stdout" ] ; then
+    echo "Skeleton specfile ($spectype) has been created to \"$specfile\"."
+fi
