@@ -3,7 +3,7 @@
 %define spectool_version   1.0.4
 
 Name:           fedora-rpmdevtools
-Version:        1.1
+Version:        1.2
 Release:        1%{?dist}
 Summary:        Fedora RPM Development Tools
 
@@ -126,7 +126,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Oct  6 2005 Ville Skyttä <ville.skytta at iki.fi>
+* Fri Oct  7 2005 Ville Skyttä <ville.skytta at iki.fi> - 1.2-1
 - check-buildroot: grep for buildroot as a fixed string, not a regexp.
 - Update FSF's address in copyright notices.
 - check-rpaths-worker: allow multiple $ORIGIN paths in an RPATH and allow
