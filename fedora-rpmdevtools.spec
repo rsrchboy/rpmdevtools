@@ -131,6 +131,7 @@ rm -rf $RPM_BUILD_ROOT
 - check-rpaths-worker: detect when RPATH references the parent directory
   of an absolute path (#169298, Enrico Scholz).
 - Add regression test for check-rpaths* (#169298, Enrico Scholz).
+- Honor user's indent-tabs-mode setting in fedora-init.el (#170902).
 
 * Fri Oct  7 2005 Ville Skyttä <ville.skytta at iki.fi> - 1.2-1
 - check-buildroot: grep for buildroot as a fixed string, not a regexp.
