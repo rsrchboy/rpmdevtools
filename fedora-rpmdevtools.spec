@@ -91,8 +91,9 @@ install -dm 755 $RPM_BUILD_ROOT%{_sysconfdir}/fedora
 install -pm 644 rmdevelrpms.conf $RPM_BUILD_ROOT%{_sysconfdir}/fedora
 
 
-%check || :
+%check
 env PATH="$RPM_BUILD_ROOT%{_bindir}:$PATH" sh test/fedora-kmodhelper-test.sh
+/bin/bash test/rpathtest.sh
 
 
 %clean
@@ -129,6 +130,7 @@ rm -rf $RPM_BUILD_ROOT
 * Sat Oct 15 2005 Ville Skyttä <ville.skytta at iki.fi>
 - check-rpaths-worker: detect when RPATH references the parent directory
   of an absolute path (#169298, Enrico Scholz).
+- Add regression test for check-rpaths* (#169298, Enrico Scholz).
 
 * Fri Oct  7 2005 Ville Skyttä <ville.skytta at iki.fi> - 1.2-1
 - check-buildroot: grep for buildroot as a fixed string, not a regexp.
