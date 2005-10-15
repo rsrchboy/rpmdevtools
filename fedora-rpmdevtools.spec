@@ -126,6 +126,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 15 2005 Ville Skyttä <ville.skytta at iki.fi>
+- check-rpaths-worker: detect when RPATH references the parent directory
+  of an absolute path (#169298, Enrico Scholz).
+
 * Fri Oct  7 2005 Ville Skyttä <ville.skytta at iki.fi> - 1.2-1
 - check-buildroot: grep for buildroot as a fixed string, not a regexp.
 - Update FSF's address in copyright notices.
