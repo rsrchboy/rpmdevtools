@@ -3,7 +3,7 @@
 %define spectool_version   1.0.4
 
 Name:           fedora-rpmdevtools
-Version:        1.2
+Version:        1.3
 Release:        1%{?dist}
 Summary:        Fedora RPM Development Tools
 
@@ -127,7 +127,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sat Oct 15 2005 Ville Skyttä <ville.skytta at iki.fi>
+* Thu Oct 27 2005 Ville Skyttä <ville.skytta at iki.fi> - 1.3-1
 - check-rpaths-worker: detect when RPATH references the parent directory
   of an absolute path (#169298, Enrico Scholz).
 - Add regression test for check-rpaths* (#169298, Enrico Scholz).
