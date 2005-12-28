@@ -3,7 +3,7 @@
 
 Name:           
 Version:        
-Release:        1
+Release:        1%{?dist}
 Summary:        
 
 Group:          Development/Languages

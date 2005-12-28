@@ -129,6 +129,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Wed Dec 28 2005 Ville Skyttä <ville.skytta at iki.fi>
 - Update spectool to 1.0.5 (#162253).
+- Add disttags to spec templates.
 
 * Thu Oct 27 2005 Ville Skyttä <ville.skytta at iki.fi> - 1.3-1
 - check-rpaths-worker: detect when RPATH references the parent directory
