@@ -1,6 +1,6 @@
 %define emacs_sitestart_d  %{_datadir}/emacs/site-lisp/site-start.d
 %define xemacs_sitestart_d %{_datadir}/xemacs/site-packages/lisp/site-start.d
-%define spectool_version   1.0.4
+%define spectool_version   1.0.5
 
 Name:           fedora-rpmdevtools
 Version:        1.3
@@ -127,6 +127,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Dec 28 2005 Ville Skyttä <ville.skytta at iki.fi>
+- Update spectool to 1.0.5.
+
 * Thu Oct 27 2005 Ville Skyttä <ville.skytta at iki.fi> - 1.3-1
 - check-rpaths-worker: detect when RPATH references the parent directory
   of an absolute path (#169298, Enrico Scholz).
