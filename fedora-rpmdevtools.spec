@@ -20,7 +20,7 @@ Provides:       %{name}-emacs = %{version}-%{release}
 Provides:       spectool = %{spectool_version}
 Obsoletes:      %{name}-emacs < 0.1.9
 # Required for tool operations
-Requires:       rpm-python, python, cpio, sed, perl
+Requires:       rpm-python, python, cpio, sed, perl, wget
 # Minimal RPM build requirements
 Requires:       rpm-build, gcc, gcc-c++, redhat-rpm-config, make, tar, patch
 Requires:       diffutils, gzip, bzip2, unzip
@@ -128,7 +128,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Wed Dec 28 2005 Ville Skyttä <ville.skytta at iki.fi>
-- Update spectool to 1.0.5 (#162253).
+- Update spectool to 1.0.5 (#162253), require wget for it.
 - Add disttags to spec templates.
 
 * Thu Oct 27 2005 Ville Skyttä <ville.skytta at iki.fi> - 1.3-1
