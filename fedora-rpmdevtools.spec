@@ -1,9 +1,9 @@
 %define emacs_sitestart_d  %{_datadir}/emacs/site-lisp/site-start.d
 %define xemacs_sitestart_d %{_datadir}/xemacs/site-packages/lisp/site-start.d
-%define spectool_version   1.0.5
+%define spectool_version   1.0.6
 
 Name:           fedora-rpmdevtools
-Version:        1.3
+Version:        1.4
 Release:        1%{?dist}
 Summary:        Fedora RPM Development Tools
 
@@ -127,6 +127,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Dec 30 2005 Ville Skyttä <ville.skytta at iki.fi> - 1.4-1
+- Update spectool to 1.0.6 (#176521).
+
 * Wed Dec 28 2005 Ville Skyttä <ville.skytta at iki.fi>
 - Update spectool to 1.0.5 (#162253), require wget for it.
 - Add disttags to spec templates.
