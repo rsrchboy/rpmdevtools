@@ -1,5 +1,5 @@
 #! /bin/bash
-# $Id: check-rpaths-worker,v 1.7 2005/10/15 19:48:11 scop Exp $
+# $Id: check-rpaths-worker,v 1.8 2006/02/04 16:48:40 scop Exp $
 
 # Copyright (C) 2004 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de>
 #  
@@ -18,7 +18,6 @@
 
 
 fail=
-IFS=:
 already_shown=0
 
 # effect of this expression is obviously:
@@ -97,13 +96,16 @@ function msg()
 }
 
 : ${QA_RPATHS:=0}
+old_IFS=$IFS
 
 for i; do
     pos=0
     rpath=$(readelf -d "$i" 2>/dev/null | LANG=C grep '(RPATH).*:') || continue
     rpath=$(echo "$rpath" | LANG=C sed -e 's!.*(RPATH).*: \[\(.*\)\]!\1!p;d')
     tmp=aux:$rpath:/lib/aux || :
+    IFS=:
     set -- $tmp
+    IFS=$old_IFS
     shift
 
     allow_ORIGIN=1

@@ -4,7 +4,7 @@
 
 Name:           fedora-rpmdevtools
 Version:        1.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Fedora RPM Development Tools
 
 Group:          Development/Tools
@@ -13,6 +13,7 @@ URL:            http://fedora.redhat.com/
 # rpminfo upstream: http://people.redhat.com/twoerner/rpminfo/bin/
 Source0:        %{name}-%{version}.tar.bz2
 Source1:        http://people.redhat.com/nphilipp/spectool/spectool-%{spectool_version}.tar.bz2
+Patch0:         %{name}-cpw-bash31.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -46,6 +47,7 @@ spectool                Expand and download sources and patches in specfiles
 
 %prep
 %setup -q -a 1
+%patch0 -p1
 cp -p spectool*/README README.spectool
 
 
@@ -127,6 +129,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Feb  4 2006 Ville Skyttä <ville.skytta at iki.fi> - 1.4-2
+- Fix rpath checker tests with bash 3.1 (#178636, Enrico Scholz).
+
 * Fri Dec 30 2005 Ville Skyttä <ville.skytta at iki.fi> - 1.4-1
 - Update spectool to 1.0.6 (#176521).
 
