@@ -27,6 +27,7 @@ Requires:       %{ruby_sitearch}
 
 
 %build
+export CFLAGS="$RPM_OPT_FLAGS"
 
 
 %install
@@ -43,8 +44,10 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %doc
-# Include files and dirs below %{ruby_sitelib} (for noarch packages) and
-# %{ruby_sitearch} (for arch-dependent packages) as appropriate
+# For noarch packages: sitelib
+%{ruby_sitelib}/*
+# For arch-specific packages: sitearch
+%{ruby_sitearch}/*
 
 
 %changelog
