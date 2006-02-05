@@ -129,6 +129,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Feb  5 2006 Ville Skyttä <ville.skytta at iki.fi>
+- Add Ruby spec template (#180066, Oliver Andrich) and make newrpmspec
+  use it for ruby-*.
+
 * Sat Feb  4 2006 Ville Skyttä <ville.skytta at iki.fi> - 1.4-2
 - Fix rpath checker tests with bash 3.1 (#178636, Enrico Scholz).
 
