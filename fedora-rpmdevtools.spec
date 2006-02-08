@@ -129,6 +129,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Feb  8 2006 Ville Skyttä <ville.skytta at iki.fi>
+- Add "diff file lists only" option to diffarchive.
+
 * Sun Feb  5 2006 Ville Skyttä <ville.skytta at iki.fi>
 - Add Ruby spec template (#180066, Oliver Andrich) and make newrpmspec
   use it for ruby-*.

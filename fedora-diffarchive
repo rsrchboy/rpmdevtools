@@ -6,13 +6,14 @@
 #
 # Author:  Ville Skyttä <ville.skytta at iki.fi>
 # License: GPL
-# $Id: fedora-diffarchive,v 1.2 2005/03/15 12:42:05 scop Exp $
+# $Id: fedora-diffarchive,v 1.3 2006/02/08 18:57:53 scop Exp $
 
 set -e
 
 unset CDPATH
 tmpdir=
 diffopts=
+list=
 
 trap cleanup EXIT
 cleanup()
@@ -24,7 +25,8 @@ cleanup()
 usage()
 {
     cat <<EOF
-Usage: `basename $0` [diff-options] from-archive to-archive
+Usage: `basename $0` [-l,--list] [diff-options] from-archive to-archive
+  -l, --list    Diff lists of files in archives, not files themselves.
   diff-options  Options passed to diff(1), in addition to -r (default: -Nu).
                 The first argument not starting with a '-' ends diff-options.
 EOF
@@ -32,8 +34,9 @@ EOF
 
 while true ; do
     case "$1" in
-        -*) diffopts="$diffopts $1" ;;
-        *)  break ;;
+        -l|--list) [ -n "$list" ] && diffopts="$diffopts $1" || list=true ;;
+        -*)        diffopts="$diffopts $1" ;;
+        *)         break ;;
     esac
     shift
 done
@@ -41,6 +44,8 @@ if [ $# -lt 2 ] ; then
     usage
     exit 1
 fi
+
+diffopts="-r ${diffopts:--Nu}"
 
 tmpdir=`mktemp -d /tmp/diffarchive.XXXXXX`
 
@@ -78,4 +83,10 @@ if [ `basename "$old"` != `basename "$new"` ] ; then
 fi
 
 # Here we go.
-diff -r ${diffopts:--Nu} "$old" "$new"
+if [ -n "$list" ] ; then
+    find "$old" | sort | cut -d/ -f 2- -s > "$old.files"
+    find "$new" | sort | cut -d/ -f 2- -s > "$new.files"
+    diff $diffopts "$old.files" "$new.files"
+else
+    diff $diffopts "$old" "$new"
+fi
