@@ -21,7 +21,7 @@ Provides:       %{name}-emacs = %{version}-%{release}
 Provides:       spectool = %{spectool_version}
 Obsoletes:      %{name}-emacs < 0.1.9
 # Required for tool operations
-Requires:       rpm-python, python, cpio, sed, perl, wget
+Requires:       rpm-python, python, cpio, sed, perl, wget, file
 # Minimal RPM build requirements
 Requires:       rpm-build, gcc, gcc-c++, redhat-rpm-config, make, tar, patch
 Requires:       diffutils, gzip, bzip2, unzip
@@ -129,6 +129,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Feb  9 2006 Ville Skyttä <ville.skytta at iki.fi>
+- Add file(1) based archive type detection to fedora-extract.
+
 * Wed Feb  8 2006 Ville Skyttä <ville.skytta at iki.fi>
 - Add "diff file lists only" option to diffarchive.
 

@@ -6,13 +6,14 @@
 #
 # Author:  Ville Skyttä <ville.skytta at iki.fi>
 # License: GPL
-# $Id: fedora-extract,v 1.1 2004/10/07 19:05:03 scop Exp $
+# $Id: fedora-extract,v 1.2 2006/02/09 19:29:10 scop Exp $
 
-# TODO: *.arc
-# TODO: file(1) archive type detection
+# TODO: more archive types
 
 set -e
 unset CDPATH
+ftype=
+decomp=
 quiet=
 force=
 dir=
@@ -25,80 +26,109 @@ usage()
     echo "  -C dir    Change to directory 'dir' before extracting."
 }
 
+fmime()
+{
+    case "$1" in
+        application/x-zip|application/zip)                  ftype=zip  ;;
+        application/x-tar*)                                 ftype=tar  ;;
+        application/x-rpm)                                  ftype=rpm  ;;
+        application/x-archive|application/x-debian-package) ftype=ar   ;;
+        application/x-arj)                                  ftype=arj  ;;
+        application/x-zoo)                                  ftype=zoo  ;;
+        application/x-lha*)                                 ftype=lha  ;;
+        application/x-rar)                                  ftype=rar  ;;
+    esac
+}
+
+ftype()
+{
+    t=`file -ibL "$1" 2>/dev/null`
+    fmime "$t"
+    [ -n "$ftype" ] && return
+
+    case "$t" in
+        application/x-compress|application/x-gzip)  decomp="gzip -dc"  ;;
+        application/x-bzip2)                        decomp="bzip2 -dc" ;;
+    esac
+
+    if [ -n "$decomp" ] ; then
+        t=`file -zibL "$1" 2>/dev/null`
+        fmime "$t"
+        [ -n "$ftype" ] && return
+    fi
+
+    t=`file -${decomp:+z}bL "$1" 2>/dev/null`
+    case "$t" in
+        *Z[iI][pP]\ *archive*)                              ftype=zip  ;;
+        *tar\ archive*)                                     ftype=tar  ;;
+        *ar\ archive*|*Debian\ *package*)                   ftype=ar   ;;
+        *ARJ\ *archive*)                                    ftype=arj  ;;
+        *Zoo\ *archive*)                                    ftype=zoo  ;;
+        *cpio\ archive*)                                    ftype=cpio ;;
+        *C[aA][bB]*archive*)                                ftype=cab  ;;
+        RPM\ *)                                             ftype=rpm  ;;
+        *ACE\ *archive*)                                    ftype=ace  ;;
+        *LHa\ *archive*)                                    ftype=lha  ;;
+        *RAR\ *archive*)                                    ftype=rar  ;;
+    esac
+}
+
 unarch()
 {
     case "$1" in
         /*) f="$1" ;;
-        *) f="$PWD/$1" ;;
+        *)  f="$PWD/$1" ;;
     esac
+    ftype "$1"
     cd "$2"
-    case "$f" in
-        *.tar.bz2|*.tbz)
+    case "$ftype" in
+        tar)
             [ -n "$force" ] && o= || o=k
-            tar jxv${o}f "$f"
+            ${decomp:-cat} "$f" | tar xv$o
             ;;
-        *.tar.gz|*.tgz|*.tar.Z)
-            [ -n "$force" ] && o= || o=k
-            tar zxv${o}f "$f"
-            ;;
-        *.tar)
-            [ -n "$force" ] && o= || o=k
-            tar xv${o}f "$f"
-            ;;
-        *.zip|*.jar|*.ear|*.war)
+        zip)
             [ -n "$force" ] && o=-o || o=-n
             unzip $o "$f"
             ;;
-        *.rar)
-            [ -n "$force" ] && o=-o+ || o=-o-
-            unrar x $o -y "$f"
+        rar)
+            [ -n "$force" ] && o=+ || o=-
+            unrar x -o$o -y "$f"
             ;;
-        *.cab)
-            # force not supported, it's always on (as of cabextract 1.0)
+        cab)
+            # force not supported, it's always on (as of cabextract 1.[01])
             cabextract -f "$f"
             ;;
-        *.rpm)
-            [ -n "$force" ] && o=u || o=
+        rpm)
             name=`rpm -qp --qf "%{NAME}-%{VERSION}-%{RELEASE}" "$f"`
             mkdir -p "$name"
             cd "$name"
             rpm2cpio "$f" \
-            | cpio --quiet --no-absolute-filenames -id${o}mv 2>&1 \
+            | cpio --quiet --no-absolute-filenames -id${force:+u}mv 2>&1 \
             | sed "s|^\(\./\)\?|$name/|"
             cd ..
             ;;
-        *.cpio)
-            [ -n "$force" ] && o=u || o=
-            cpio --quiet --no-absolute-filenames -id${o}mv < "$f"
+        cpio)
+            ${decomp:-cat} "$f" | \
+                cpio --quiet --no-absolute-filenames -id${force:+u}mv
             ;;
-        *.cpio.gz|*.cpio.Z|*.cgz)
-            [ -n "$force" ] && o=u || o=
-            gzip -dc "$f" | cpio --quiet --no-absolute-filenames -id${o}mv
-            ;;
-        *.cpio.bz2|*.cbz)
-            [ -n "$force" ] && o=u || o=
-            bzip2 -dc "$f" | cpio --quiet --no-absolute-filenames -id${o}mv
-            ;;
-        *.a|*.deb)
+        ar)
             # force not supported, it's always on
             ar xvo "$f"
             ;;
-        *.ace)
+        ace)
             [ -n "$force" ] && o=+ || o=-
             unace x -o$o -y "$f"
             ;;
-        *.arj)
+        arj)
             # force not supported, it's always off (as of unarj 2.6[35])
             # it will also return an error if some files already exist :(
             unarj x "$f"
             ;;
-        *.zoo)
-            [ -n "$force" ] && o=OOS || o=
-            zoo x$o "$f"
+        zoo)
+            zoo x${force:+OOS} "$f"
             ;;
-        *.lhz)
-            [ -n "$force" ] && o=f || o=
-            lha x$o "$f" </dev/null
+        lha)
+            lha x${force:+f} "$f" < /dev/null
             ;;
         *)
             echo "Error: unrecognized archive: '$f'" >&2
