@@ -1,6 +1,6 @@
 %define emacs_sitestart_d  %{_datadir}/emacs/site-lisp/site-start.d
 %define xemacs_sitestart_d %{_datadir}/xemacs/site-packages/lisp/site-start.d
-%define spectool_version   1.0.6
+%define spectool_version   1.0.7
 
 Name:           fedora-rpmdevtools
 Version:        1.4
@@ -129,6 +129,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Feb 24 2006 Ville Skyttä <ville.skytta at iki.fi>
+- Update spectool to 1.0.7 (#162253).
+
 * Thu Feb  9 2006 Ville Skyttä <ville.skytta at iki.fi>
 - Add file(1) based archive type detection to fedora-extract.
 
