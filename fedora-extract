@@ -6,7 +6,7 @@
 #
 # Author:  Ville Skyttä <ville.skytta at iki.fi>
 # License: GPL
-# $Id: fedora-extract,v 1.2 2006/02/09 19:29:10 scop Exp $
+# $Id: fedora-extract,v 1.3 2006/02/26 15:53:55 scop Exp $
 
 # TODO: more archive types
 
@@ -150,7 +150,20 @@ while getopts "qfC:" key ; do
 done
 shift $(( $OPTIND -1 ))
 
+if [ ! -d "$dir" ] ; then
+    [ -e "$dir" ] && \
+        echo "Error: not a directory: '$dir'" >&2 ||
+        echo "Error: directory does not exist: '$dir'" >&2
+    exit 1
+fi
+
 for file in "$@" ; do
+    if [ ! -f "$file" ] ; then
+        [ -e "$file" ] && \
+            echo "Error: not a regular file: '$file'" >&2 ||
+            echo "Error: file does not exist: '$file'" >&2
+        exit 1
+    fi
     # Not that fancy at the moment, but -q is for backwards compatibility
     # and in case we need to do more fine-grained stuff for some unarchivers
     # later.

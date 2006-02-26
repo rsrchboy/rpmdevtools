@@ -3,8 +3,8 @@
 %define spectool_version   1.0.7
 
 Name:           fedora-rpmdevtools
-Version:        1.4
-Release:        2%{?dist}
+Version:        1.5
+Release:        1%{?dist}
 Summary:        Fedora RPM Development Tools
 
 Group:          Development/Tools
@@ -119,7 +119,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc COPYING README*
 %config(noreplace) %{_sysconfdir}/fedora
-%{_datadir}/fedora
+%{_datadir}/fedora/
 %{_bindir}/fedora-*
 %{_bindir}/spectool
 %{_prefix}/lib/rpm/check-*
@@ -127,6 +127,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Feb 26 2006 Ville Skyttä <ville.skytta at iki.fi> - 1.5-1
+- Improve diffarchive and extract error messages.
+
 * Fri Feb 24 2006 Ville Skyttä <ville.skytta at iki.fi>
 - Update spectool to 1.0.7 (#162253).
 
