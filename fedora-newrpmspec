@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# $Id: fedora-newrpmspec,v 1.6 2006/02/05 14:05:34 scop Exp $
+# $Id: fedora-newrpmspec,v 1.7 2006/04/02 22:08:11 scop Exp $
 
 SPECDIR="/usr/share/fedora"
 DEFTYPE="minimal"
@@ -14,8 +14,10 @@ Usage: fedora-newrpmspec [option]... [appname]
 Options:
   -o FILE  Output the specfile to FILE.  "-" means stdout.  The default is
            "<appname>.spec", or "$DEFSPEC" if appname is not given.
-  -t TYPE  Force use of the TYPE spec template.  The default is "$DEFTYPE",
-           see $SPECDIR/spectemplate-*.spec for available types.
+  -t TYPE  Force use of the TYPE spec template.  The default is guessed
+           from <appname>, falling back to "$DEFTYPE" if the guesswork
+           does not result in a more specific one or if <appname> is not
+           given.  See $SPECDIR/spectemplate-*.spec for available types.
   -h       Show this usage message
 EOF
     exit $ret
@@ -64,6 +66,9 @@ if [ -z "$spectype" ] ; then
             ;;
         ruby-*)
             spectype=ruby
+            ;;
+        lib*|*-lib|*-libs)
+            spectype=lib
             ;;
         *)
             spectype=$DEFTYPE

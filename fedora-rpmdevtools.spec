@@ -127,6 +127,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Apr  3 2006 Ville Skyttä <ville.skytta at iki.fi>
+- Add spec template for library packages (#185606, Ignacio Vazquez-Abrams).
+
 * Sun Feb 26 2006 Ville Skyttä <ville.skytta at iki.fi> - 1.5-1
 - Improve diffarchive and extract error messages.
 
