@@ -3,7 +3,7 @@
 %define spectool_version   1.0.7
 
 Name:           fedora-rpmdevtools
-Version:        1.5
+Version:        1.6
 Release:        1%{?dist}
 Summary:        Fedora RPM Development Tools
 
@@ -127,7 +127,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Apr  3 2006 Ville Skyttä <ville.skytta at iki.fi>
+* Tue May 16 2006 Ville Skyttä <ville.skytta at iki.fi> - 1.6-1
 - Add spec template for library packages (#185606, Ignacio Vazquez-Abrams).
 
 * Sun Feb 26 2006 Ville Skyttä <ville.skytta at iki.fi> - 1.5-1
