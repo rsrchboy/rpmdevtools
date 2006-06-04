@@ -4,27 +4,8 @@
 # fedora-rmdevelrpms -- Find (and optionally remove) "development" RPMs
 #
 # Author:  Ville Skyttä <ville.skytta at iki.fi>
-# License: GPL
 # Credits: Seth Vidal (yum), Thomas Vander Stichele (mach)
-# $Id: fedora-rmdevelrpms,v 1.16 2006/06/04 20:05:09 scop Exp $
-#
-# This script is useful hack in cleaning up development RPMs from your
-# system, eg. before starting to build a new RPM package.
-#
-# Currently, "development RPMs" include:
-# - Any package whose %{NAME} matches "-devel\b", or "-debuginfo\b",
-#   except gcc requirements.
-# - Any package whose %{NAME} starts with "perl-(Devel|ExtUtils|Test)-".
-# - Any package whose %{NAME} starts with "compat-gcc".
-# - Ones listed in def_devpkgs below.
-# - Ones in devpkgs (see below).
-#
-# If you want to keep some devel RPMs around, put their names into the
-# nondevpkgs list in the configuration file.  The opposite of this is
-# provided by devpkgs.
-#
-# The configuration files are /etc/fedora/rmdevelrpms.conf and
-# ~/.rmdevelrpmsrc, and are written in Python.
+# $Id: fedora-rmdevelrpms,v 1.17 2006/06/04 20:53:01 scop Exp $
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -122,20 +103,77 @@ def callback(what, bytes, total, h, user):
     sys.stdout.flush()
 
 
+def help():
+    print '''fedora-rmdevelrpms is a script for finding and optionally removing
+"development" packages, for example for cleanup purposes before starting to
+build a new package.
+
+By default, the following packages are treated as development ones and are
+thus candidates for removal: any package whose name matches "-devel\\b", or
+"-debuginfo\\b", except gcc requirements; any package whose name starts with
+"perl-(Devel|ExtUtils|Test)-"; any package whose name starts with "compat-gcc";
+packages in the internal list of known development oriented packages (see
+def_devpkgs in the source code); packages determined to be development ones
+based on some basic heuristic checks on the package\'s contents.
+
+The default set of packages above is not intended to not reduce a system into
+a minimal clean build root, but to keep it usable for general purposes while
+getting rid of a reasonably large set of development packages.  The package
+set operated on can be configured to meet various scenarios.
+
+To include additional packages in the list of ones treated as development
+packages, use the "devpkgs" option in the configuration file.  To exclude
+packages from the list use "nondevpkgs" in it.  Exclusion overrides inclusion.
+
+The system wide configuration file is /etc/fedora/rmdevelrpms.conf, and per
+user settings (which override system ones) can be specified in
+~/.rmdevelrpmsrc.  These files are written in Python.
+'''
+    usage(None)
+    print '''
+Report bugs to <http://bugzilla.redhat.com/>.'''
+    sys.exit(0)
+
+
+def usage(exit=1):
+    print '''
+Usage: fedora-rmdevelrpms [OPTION]...
+
+Options:
+  -y, --yes         Assume yes to all questions, do not prompt.
+  -v, --version     Print program version and exit.
+  -h, --help        Print help message and exit.'''
+    if exit is not None:
+        sys.exit(exit)
+
+
+def version():
+    print "fedora-rmdevelrpms version %s" % __version__
+    print '''
+Copyright (c) 2004-2006 Fedora Project <http://fedoraproject.org/>.
+This  program is licensed under the GNU General Public License, see the
+file COPYING included in the distribution archive.
+
+Written by Ville Skyttä.'''
+    sys.exit(0)
+
+
 def main():
     "Da meat."
     try:
         # TODO: implement -r|--root for checking a specified rpm root
-        opts, args = getopt.getopt(sys.argv[1:], "yv", ["yes", "version"])
+        opts, args = getopt.getopt(sys.argv[1:],
+                                   "yvh",
+                                   ["yes", "version", "help"])
     except getopt.GetoptError:
-        print "Usage: %s [-v|--version] [-y|--yes]" % sys.argv[0]
-        sys.exit(2)
+        usage(2)
     confirm = 1
     for o, a in opts:
-        if (o in ("-v", "--version")):
-            print "fedora-rmdevelrpms version %s" % __version__
-            sys.exit(0)
-        elif (o in ("-y", "--yes")):
+        if o in ("-v", "--version"):
+            version()
+        if o in ("-h", "--help"):
+            help()
+        elif o in ("-y", "--yes"):
             confirm = 0
     ts = rpm.TransactionSet("/")
     ts.setVSFlags(~(rpm._RPMVSF_NOSIGNATURES|rpm._RPMVSF_NODIGESTS))
