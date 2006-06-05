@@ -1,10 +1,11 @@
 #!/bin/sh
 
 err=
+kmodhelper=${1:-../fedora-kmodhelper}
 
 t ()
 {
-    res=`fedora-kmodhelper $1`
+    res=`$kmodhelper $1`
     if ! test "$res" = "$2" ; then
         cat <<EOF >&2
 Error (fedora-kmodhelper $1):
