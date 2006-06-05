@@ -1,12 +1,21 @@
 #!/bin/bash
+# -*- coding: utf-8 -*-
 
+# fedora-extract -- Extract various archives in "tar xvf" style
 #
-# fedora-extract
-# Extract various archives, "tar xvf" style
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
 #
-# Author:  Ville Skyttä <ville.skytta at iki.fi>
-# License: GPL
-# $Id: fedora-extract,v 1.3 2006/02/26 15:53:55 scop Exp $
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Library General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 # TODO: more archive types
 
@@ -18,12 +27,46 @@ quiet=
 force=
 dir=
 
+version()
+{
+    cat <<EOF
+fedora-extract version 1.0
+
+Copyright (c) 2004-2006 Fedora Project <http://fedoraproject.org/>.
+This  program is licensed under the GNU General Public License, see the
+file COPYING included in the distribution archive.
+
+Written by Ville Skyttä.
+EOF
+}
+
+help()
+{
+    cat <<EOF
+fedora-extract extracts various archives in "tar xvf" style.
+
+Depending on availability of external (un)archiver programs, the following
+archive types are supported: ace, ar/deb, arj, cab/exe, cpio, lha, rar, rpm,
+tar, zip/jar, zoo.
+
+EOF
+    usage
+    echo ""
+    echo "Report bugs to <http://bugzilla.redhat.com/>."
+}
+
 usage()
 {
-    echo "Usage: `basename $0` [-qf] [-C dir] ARCHIVE..."
-    echo "  -q        Suppress output."
-    echo "  -f        Force overwriting existing files."
-    echo "  -C dir    Change to directory 'dir' before extracting."
+    cat <<EOF
+Usage: fedora-extract [OPTION]... ARCHIVE...
+
+Options:
+  -q        Suppress output.
+  -f        Force overwriting existing files.
+  -C DIR    Change to directory DIR before extracting.
+  -h        Print help message and exit.
+  -v        Print version information and exit.
+EOF
 }
 
 fmime()
@@ -140,11 +183,13 @@ unarch()
 
 dir="$PWD"
 
-while getopts "qfC:" key ; do
+while getopts "qfC:hv" key ; do
     case "$key" in
         q) quiet=1 ;;
         f) force=1 ;;
         C) dir="$OPTARG" ;;
+        h) help ; exit 0 ;;
+        v) version ; exit 0 ;;
         *) usage ; exit 1 ;;
     esac
 done

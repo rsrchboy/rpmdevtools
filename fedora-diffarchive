@@ -1,12 +1,21 @@
 #!/bin/bash
+# -*- coding: utf-8 -*-
 
+# fedora-diffarchive -- Diff contents of two archives
 #
-# fedora-diffarchive
-# Diff contents of two archives
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
 #
-# Author:  Ville Skyttä <ville.skytta at iki.fi>
-# License: GPL
-# $Id: fedora-diffarchive,v 1.4 2006/02/26 15:53:55 scop Exp $
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Library General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 set -e
 
@@ -22,11 +31,40 @@ cleanup()
     [ -z "$tmpdir" -o ! -d "$tmpdir" ] || rm -rf "$tmpdir"
 }
 
+version()
+{
+    cat <<EOF
+fedora-diffarchive version 1.0
+
+Copyright (c) 2004-2006 Fedora Project <http://fedoraproject.org/>.
+This  program is licensed under the GNU General Public License, see the
+file COPYING included in the distribution archive.
+
+Written by Ville Skyttä.
+EOF
+}
+
+help()
+{
+    cat <<EOF
+fedora-diffarchive diffs contents of two archives.
+
+See fedora-extract(1) for information about supported archive types.
+EOF
+    usage
+    echo ""
+    echo "Report bugs to <http://bugzilla.redhat.com/>."
+}
+
 usage()
 {
     cat <<EOF
-Usage: `basename $0` [-l,--list] [diff-options] from-archive to-archive
+Usage: fedora-diffarchive [OPTION]... [DIFF_OPTIONS] FROM-ARCHIVE TO-ARCHIVE
+
+Options:
   -l, --list    Diff lists of files in archives, not files themselves.
+  -h, --help    Print help message and exit.
+  -v, --version Print version information and exit.
   diff-options  Options passed to diff(1), in addition to -r (default: -Nu).
                 The first argument not starting with a '-' ends diff-options.
 EOF
@@ -34,9 +72,11 @@ EOF
 
 while true ; do
     case "$1" in
-        -l|--list) [ -n "$list" ] && diffopts="$diffopts $1" || list=true ;;
-        -*)        diffopts="$diffopts $1" ;;
-        *)         break ;;
+        -l|--list)    [ -n "$list" ] && diffopts="$diffopts $1" || list=true ;;
+        -h|--help)    help ; exit 0 ;;
+        -v|--version) version ; exit 0 ;;
+        -*)           diffopts="$diffopts $1" ;;
+        *)            break ;;
     esac
     shift
 done
