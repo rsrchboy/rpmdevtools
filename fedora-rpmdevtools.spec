@@ -104,7 +104,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Mon Jun  5 2006 Ville Skyttä <ville.skytta at iki.fi>
-- Add manual pages for rmdevelrpms and extract.
+- Add manual pages for rmdevelrpms, diffarchive and extract.
 - Trim pre-2005 changelog entries.
 - Autotoolize source tree.
 
