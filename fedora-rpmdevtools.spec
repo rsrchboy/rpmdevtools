@@ -103,6 +103,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jul  7 2006 Ville Skyttä <ville.skytta at iki.fi>
+- Improve ruby spec template (#180066, David Lutterkort).
+
 * Mon Jun  5 2006 Ville Skyttä <ville.skytta at iki.fi>
 - Add manual pages for rmdevelrpms, diffarchive and extract.
 - Trim pre-2005 changelog entries.
