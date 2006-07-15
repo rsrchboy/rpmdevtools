@@ -103,6 +103,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Jul 15 2006 Ville Skyttä <ville.skytta at iki.fi>
+- Sort rmdevelrpms' output.
+
 * Fri Jul  7 2006 Ville Skyttä <ville.skytta at iki.fi>
 - Improve ruby spec template (#180066, David Lutterkort).
 
