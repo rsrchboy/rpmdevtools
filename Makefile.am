@@ -1,13 +1,13 @@
 AUTOMAKE_OPTIONS = foreign 1.5 dist-bzip2
 
-SUBDIRS = devgpgkeys emacs test
+SUBDIRS = emacs test
 
 pkgdatadir = $(datadir)/fedora
 pkgsysconfdir = $(sysconfdir)/fedora
 rpmlibdir = $(libdir)/rpm
 
 dist_bin_SCRIPTS = fedora-buildrpmtree fedora-diffarchive fedora-extract \
-	fedora-installdevkeys fedora-kmodhelper fedora-md5 fedora-newrpmspec \
+	fedora-kmodhelper fedora-md5 fedora-newrpmspec \
 	fedora-rmdevelrpms fedora-rpmchecksig fedora-rpminfo fedora-rpmvercmp \
 	fedora-wipebuildtree
 

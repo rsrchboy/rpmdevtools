@@ -29,7 +29,6 @@ This package contains scripts and (X)Emacs support files to aid in
 development of Fedora RPM packages.  These tools are designed for Fedora
 Core 2 and later.
 fedora-buildrpmtree     Create RPM build tree within user's home directory
-fedora-installdevkeys   Install GPG keys in alternate RPM keyring
 fedora-kmodhelper       Helper script for building kernel module RPMs
 fedora-md5              Display the md5sum of all files in an RPM
 fedora-newrpmspec       Creates new .spec from template
@@ -103,6 +102,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Jul 16 2006 Ville Skyttä <ville.skytta at iki.fi>
+- Drop fedora-installdevkeys and GPG keys, modify rpmchecksig to use
+  the system rpmdb.
+
 * Sat Jul 15 2006 Ville Skyttä <ville.skytta at iki.fi>
 - Sort rmdevelrpms' output.
 

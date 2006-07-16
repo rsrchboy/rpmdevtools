@@ -4,7 +4,6 @@ AC_PATH_PROG(HELP2MAN,help2man)
 AC_PATH_PROG(WGET,wget)
 AC_OUTPUT(
 Makefile
-devgpgkeys/Makefile
 emacs/Makefile
 test/Makefile
 )
