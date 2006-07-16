@@ -1,6 +1,5 @@
-EXTRA_DIST = fedora-kmodhelper-test.sh rpathtest.sh
+EXTRA_DIST = rpathtest.sh
 
 check:
-	chmod +x $(srcdir)/*.sh $(top_srcdir)/{fedora-kmodhelper,check-*}
-	$(srcdir)/fedora-kmodhelper-test.sh $(top_srcdir)/fedora-kmodhelper
+	chmod +x $(srcdir)/*.sh $(top_srcdir)/check-*
 	env srcdir=$(top_srcdir) $(srcdir)/rpathtest.sh

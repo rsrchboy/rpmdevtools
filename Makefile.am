@@ -7,7 +7,7 @@ pkgsysconfdir = $(sysconfdir)/fedora
 rpmlibdir = $(libdir)/rpm
 
 dist_bin_SCRIPTS = fedora-buildrpmtree fedora-diffarchive fedora-extract \
-	fedora-kmodhelper fedora-md5 fedora-newrpmspec \
+	fedora-md5 fedora-newrpmspec \
 	fedora-rmdevelrpms fedora-rpmchecksig fedora-rpminfo fedora-rpmvercmp \
 	fedora-wipebuildtree
 
