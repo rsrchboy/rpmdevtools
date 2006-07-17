@@ -2,8 +2,8 @@ AUTOMAKE_OPTIONS = foreign 1.5 dist-bzip2
 
 SUBDIRS = emacs test
 
-pkgdatadir = $(datadir)/fedora
-pkgsysconfdir = $(sysconfdir)/fedora
+pkgdatadir = $(datadir)/rpmdevtools
+pkgsysconfdir = $(sysconfdir)/rpmdevtools
 rpmlibdir = $(libdir)/rpm
 
 dist_bin_SCRIPTS = buildrpmtree diffarchive extractarchive \
@@ -11,16 +11,16 @@ dist_bin_SCRIPTS = buildrpmtree diffarchive extractarchive \
 	rmdevelrpms rpmchecksig rpminfo rpmvercmp \
 	wipebuildtree
 
-dist_pkgdata_DATA = spectemplate-lib.spec spectemplate-minimal.spec \
-	spectemplate-perl.spec spectemplate-python.spec \
-	spectemplate-ruby.spec template.init
-
 dist_man1_MANS = extractarchive.1 diffarchive.1
 dist_man8_MANS = rmdevelrpms.8
 
-dist_rpmlib_SCRIPTS = check-buildroot check-rpaths check-rpaths-worker
+dist_pkgdata_DATA = template.init
 
-dist_pkgsysconf_DATA = rmdevelrpms.conf
+dist_pkgsysconf_DATA = spectemplate-lib.spec spectemplate-minimal.spec \
+	spectemplate-perl.spec spectemplate-python.spec \
+	spectemplate-ruby.spec rmdevelrpms.conf
+
+dist_rpmlib_SCRIPTS = check-buildroot check-rpaths check-rpaths-worker
 
 EXTRA_DIST = $(PACKAGE).spec
 

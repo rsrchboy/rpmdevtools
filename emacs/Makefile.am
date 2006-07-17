@@ -1,4 +1,3 @@
-pkgdatadir = $(datadir)/fedora
-emacsdir = $(pkgdatadir)/emacs
+pkgdatadir = $(datadir)/rpmdevtools
 
-dist_emacs_DATA = $(PACKAGE)-init.el
+dist_pkgdata_DATA = $(PACKAGE)-init.el

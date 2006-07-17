@@ -60,8 +60,8 @@ install -pm 755 spectool*/spectool $RPM_BUILD_ROOT%{_bindir}
 
 for dir in %{emacs_sitestart_d} %{xemacs_sitestart_d} ; do
   install -dm 755 $RPM_BUILD_ROOT$dir
-  ln -s %{_datadir}/fedora/emacs/%{name}-init.el $RPM_BUILD_ROOT$dir
-  touch $RPM_BUILD_ROOT$dir/%{name}-init.elc
+  ln -s %{_datadir}/rpmdevtools/rpmdevtools-init.el $RPM_BUILD_ROOT$dir
+  touch $RPM_BUILD_ROOT$dir/rpmdevtools-init.elc
 done
 
 # Backwards compatibility symlinks
@@ -87,24 +87,24 @@ rm -rf $RPM_BUILD_ROOT
 
 %triggerin -- emacs-common
 [ -d %{emacs_sitestart_d} ] && \
-  ln -sf %{_datadir}/fedora/emacs/%{name}-init.el %{emacs_sitestart_d} || :
+  ln -sf %{_datadir}/rpmdevtools/rpmdevtools-init.el %{emacs_sitestart_d} || :
 
 %triggerin -- xemacs-common
 [ -d %{xemacs_sitestart_d} ] && \
-  ln -sf %{_datadir}/fedora/emacs/%{name}-init.el %{xemacs_sitestart_d} || :
+  ln -sf %{_datadir}/rpmdevtools/rpmdevtools-init.el %{xemacs_sitestart_d} || :
 
 %triggerun -- emacs-common
-[ $2 -eq 0 ] && rm -f %{emacs_sitestart_d}/%{name}-init.el* || :
+[ $2 -eq 0 ] && rm -f %{emacs_sitestart_d}/rpmdevtools-init.el* || :
 
 %triggerun -- xemacs-common
-[ $2 -eq 0 ] && rm -f %{xemacs_sitestart_d}/%{name}-init.el* || :
+[ $2 -eq 0 ] && rm -f %{xemacs_sitestart_d}/rpmdevtools-init.el* || :
 
 
 %files
 %defattr(-,root,root,-)
 %doc COPYING README*
-%config(noreplace) %{_sysconfdir}/fedora
-%{_datadir}/fedora/
+%config(noreplace) %{_sysconfdir}/rpmdevtools/
+%{_datadir}/rpmdevtools/
 %{_bindir}/*
 %{_prefix}/lib/rpm/check-*
 %ghost %{_datadir}/*emacs
@@ -114,6 +114,9 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Mon Jul 17 2006 Ville Skyttä <ville.skytta at iki.fi>
 - Drop fedora- prefix everywhere, add backcompat symlinks for execubtables.
+- Move %%{_sysconfdir}/fedora to %%{_sysconfdir}/rpmdevtools and
+  %%{_datadir}/fedora to %%{_datadir}/rpmdevtools.
+- Move spec templates to %%{_sysconfdir}/rpmdevtools, mark as config.
 - Bump version to 5.0.
 
 * Sun Jul 16 2006 Ville Skyttä <ville.skytta at iki.fi>
