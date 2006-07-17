@@ -1,4 +1,4 @@
-AC_INIT(fedora-rpmdevtools, 1.6)
+AC_INIT(rpmdevtools, 5.0)
 AM_INIT_AUTOMAKE
 AC_PATH_PROG(HELP2MAN,help2man)
 AC_PATH_PROG(WGET,wget)

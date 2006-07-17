@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 #	RPM-build-tree.txt
-#		also called: fedora-buildrpmtree
+#		also called: buildrpmtree
 #
 #	Set up a 'plain userid' SRPM build environment
 #
@@ -20,7 +20,7 @@ VER="0.06-050205"
 #	copyright (c) 2002 Owl River Company - Columbus OH
 #	info@owlriver.com -- GPL v.2 
 #
-#       $Id: fedora-buildrpmtree,v 1.5 2005/02/05 22:52:38 scop Exp $
+#       $Id: buildrpmtree,v 1.1 2006/07/17 20:02:10 scop Exp $
 #
 #	rev 0.06 050205 IVA -- use the paths as defined in configuration
 #	rev 0.05 030814 RPH -- apply NIS extension per 

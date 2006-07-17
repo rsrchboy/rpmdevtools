@@ -6,7 +6,7 @@ Makefile.in
 autom4te.cache
 config.*
 configure
-fedora-rpmdevtools-*
-fedora-rpminfo
 install-sh
 missing
+rpmdevtools-*
+rpminfo

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 #
 # Seth Vidal - yadda yadda yadda GPL Yadda yadda yadda Use at own risk
-# $Id: fedora-rpmvercmp,v 1.2 2003/08/15 20:25:45 scop Exp $
+# $Id: rpmvercmp,v 1.1 2006/07/17 20:02:10 scop Exp $
 
 import rpm
 import sys

@@ -1,7 +1,7 @@
 #!/bin/bash
 # -*- coding: utf-8 -*-
 
-# fedora-diffarchive -- Diff contents of two archives
+# diffarchive -- Diff contents of two archives
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ cleanup()
 version()
 {
     cat <<EOF
-fedora-diffarchive version 1.0
+diffarchive version 1.0
 
 Copyright (c) 2004-2006 Fedora Project <http://fedoraproject.org/>.
 This  program is licensed under the GNU General Public License, see the
@@ -47,9 +47,9 @@ EOF
 help()
 {
     cat <<EOF
-fedora-diffarchive diffs contents of two archives.
+diffarchive diffs contents of two archives.
 
-See fedora-extract(1) for information about supported archive types.
+See extractarchive(1) for information about supported archive types.
 EOF
     usage
     echo ""
@@ -59,7 +59,7 @@ EOF
 usage()
 {
     cat <<EOF
-Usage: fedora-diffarchive [OPTION]... [DIFF_OPTIONS] FROM-ARCHIVE TO-ARCHIVE
+Usage: diffarchive [OPTION]... [DIFF_OPTIONS] FROM-ARCHIVE TO-ARCHIVE
 
 Options:
   -l, --list    Diff lists of files in archives, not files themselves.
@@ -98,10 +98,10 @@ diffopts="-r ${diffopts:--Nu}"
 tmpdir=`mktemp -d /tmp/diffarchive.XXXXXX`
 
 mkdir "$tmpdir/old" "$tmpdir/new"
-fedora-extract -q -C "$tmpdir/old" "$1"
-fedora-extract -q -C "$tmpdir/new" "$2"
+extractarchive -q -C "$tmpdir/old" "$1"
+extractarchive -q -C "$tmpdir/new" "$2"
 
-# It would be nice if fedora-extract could do some of the chmods.
+# It would be nice if extractarchive could do some of the chmods.
 find "$tmpdir"/* -type d -exec chmod u+rx {} ';' # Note: -exec, not xargs here.
 chmod -R u+rw "$tmpdir"/*
 cd "$tmpdir"

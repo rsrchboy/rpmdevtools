@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# $Id: fedora-newrpmspec,v 1.7 2006/04/02 22:08:11 scop Exp $
+# $Id: newrpmspec,v 1.1 2006/07/17 20:02:10 scop Exp $
 
 SPECDIR="/usr/share/fedora"
 DEFTYPE="minimal"
@@ -9,7 +9,7 @@ DEFSPEC="newpackage.spec"
 usage() {
     ret=${1:-0}
     cat <<EOF
-Usage: fedora-newrpmspec [option]... [appname]
+Usage: newrpmspec [option]... [appname]
 
 Options:
   -o FILE  Output the specfile to FILE.  "-" means stdout.  The default is

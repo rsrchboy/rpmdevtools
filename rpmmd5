@@ -17,8 +17,8 @@
 
 while test "$1"; do
     case "$1" in
-	--help)		echo $"Usage: fedora-md5 <package>"; exit 0;;
-	--version)	echo $"fedora-md5 0.4"; exit 0;;
+	--help)		echo $"Usage: rpmmd5 <package>"; exit 0;;
+	--version)	echo $"rpmmd5 0.4"; exit 0;;
 	--)		shift; break;;
 	*)		break
     esac

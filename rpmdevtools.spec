@@ -2,8 +2,8 @@
 %define xemacs_sitestart_d %{_datadir}/xemacs/site-packages/lisp/site-start.d
 %define spectool_version   1.0.7
 
-Name:           fedora-rpmdevtools
-Version:        1.6
+Name:           rpmdevtools
+Version:        5.0
 Release:        1%{?dist}
 Summary:        Fedora RPM Development Tools
 
@@ -15,9 +15,9 @@ Source1:        http://people.redhat.com/nphilipp/spectool/spectool-%{spectool_v
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
-Provides:       %{name}-emacs = %{version}-%{release}
 Provides:       spectool = %{spectool_version}
-Obsoletes:      %{name}-emacs < 0.1.9
+Provides:       fedora-rpmdevtools = %{name}-%{version}
+Obsoletes:      fedora-rpmdevtools < 5.0
 # Required for tool operations
 Requires:       rpm-python, python, cpio, sed, perl, wget, file
 # Minimal RPM build requirements
@@ -28,17 +28,17 @@ Requires:       diffutils, gzip, bzip2, unzip
 This package contains scripts and (X)Emacs support files to aid in
 development of Fedora RPM packages.  These tools are designed for Fedora
 Core 2 and later.
-fedora-buildrpmtree     Create RPM build tree within user's home directory
-fedora-md5              Display the md5sum of all files in an RPM
-fedora-newrpmspec       Creates new .spec from template
-fedora-rmdevelrpms      Find (and optionally remove) "development" RPMs
-fedora-rpmchecksig      Check package signatures using alternate RPM keyring
-fedora-rpminfo          Prints information about executables and libraries
-fedora-rpmvercmp        RPM version comparison checker
-fedora-extract          Extract various archives, "tar xvf" style
-fedora-diffarchive      Diff contents of two archives
-fedora-wipebuildtree    Erase all files within dirs created by buildrpmtree
-spectool                Expand and download sources and patches in specfiles
+buildrpmtree     Create RPM build tree within user's home directory
+diffarchive      Diff contents of two archives
+extractarchive   Extract various archives, "tar xvf" style
+newrpmspec       Creates new .spec from template
+rmdevelrpms      Find (and optionally remove) "development" RPMs
+rpmchecksig      Check package signatures using alternate RPM keyring
+rpminfo          Prints information about executables and libraries
+rpmmd5           Display the md5sum of all files in an RPM
+rpmvercmp        RPM version comparison checker
+spectool         Expand and download sources and patches in specfiles
+wipebuildtree    Erase all files within dirs created by buildrpmtree
 
 
 %prep
@@ -60,9 +60,21 @@ install -pm 755 spectool*/spectool $RPM_BUILD_ROOT%{_bindir}
 
 for dir in %{emacs_sitestart_d} %{xemacs_sitestart_d} ; do
   install -dm 755 $RPM_BUILD_ROOT$dir
-  ln -s %{_datadir}/fedora/emacs/fedora-init.el $RPM_BUILD_ROOT$dir
-  touch $RPM_BUILD_ROOT$dir/fedora-init.elc
+  ln -s %{_datadir}/fedora/emacs/%{name}-init.el $RPM_BUILD_ROOT$dir
+  touch $RPM_BUILD_ROOT$dir/%{name}-init.elc
 done
+
+# Backwards compatibility symlinks
+ln -s buildrpmtree    $RPM_BUILD_ROOT%{_bindir}/fedora-buildrpmtree
+ln -s diffarchive     $RPM_BUILD_ROOT%{_bindir}/fedora-diffarchive
+ln -s extractarchive  $RPM_BUILD_ROOT%{_bindir}/fedora-extract
+ln -s newrpmspec      $RPM_BUILD_ROOT%{_bindir}/fedora-newrpmspec
+ln -s rmdevelrpms     $RPM_BUILD_ROOT%{_bindir}/fedora-rmdevelrpms
+ln -s rpmchecksig     $RPM_BUILD_ROOT%{_bindir}/fedora-rpmchecksig
+ln -s rpminfo         $RPM_BUILD_ROOT%{_bindir}/fedora-rpminfo
+ln -s rpmmd5          $RPM_BUILD_ROOT%{_bindir}/fedora-md5
+ln -s rpmvercmp       $RPM_BUILD_ROOT%{_bindir}/fedora-rpmvercmp
+ln -s wipebuildtree   $RPM_BUILD_ROOT%{_bindir}/fedora-wipebuildtree
 
 
 %check
@@ -75,17 +87,17 @@ rm -rf $RPM_BUILD_ROOT
 
 %triggerin -- emacs-common
 [ -d %{emacs_sitestart_d} ] && \
-  ln -sf %{_datadir}/fedora/emacs/fedora-init.el %{emacs_sitestart_d} || :
+  ln -sf %{_datadir}/fedora/emacs/%{name}-init.el %{emacs_sitestart_d} || :
 
 %triggerin -- xemacs-common
 [ -d %{xemacs_sitestart_d} ] && \
-  ln -sf %{_datadir}/fedora/emacs/fedora-init.el %{xemacs_sitestart_d} || :
+  ln -sf %{_datadir}/fedora/emacs/%{name}-init.el %{xemacs_sitestart_d} || :
 
 %triggerun -- emacs-common
-[ $2 -eq 0 ] && rm -f %{emacs_sitestart_d}/fedora-init.el* || :
+[ $2 -eq 0 ] && rm -f %{emacs_sitestart_d}/%{name}-init.el* || :
 
 %triggerun -- xemacs-common
-[ $2 -eq 0 ] && rm -f %{xemacs_sitestart_d}/fedora-init.el* || :
+[ $2 -eq 0 ] && rm -f %{xemacs_sitestart_d}/%{name}-init.el* || :
 
 
 %files
@@ -93,14 +105,17 @@ rm -rf $RPM_BUILD_ROOT
 %doc COPYING README*
 %config(noreplace) %{_sysconfdir}/fedora
 %{_datadir}/fedora/
-%{_bindir}/fedora-*
-%{_bindir}/spectool
+%{_bindir}/*
 %{_prefix}/lib/rpm/check-*
 %ghost %{_datadir}/*emacs
-%{_mandir}/man?/fedora-*.?*
+%{_mandir}/man?/*.*
 
 
 %changelog
+* Mon Jul 17 2006 Ville Skyttä <ville.skytta at iki.fi>
+- Drop fedora- prefix everywhere, add backcompat symlinks for execubtables.
+- Bump version to 5.0.
+
 * Sun Jul 16 2006 Ville Skyttä <ville.skytta at iki.fi>
 - Drop fedora-kmodhelper.
 - Drop fedora-installdevkeys and GPG keys, modify rpmchecksig to use

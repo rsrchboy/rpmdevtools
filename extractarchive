@@ -1,7 +1,7 @@
 #!/bin/bash
 # -*- coding: utf-8 -*-
 
-# fedora-extract -- Extract various archives in "tar xvf" style
+# extractarchive -- Extract various archives in "tar xvf" style
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ dir=
 version()
 {
     cat <<EOF
-fedora-extract version 1.0
+extractarchive version 1.0
 
 Copyright (c) 2004-2006 Fedora Project <http://fedoraproject.org/>.
 This  program is licensed under the GNU General Public License, see the
@@ -43,7 +43,7 @@ EOF
 help()
 {
     cat <<EOF
-fedora-extract extracts various archives in "tar xvf" style.
+extractarchive extracts various archives in "tar xvf" style.
 
 Depending on availability of external (un)archiver programs, the following
 archive types are supported: ace, ar/deb, arj, cab/exe, cpio, lha, rar, rpm,
@@ -58,7 +58,7 @@ EOF
 usage()
 {
     cat <<EOF
-Usage: fedora-extract [OPTION]... ARCHIVE...
+Usage: extractarchive [OPTION]... ARCHIVE...
 
 Options:
   -q        Suppress output.

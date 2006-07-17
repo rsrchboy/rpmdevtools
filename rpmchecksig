@@ -13,10 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-#Copyright 2003 Duke University
+# Copyright 2003 Duke University
 #    Seth Vidal skvidal at phy.duke.edu
 #
-# $Id: fedora-rpmchecksig,v 1.4 2006/07/16 21:09:23 scop Exp $
+# $Id: rpmchecksig,v 1.1 2006/07/17 20:02:10 scop Exp $
 
 ######
 # Simple docs: run it with a list of rpms as the args
