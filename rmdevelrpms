@@ -5,7 +5,7 @@
 #
 # Author:  Ville Skyttä <ville.skytta at iki.fi>
 # Credits: Seth Vidal (yum), Thomas Vander Stichele (mach)
-# $Id: rmdevelrpms,v 1.1 2006/07/17 20:02:10 scop Exp $
+# $Id: rmdevelrpms,v 1.2 2006/07/17 20:53:23 scop Exp $
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -125,8 +125,8 @@ To include additional packages in the list of ones treated as development
 packages, use the "devpkgs" option in the configuration file.  To exclude
 packages from the list use "nondevpkgs" in it.  Exclusion overrides inclusion.
 
-The system wide configuration file is /etc/fedora/rmdevelrpms.conf, and per
-user settings (which override system ones) can be specified in
+The system wide configuration file is /etc/rpmdevtools/rmdevelrpms.conf, and
+per user settings (which override system ones) can be specified in
 ~/.rmdevelrpmsrc.  These files are written in Python.
 '''
     usage(None)
@@ -241,7 +241,7 @@ def main():
         del ts
 
 
-for conf in ("/etc/fedora/rmdevelrpms.conf",
+for conf in ("/etc/rpmdevtools/rmdevelrpms.conf",
              os.path.join(os.environ["HOME"], ".rmdevelrpmsrc")):
     try:
         execfile(conf)

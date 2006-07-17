@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# $Id: newrpmspec,v 1.1 2006/07/17 20:02:10 scop Exp $
+# $Id: newrpmspec,v 1.2 2006/07/17 20:53:23 scop Exp $
 
-SPECDIR="/usr/share/fedora"
+SPECDIR="/etc/rpmdevtools"
 DEFTYPE="minimal"
 DEFSPEC="newpackage.spec"
 
