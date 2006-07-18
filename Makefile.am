@@ -17,8 +17,8 @@ dist_man8_MANS = rmdevelrpms.8
 dist_pkgdata_DATA = template.init
 
 dist_pkgsysconf_DATA = spectemplate-lib.spec spectemplate-minimal.spec \
-	spectemplate-perl.spec spectemplate-python.spec \
-	spectemplate-ruby.spec rmdevelrpms.conf
+	spectemplate-perl.spec spectemplate-php-pear.spec \
+	spectemplate-python.spec spectemplate-ruby.spec rmdevelrpms.conf 
 
 dist_rpmlib_SCRIPTS = check-buildroot check-rpaths check-rpaths-worker
 

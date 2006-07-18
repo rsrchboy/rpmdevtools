@@ -112,6 +112,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jul 18 2006 Ville Skyttä <ville.skytta at iki.fi>
+- Add PHP PEAR spec template (#198706, Christopher Stone).
+
 * Mon Jul 17 2006 Ville Skyttä <ville.skytta at iki.fi>
 - Drop fedora- prefix everywhere, add backcompat symlinks for execubtables.
 - Move %%{_sysconfdir}/fedora to %%{_sysconfdir}/rpmdevtools and
