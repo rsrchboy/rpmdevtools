@@ -114,6 +114,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Wed Jul 19 2006 Ville Skyttä <ville.skytta at iki.fi>
 - Move option arguments to "find" before non-option ones in Perl spec template.
+- Drop python-abi dependency from Python spec template (#189947).
 
 * Tue Jul 18 2006 Ville Skyttä <ville.skytta at iki.fi>
 - Add PHP PEAR spec template (#198706, Christopher Stone).

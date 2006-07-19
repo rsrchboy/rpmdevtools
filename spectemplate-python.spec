@@ -14,7 +14,6 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      
 BuildRequires:  python-devel
-Requires:   python-abi = %(%{__python} -c "import sys ; print sys.version[:3]")
 
 %description
 
