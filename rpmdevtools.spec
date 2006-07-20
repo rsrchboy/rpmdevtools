@@ -112,6 +112,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jul 20 2006 Ville Skyttä <ville.skytta at iki.fi>
+- Mark things that are not needed for noarch module packages in the Perl
+  spec template.
+
 * Wed Jul 19 2006 Ville Skyttä <ville.skytta at iki.fi>
 - Move option arguments to "find" before non-option ones in Perl spec template.
 - Drop python-abi dependency from Python spec template (#189947).
