@@ -114,6 +114,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Wed Aug  2 2006 Ville Skyttä <ville.skytta at iki.fi>
 - Treat *-sdk as devel packages in rmdevelrpms (#199909).
+- Don't assume compface is a devel package in rmdevelrpms.
 
 * Thu Jul 20 2006 Ville Skyttä <ville.skytta at iki.fi>
 - Mark things that are not needed for noarch module packages in the Perl

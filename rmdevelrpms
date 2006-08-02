@@ -5,7 +5,7 @@
 #
 # Author:  Ville Skyttä <ville.skytta at iki.fi>
 # Credits: Seth Vidal (yum), Thomas Vander Stichele (mach)
-# $Id: rmdevelrpms,v 1.3 2006/08/02 20:39:50 scop Exp $
+# $Id: rmdevelrpms,v 1.4 2006/08/02 20:41:47 scop Exp $
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ jdev_re = re.compile("^java-.+-gcj-compat-devel$")
 
 def_devpkgs =\
 ("autoconf", "autoconf213", "automake", "automake14", "automake15",
- "automake16", "automake17", "bison", "byacc", "compface", "dev86", "djbfft",
+ "automake16", "automake17", "bison", "byacc", "dev86", "djbfft",
  "docbook-utils-pdf", "doxygen", "flex", "gcc-g77", "gcc-gfortran", "gcc-gnat",
  "gcc-objc", "gcc32", "gcc34", "gcc34-c++", "gcc34-java", "gcc35", "gcc35-c++",
  "gcc4", "gcc4-c++", "gcc4-gfortran", "gettext", "glade", "glade2",
