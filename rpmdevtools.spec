@@ -113,6 +113,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Sun Aug 20 2006 Ville Skyttä <ville.skytta at iki.fi>
 - Re-rename almost everything to rpmdev-*, with backwards compat symlinks.
+- Drop PHP PEAR spec template, it's not ready yet.
 
 * Wed Aug  2 2006 Ville Skyttä <ville.skytta at iki.fi>
 - Treat *-sdk as devel packages in rmdevelrpms (#199909).
