@@ -16,7 +16,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
 Provides:       spectool = %{spectool_version}
-Provides:       fedora-rpmdevtools = %{name}-%{version}
+Provides:       fedora-rpmdevtools = %{version}
 Obsoletes:      fedora-rpmdevtools < 5.0
 # Required for tool operations
 Requires:       rpm-python, python, cpio, sed, perl, wget, file
