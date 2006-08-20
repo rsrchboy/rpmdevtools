@@ -1,14 +1,13 @@
 #!/usr/bin/python
 #
 # Seth Vidal - yadda yadda yadda GPL Yadda yadda yadda Use at own risk
-# $Id: rpmvercmp,v 1.1 2006/07/17 20:02:10 scop Exp $
 
 import rpm
 import sys
 
 def usage():
     print """
-    rpmvercmp epoch1, ver1, release1, epoch2, ver2, release2
+    rpmdev-vercmp epoch1, ver1, release1, epoch2, ver2, release2
     or just let it ask you.
     """
 

@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# $Id: newrpmspec,v 1.3 2006/07/18 16:52:35 scop Exp $
-
 SPECDIR="/etc/rpmdevtools"
 DEFTYPE="minimal"
 DEFSPEC="newpackage.spec"
@@ -9,7 +7,7 @@ DEFSPEC="newpackage.spec"
 usage() {
     ret=${1:-0}
     cat <<EOF
-Usage: newrpmspec [option]... [appname]
+Usage: rpmdev-newspec [option]... [appname]
 
 Options:
   -o FILE  Output the specfile to FILE.  "-" means stdout.  The default is

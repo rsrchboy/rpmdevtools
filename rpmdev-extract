@@ -1,7 +1,7 @@
 #!/bin/bash
 # -*- coding: utf-8 -*-
 
-# extractarchive -- Extract various archives in "tar xvf" style
+# rpmdev-extract -- Extract various archives in "tar xvf" style
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ dir=
 version()
 {
     cat <<EOF
-extractarchive version 1.0
+rpmdev-extract version 1.0
 
 Copyright (c) 2004-2006 Fedora Project <http://fedoraproject.org/>.
 This  program is licensed under the GNU General Public License, see the
@@ -43,7 +43,7 @@ EOF
 help()
 {
     cat <<EOF
-extractarchive extracts various archives in "tar xvf" style.
+rpmdev-extract extracts various archives in "tar xvf" style.
 
 Depending on availability of external (un)archiver programs, the following
 archive types are supported: ace, ar/deb, arj, cab/exe, cpio, lha, rar, rpm,
@@ -58,7 +58,7 @@ EOF
 usage()
 {
     cat <<EOF
-Usage: extractarchive [OPTION]... ARCHIVE...
+Usage: rpmdev-extract [OPTION]... ARCHIVE...
 
 Options:
   -q        Suppress output.

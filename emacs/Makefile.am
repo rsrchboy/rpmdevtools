@@ -1,3 +1,3 @@
 pkgdatadir = $(datadir)/rpmdevtools
 
-dist_pkgdata_DATA = $(PACKAGE)-init.el
+dist_pkgdata_DATA = rpmdev-init.el

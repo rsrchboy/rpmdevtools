@@ -6,13 +6,12 @@ pkgdatadir = $(datadir)/rpmdevtools
 pkgsysconfdir = $(sysconfdir)/rpmdevtools
 rpmlibdir = $(libdir)/rpm
 
-dist_bin_SCRIPTS = buildrpmtree diffarchive extractarchive \
-	rpmmd5 newrpmspec \
-	rmdevelrpms rpmchecksig rpminfo rpmvercmp \
-	wipebuildtree
+dist_bin_SCRIPTS = rpmdev-checksig rpmdev-diff rpmdev-extract rpmdev-md5 \
+	rpmdev-newspec rpmdev-rmdevelrpms rpmdev-setuptree rpmdev-vercmp \
+	rpmdev-wipetree rpminfo
 
-dist_man1_MANS = extractarchive.1 diffarchive.1
-dist_man8_MANS = rmdevelrpms.8
+dist_man1_MANS = rpmdev-diff.1 rpmdev-extract.1
+dist_man8_MANS = rpmdev-rmdevelrpms.8
 
 dist_pkgdata_DATA = template.init
 

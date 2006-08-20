@@ -5,7 +5,7 @@
 Name:           rpmdevtools
 Version:        5.0
 Release:        1%{?dist}
-Summary:        Fedora RPM Development Tools
+Summary:        RPM Development Tools
 
 Group:          Development/Tools
 License:        GPL
@@ -26,19 +26,18 @@ Requires:       diffutils, gzip, bzip2, unzip
 
 %description
 This package contains scripts and (X)Emacs support files to aid in
-development of Fedora RPM packages.  These tools are designed for Fedora
-Core 2 and later.
-buildrpmtree     Create RPM build tree within user's home directory
-diffarchive      Diff contents of two archives
-extractarchive   Extract various archives, "tar xvf" style
-newrpmspec       Creates new .spec from template
-rmdevelrpms      Find (and optionally remove) "development" RPMs
-rpmchecksig      Check package signatures using alternate RPM keyring
-rpminfo          Prints information about executables and libraries
-rpmmd5           Display the md5sum of all files in an RPM
-rpmvercmp        RPM version comparison checker
-spectool         Expand and download sources and patches in specfiles
-wipebuildtree    Erase all files within dirs created by buildrpmtree
+development of RPM packages.
+rpmdev-setuptree    Create RPM build tree within user's home directory
+rpmdev-diff         Diff contents of two archives
+rpmdev-newspec      Creates new .spec from template
+rpmdev-rmdevelrpms  Find (and optionally remove) "development" RPMs
+rpmdev-checksig     Check package signatures using alternate RPM keyring
+rpminfo             Print information about executables and libraries
+rpmdev-md5          Display the md5sum of all files in an RPM
+rpmdev-vercmp       RPM version comparison checker
+spectool            Expand and download sources and patches in specfiles
+rpmdev-wipetree     Erase all files within dirs created by rpmdev-setuptree
+rpmdev-extract      Extract various archives, "tar xvf" style
 
 
 %prep
@@ -60,21 +59,21 @@ install -pm 755 spectool*/spectool $RPM_BUILD_ROOT%{_bindir}
 
 for dir in %{emacs_sitestart_d} %{xemacs_sitestart_d} ; do
   install -dm 755 $RPM_BUILD_ROOT$dir
-  ln -s %{_datadir}/rpmdevtools/rpmdevtools-init.el $RPM_BUILD_ROOT$dir
-  touch $RPM_BUILD_ROOT$dir/rpmdevtools-init.elc
+  ln -s %{_datadir}/rpmdevtools/rpmdev-init.el $RPM_BUILD_ROOT$dir
+  touch $RPM_BUILD_ROOT$dir/rpmdev-init.elc
 done
 
 # Backwards compatibility symlinks
-ln -s buildrpmtree    $RPM_BUILD_ROOT%{_bindir}/fedora-buildrpmtree
-ln -s diffarchive     $RPM_BUILD_ROOT%{_bindir}/fedora-diffarchive
-ln -s extractarchive  $RPM_BUILD_ROOT%{_bindir}/fedora-extract
-ln -s newrpmspec      $RPM_BUILD_ROOT%{_bindir}/fedora-newrpmspec
-ln -s rmdevelrpms     $RPM_BUILD_ROOT%{_bindir}/fedora-rmdevelrpms
-ln -s rpmchecksig     $RPM_BUILD_ROOT%{_bindir}/fedora-rpmchecksig
-ln -s rpminfo         $RPM_BUILD_ROOT%{_bindir}/fedora-rpminfo
-ln -s rpmmd5          $RPM_BUILD_ROOT%{_bindir}/fedora-md5
-ln -s rpmvercmp       $RPM_BUILD_ROOT%{_bindir}/fedora-rpmvercmp
-ln -s wipebuildtree   $RPM_BUILD_ROOT%{_bindir}/fedora-wipebuildtree
+ln -s rpmdev-checksig    $RPM_BUILD_ROOT%{_bindir}/fedora-rpmchecksig
+ln -s rpmdev-diff        $RPM_BUILD_ROOT%{_bindir}/fedora-diffarchive
+ln -s rpmdev-extract     $RPM_BUILD_ROOT%{_bindir}/fedora-extract
+ln -s rpmdev-md5         $RPM_BUILD_ROOT%{_bindir}/fedora-md5
+ln -s rpmdev-newspec     $RPM_BUILD_ROOT%{_bindir}/fedora-newrpmspec
+ln -s rpmdev-rmdevelrpms $RPM_BUILD_ROOT%{_bindir}/fedora-rmdevelrpms
+ln -s rpmdev-setuptree   $RPM_BUILD_ROOT%{_bindir}/fedora-buildrpmtree
+ln -s rpmdev-vercmp      $RPM_BUILD_ROOT%{_bindir}/fedora-rpmvercmp
+ln -s rpmdev-wipetree    $RPM_BUILD_ROOT%{_bindir}/fedora-wipebuildtree
+ln -s rpminfo            $RPM_BUILD_ROOT%{_bindir}/fedora-rpminfo
 
 
 %check
@@ -87,17 +86,17 @@ rm -rf $RPM_BUILD_ROOT
 
 %triggerin -- emacs-common
 [ -d %{emacs_sitestart_d} ] && \
-  ln -sf %{_datadir}/rpmdevtools/rpmdevtools-init.el %{emacs_sitestart_d} || :
+  ln -sf %{_datadir}/rpmdevtools/rpmdev-init.el %{emacs_sitestart_d} || :
 
 %triggerin -- xemacs-common
 [ -d %{xemacs_sitestart_d} ] && \
-  ln -sf %{_datadir}/rpmdevtools/rpmdevtools-init.el %{xemacs_sitestart_d} || :
+  ln -sf %{_datadir}/rpmdevtools/rpmdev-init.el %{xemacs_sitestart_d} || :
 
 %triggerun -- emacs-common
-[ $2 -eq 0 ] && rm -f %{emacs_sitestart_d}/rpmdevtools-init.el* || :
+[ $2 -eq 0 ] && rm -f %{emacs_sitestart_d}/rpmdev-init.el* || :
 
 %triggerun -- xemacs-common
-[ $2 -eq 0 ] && rm -f %{xemacs_sitestart_d}/rpmdevtools-init.el* || :
+[ $2 -eq 0 ] && rm -f %{xemacs_sitestart_d}/rpmdev-init.el* || :
 
 
 %files
@@ -112,6 +111,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Aug 20 2006 Ville Skyttä <ville.skytta at iki.fi>
+- Re-rename almost everything to rpmdev-*, with backwards compat symlinks.
+
 * Wed Aug  2 2006 Ville Skyttä <ville.skytta at iki.fi>
 - Treat *-sdk as devel packages in rmdevelrpms (#199909).
 - Don't assume compface is a devel package in rmdevelrpms.

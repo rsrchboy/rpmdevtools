@@ -1,17 +1,16 @@
 #!/bin/sh
 #
-# wipebuildtree
+# rpmdev-wipetree
 # Erases all files within the rpm build dir
 #
 # Author:  Warren Togami <warren@togami.com>
 # License: GPL
-# $Id: wipebuildtree,v 1.1 2006/07/17 20:02:10 scop Exp $
 
 # Sanity Check: Forbid root user
 if [ $(id -u) -eq 0 ]; then
     echo
     echo "ERROR: You should not be building RPMS as the superuser!"
-    echo "Please use buildrpmtree as a normal user and build"
+    echo "Please use rpmdev-setuptree as a normal user and build"
     echo "packages as that user.  If package building fails, then"
     echo "the package is improper and needs fixing."
     echo

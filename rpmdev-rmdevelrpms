@@ -1,11 +1,10 @@
 #!/usr/bin/python -tt
 # -*- coding: utf-8 -*-
 
-# rmdevelrpms -- Find (and optionally remove) "development" RPMs
+# rpmdev-rmdevelrpms -- Find (and optionally remove) "development" RPMs
 #
 # Author:  Ville Skyttä <ville.skytta at iki.fi>
 # Credits: Seth Vidal (yum), Thomas Vander Stichele (mach)
-# $Id: rmdevelrpms,v 1.4 2006/08/02 20:41:47 scop Exp $
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -104,7 +103,7 @@ def callback(what, bytes, total, h, user):
 
 
 def help():
-    print '''rmdevelrpms is a script for finding and optionally removing
+    print '''rpmdev-rmdevelrpms is a script for finding and optionally removing
 "development" packages, for example for cleanup purposes before starting to
 build a new package.
 
@@ -138,7 +137,7 @@ Report bugs to <http://bugzilla.redhat.com/>.'''
 
 def usage(exit=1):
     print '''
-Usage: rmdevelrpms [OPTION]...
+Usage: rpmdev-rmdevelrpms [OPTION]...
 
 Options:
   -y, --yes         Assume yes to all questions, do not prompt.
@@ -149,7 +148,7 @@ Options:
 
 
 def version():
-    print "rmdevelrpms version %s" % __version__
+    print "rpmdev-rmdevelrpms version %s" % __version__
     print '''
 Copyright (c) 2004-2006 Fedora Project <http://fedoraproject.org/>.
 This  program is licensed under the GNU General Public License, see the
