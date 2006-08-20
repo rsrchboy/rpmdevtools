@@ -1,6 +1,7 @@
 *.1
 *.8
 *.m4
+*.tar.*
 Makefile
 Makefile.in
 autom4te.cache
@@ -8,5 +9,4 @@ config.*
 configure
 install-sh
 missing
-rpmdevtools-*
 rpminfo
