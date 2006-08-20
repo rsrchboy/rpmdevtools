@@ -1,2 +1,3 @@
+*.elc
 Makefile
 Makefile.in
