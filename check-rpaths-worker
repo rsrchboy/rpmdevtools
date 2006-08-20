@@ -1,5 +1,4 @@
 #! /bin/bash
-# $Id: check-rpaths-worker,v 1.9 2006/07/17 20:02:10 scop Exp $
 
 # Copyright (C) 2004 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de>
 #  
