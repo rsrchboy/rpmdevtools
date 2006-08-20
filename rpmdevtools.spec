@@ -111,7 +111,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Aug 20 2006 Ville Skyttä <ville.skytta at iki.fi>
+* Sun Aug 20 2006 Ville Skyttä <ville.skytta at iki.fi> - 5.0-1
 - Re-rename almost everything to rpmdev-*, with backwards compat symlinks.
 - Don't encourage %%ghost'ing *.pyo in Python spec template, add some comments.
 - Drop PHP PEAR spec template, it's not ready yet.
