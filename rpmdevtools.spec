@@ -4,7 +4,7 @@
 
 Name:           rpmdevtools
 Version:        5.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        RPM Development Tools
 
 Group:          Development/Tools
@@ -84,6 +84,15 @@ make check
 rm -rf $RPM_BUILD_ROOT
 
 
+%post
+# Upgrade from fedora-rpmdevtools:
+oldconf=%{_sysconfdir}/fedora/rmdevelrpms.conf
+if [ $1 -eq 1 -a -f $oldconf ] ; then
+  echo "5615a64d80f6e6b4df77b3ab0ef1469c  $oldconf" \
+  | md5sum -c --status - >/dev/null 2>&1 || \
+  cat $oldconf > %{_sysconfdir}/rpmdevtools/rmdevelrpms.conf || :
+fi
+
 %triggerin -- emacs-common
 [ -d %{emacs_sitestart_d} ] && \
   ln -sf %{_datadir}/rpmdevtools/rpmdev-init.el %{emacs_sitestart_d} || :
@@ -111,6 +120,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Aug 22 2006 Ville Skyttä <ville.skytta at iki.fi> - 5.0-2
+- Migrate rmdevelrpms config when upgrading from fedora-rpmdevtools.
+
 * Sun Aug 20 2006 Ville Skyttä <ville.skytta at iki.fi> - 5.0-1
 - Re-rename almost everything to rpmdev-*, with backwards compat symlinks.
 - Don't encourage %%ghost'ing *.pyo in Python spec template, add some comments.
