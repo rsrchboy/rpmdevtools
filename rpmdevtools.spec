@@ -4,7 +4,7 @@
 
 Name:           rpmdevtools
 Version:        5.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        RPM Development Tools
 
 Group:          Development/Tools
@@ -120,6 +120,9 @@ fi
 
 
 %changelog
+* Mon Sep  4 2006 Ville Skyttä <ville.skytta at iki.fi> - 5.0-3
+- Re-add PHP PEAR spec template (#198706).
+
 * Tue Aug 22 2006 Ville Skyttä <ville.skytta at iki.fi> - 5.0-2
 - Migrate rmdevelrpms config when upgrading from fedora-rpmdevtools.
 
