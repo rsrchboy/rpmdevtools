@@ -22,16 +22,20 @@ Provides:       php-pear(Foo_Bar) = %{version}
 
 
 %prep
-%setup -q -n Foo_Bar-%{version}
-mv ../package.xml .
+%setup -q -c
+[ -f package2.xml ] || mv package.xml package2.xml
+mv package2.xml Foo_Bar-%{version}/Foo_Bar.xml
 
 
 %build
+cd Foo_Bar-%{version}
+# Empty build section, most likely nothing required.
 
 
 %install
+cd Foo_Bar-%{version}
 rm -rf $RPM_BUILD_ROOT docdir
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT package.xml
+%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT Foo_Bar.xml
 
 # Move documentation
 mkdir -p docdir
@@ -42,7 +46,7 @@ rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
 
 # Install XML package description
 mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 package.xml $RPM_BUILD_ROOT%{pear_xmldir}/Foo_Bar.xml
+install -pm 644 Foo_Bar.xml $RPM_BUILD_ROOT%{pear_xmldir}
 
 
 %clean
@@ -62,7 +66,7 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc docdir/Foo_Bar/*
+%doc Foo_Bar-%{version}/docdir/Foo_Bar/*
 %{pear_xmldir}/Foo_Bar.xml
 %{pear_testdir}/Foo_Bar
 %{pear_datadir}/Foo_Bar
