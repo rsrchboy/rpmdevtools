@@ -62,11 +62,7 @@ if [ -z "$spectype" ] ; then
         php-pear-*)
             spectype=php-pear
             pearname="$(echo ${appname##php-pear-} | tr - _)"
-            basepeardir="$(echo $pearname | cut -f 1 -d _)"
-            peardirpath="$(echo $pearname | tr _ /)"
-            specfilter="; s|^\\(.*\\)Foo_Bar\\(.*\\)|\1$pearname\2| \
-              ; s|^\\(%{pear_phpdir}/\\)Foo|\1$basepeardir| \
-              ; s|^\\(%{pear_phpdir}/\\)$pearname\\(.php\\)|\1$peardirpath\2|"
+            specfilter="; s/\\bFoo_Bar\\b/$pearname/"
             ;;
         [Pp]y*)
             spectype=python
