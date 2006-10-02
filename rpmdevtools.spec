@@ -3,7 +3,7 @@
 %define spectool_version   1.0.7
 
 Name:           rpmdevtools
-Version:        5.1
+Version:        5.2
 Release:        1%{?dist}
 Summary:        RPM Development Tools
 
@@ -120,6 +120,9 @@ fi
 
 
 %changelog
+* Mon Oct  2 2006 Ville Skyttä <ville.skytta at iki.fi> - 5.2-1
+- Treat yasm and *-static as devel packages in rmdevelrpms.
+
 * Sat Sep  9 2006 Ville Skyttä <ville.skytta at iki.fi> - 5.1-1
 - Re-add PHP PEAR spec template, more improvements to it (#198706,
   Christopher Stone, Remi Collet).
