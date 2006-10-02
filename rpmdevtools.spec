@@ -121,6 +121,7 @@ fi
 
 %changelog
 * Mon Oct  2 2006 Ville Skyttä <ville.skytta at iki.fi> - 5.2-1
+- Skip *.jar.so.debug in check-buildroot (#208903).
 - Treat yasm and *-static as devel packages in rmdevelrpms.
 
 * Sat Sep  9 2006 Ville Skyttä <ville.skytta at iki.fi> - 5.1-1
