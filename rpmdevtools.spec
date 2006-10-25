@@ -1,9 +1,9 @@
 %define emacs_sitestart_d  %{_datadir}/emacs/site-lisp/site-start.d
 %define xemacs_sitestart_d %{_datadir}/xemacs/site-packages/lisp/site-start.d
-%define spectool_version   1.0.7
+%define spectool_version   1.0.8
 
 Name:           rpmdevtools
-Version:        5.2
+Version:        5.3
 Release:        1%{?dist}
 Summary:        RPM Development Tools
 
@@ -120,6 +120,9 @@ fi
 
 
 %changelog
+* Wed Oct 25 2006 Ville Skyttä <ville.skytta at iki.fi> - 5.3-1
+- Update spectool to 1.0.8, fixes #212108.
+
 * Mon Oct  2 2006 Ville Skyttä <ville.skytta at iki.fi> - 5.2-1
 - Skip *.jar.so.debug in check-buildroot (#208903).
 - Treat yasm and *-static as devel packages in rmdevelrpms.
