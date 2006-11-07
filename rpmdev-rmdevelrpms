@@ -24,7 +24,7 @@
 import getopt, os, re, rpm, stat, sys, types
 
 
-__version__ = "1.3"
+__version__ = "1.4"
 
 
 dev_re  = re.compile("-(?:de(?:buginfo|vel)|sdk|static)\\b", re.IGNORECASE)
@@ -66,10 +66,11 @@ def isDevelPkg(hdr):
     if not hdr: return 0
     name = hdr[rpm.RPMTAG_NAME]
     if not name: return 0
-    if name in nondevpkgs: return 0
-    if name in devpkgs: return 1
-    if name in def_nondevpkgs: return 0
-    if name in def_devpkgs: return 1
+    na = "%s.%s" % (name, hdr[rpm.RPMTAG_ARCH])
+    if name in nondevpkgs or na in nondevpkgs: return 0
+    if name in devpkgs or na in devpkgs: return 1
+    if name in def_nondevpkgs or na in def_nondevpkgs: return 0
+    if name in def_devpkgs or na in def_devpkgs: return 1
     if jdev_re.search(name): return 0
     if dev_re.search(name): return 1
     if test_re.search(name): return 1
@@ -177,16 +178,20 @@ def main():
             confirm = 0
     ts = rpm.TransactionSet("/")
     ts.setVSFlags(~(rpm._RPMVSF_NOSIGNATURES|rpm._RPMVSF_NODIGESTS))
-    for pkg in ts.dbMatch():
+    mi = ts.dbMatch()
+    for pkg in mi:
         if isDevelPkg(pkg):
-            # addErase behaves like "--allmatches"
-            ts.addErase(pkg[rpm.RPMTAG_NAME])
+            ts.addErase(mi.instance())
     ts.order()
     pkgs = []
     try:
         te = ts.next()
         while te:
-            pkgs.append(te.NEVR())
+            arch = te.A()
+            if arch:
+                pkgs.append("%s.%s" % (te.NEVR(), arch))
+            else:
+                pkgs.append(te.NEVR())
             te = ts.next()
     except StopIteration:
         pass
@@ -196,6 +201,7 @@ def main():
             print "Found %d devel packages:" % len(pkgs)
             for pkg in pkgs:
                 print "  %s" % pkg
+            # TODO: is there a way to get arch for the unresolved deps?
             unresolved = ts.check()
             if unresolved:
                 print "...but removal would cause unresolved dependencies:"

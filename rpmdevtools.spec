@@ -120,6 +120,10 @@ fi
 
 
 %changelog
+* Wed Nov  8 2006 Ville Skyttä <ville.skytta at iki.fi>
+- Arch-qualify output of matched packages in rmdevelrpms and allow
+  arch-qualified packages in the config file.
+
 * Wed Oct 25 2006 Ville Skyttä <ville.skytta at iki.fi> - 5.3-1
 - Update spectool to 1.0.8, fixes #212108.
 
