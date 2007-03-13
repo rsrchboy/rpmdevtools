@@ -9,7 +9,7 @@ Summary:        RPM Development Tools
 
 Group:          Development/Tools
 License:        GPL
-URL:            http://fedora.redhat.com/
+URL:            http://fedoraproject.org/
 Source0:        %{name}-%{version}.tar.bz2
 Source1:        http://people.redhat.com/nphilipp/spectool/spectool-%{spectool_version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -103,6 +103,7 @@ rm -rf $RPM_BUILD_ROOT
 * Tue Mar 13 2007 Ville Skyttä <ville.skytta at iki.fi>
 - BR perl(ExtUtils::MakeMaker) by default in perl spec template.
 - Drop deprecated backwards compatibility with fedora-rpmdevtools.
+- Update URL.
 
 * Wed Nov  8 2006 Ville Skyttä <ville.skytta at iki.fi>
 - Arch-qualify output of matched packages in rmdevelrpms and allow
