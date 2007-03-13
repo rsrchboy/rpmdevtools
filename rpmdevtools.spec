@@ -120,6 +120,9 @@ fi
 
 
 %changelog
+* Tue Mar 13 2007 Ville Skyttä <ville.skytta at iki.fi>
+- BR perl(ExtUtils::MakeMaker) by default in perl spec template.
+
 * Wed Nov  8 2006 Ville Skyttä <ville.skytta at iki.fi>
 - Arch-qualify output of matched packages in rmdevelrpms and allow
   arch-qualified packages in the config file.
