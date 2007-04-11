@@ -100,6 +100,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Apr 11 2007 Ville Skyttä <ville.skytta at iki.fi>
+- Add --list-only option to rmdevelrpms (Thorsten Leemhuis).
+
 * Tue Mar 13 2007 Ville Skyttä <ville.skytta at iki.fi>
 - BR perl(ExtUtils::MakeMaker) by default in perl spec template.
 - Drop deprecated backwards compatibility with fedora-rpmdevtools.

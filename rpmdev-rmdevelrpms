@@ -24,7 +24,7 @@
 import getopt, os, re, rpm, stat, sys, types
 
 
-__version__ = "1.4"
+__version__ = "1.5"
 
 
 dev_re  = re.compile("-(?:de(?:buginfo|vel)|sdk|static)\\b", re.IGNORECASE)
@@ -142,6 +142,7 @@ Usage: rpmdev-rmdevelrpms [OPTION]...
 
 Options:
   -y, --yes         Remove without prompting (no-op if not root).
+  -l, --list-only   Output condensed list of found packages, do not remove.
   -v, --version     Print program version and exit.
   -h, --help        Print help message and exit.'''
     if exit is not None:
@@ -164,16 +165,19 @@ def main():
     try:
         # TODO: implement -r|--root for checking a specified rpm root
         opts, args = getopt.getopt(sys.argv[1:],
-                                   "yvh",
-                                   ["yes", "version", "help"])
+                                   "ylvh",
+                                   ["yes", "list", "version", "help"])
     except getopt.GetoptError:
         usage(2)
+    listonly = 0
     confirm = 1
     for o, a in opts:
         if o in ("-v", "--version"):
             version()
         if o in ("-h", "--help"):
             help()
+        if o in ("-l", "--list"):
+            listonly = 1
         elif o in ("-y", "--yes"):
             confirm = 0
     ts = rpm.TransactionSet("/")
@@ -198,48 +202,54 @@ def main():
     try:
         if len(pkgs) > 0:
             pkgs.sort()
-            print "Found %d devel packages:" % len(pkgs)
+            indent = ""
+            if not listonly:
+                indent = "  "
+                print "Found %d devel packages:" % len(pkgs)
             for pkg in pkgs:
-                print "  %s" % pkg
-            # TODO: is there a way to get arch for the unresolved deps?
-            unresolved = ts.check()
-            if unresolved:
-                print "...whose removal would cause unresolved dependencies:"
-                unresolved.sort(lambda x, y: cmp(x[0][0], y[0][0]))
-                for t in unresolved:
-                    dep = t[1][0]
-                    if t[1][1]:
-                        dep = dep + " "
-                        if t[2] & rpm.RPMSENSE_LESS:
-                            dep = dep + "<"
-                        if t[2] & rpm.RPMSENSE_GREATER:
-                            dep = dep + ">"
-                        if t[2] & rpm.RPMSENSE_EQUAL:
-                            dep = dep + "="
-                        dep = dep + " " + t[1][1]
-                    if t[4] == rpm.RPMDEP_SENSE_CONFLICTS:
-                        dep = "conflicts with " + dep
-                    elif t[4] == rpm.RPMDEP_SENSE_REQUIRES:
-                        dep = "requires " + dep
-                    print "  %s-%s-%s %s" % (t[0][0], t[0][1], t[0][2], dep)
-                print "Skipped."
-            elif os.geteuid() == 0:
-                if confirm:
-                    proceed = raw_input("Remove them? [y/N] ")
-                else:
-                    proceed = "y"
-                if (proceed in ("Y", "y")):
-                    sys.stdout.write("Removing...")
-                    errors = ts.run(callback, "")
-                    print "Done."
-                    if errors:
-                        for error in errors:
-                            print error
-                        sys.exit(1)
-                else:
-                    print "Not removed due to dependencies."
+                print indent + pkg
+            if listonly:
+                pass
             else:
-                print "Not running as root, skipping remove."
+                # TODO: is there a way to get arch for the unresolved deps?
+                unresolved = ts.check()
+                if unresolved:
+                    print "...whose removal would cause unresolved dependencies:"
+                    unresolved.sort(lambda x, y: cmp(x[0][0], y[0][0]))
+                    for t in unresolved:
+                        dep = t[1][0]
+                        if t[1][1]:
+                            dep = dep + " "
+                            if t[2] & rpm.RPMSENSE_LESS:
+                                dep = dep + "<"
+                            if t[2] & rpm.RPMSENSE_GREATER:
+                                dep = dep + ">"
+                            if t[2] & rpm.RPMSENSE_EQUAL:
+                                dep = dep + "="
+                            dep = dep + " " + t[1][1]
+                        if t[4] == rpm.RPMDEP_SENSE_CONFLICTS:
+                            dep = "conflicts with " + dep
+                        elif t[4] == rpm.RPMDEP_SENSE_REQUIRES:
+                            dep = "requires " + dep
+                        print "  %s-%s-%s %s" % (t[0][0], t[0][1], t[0][2], dep)
+                    print "Skipped."
+                elif os.geteuid() == 0:
+                    if confirm:
+                        proceed = raw_input("Remove them? [y/N] ")
+                    else:
+                        proceed = "y"
+                    if (proceed in ("Y", "y")):
+                        sys.stdout.write("Removing...")
+                        errors = ts.run(callback, "")
+                        print "Done."
+                        if errors:
+                            for error in errors:
+                                print error
+                            sys.exit(1)
+                    else:
+                        print "Not removed due to dependencies."
+                else:
+                    print "Not running as root, skipping remove."
         else:
             print "No devel packages found."
     finally:
