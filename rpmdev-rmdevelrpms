@@ -232,7 +232,7 @@ def main():
                         elif t[4] == rpm.RPMDEP_SENSE_REQUIRES:
                             dep = "requires " + dep
                         print "  %s-%s-%s %s" % (t[0][0], t[0][1], t[0][2], dep)
-                    print "Skipped."
+                    print "Not removed due to dependencies."
                 elif os.geteuid() == 0:
                     if confirm:
                         proceed = raw_input("Remove them? [y/N] ")
@@ -247,7 +247,7 @@ def main():
                                 print error
                             sys.exit(1)
                     else:
-                        print "Not removed due to dependencies."
+                        print "Not removed."
                 else:
                     print "Not running as root, skipping remove."
         else:
