@@ -141,7 +141,7 @@ def usage(exit=1):
 Usage: rpmdev-rmdevelrpms [OPTION]...
 
 Options:
-  -y, --yes         Assume yes to all questions, do not prompt.
+  -y, --yes         Remove without prompting (no-op if not root).
   -v, --version     Print program version and exit.
   -h, --help        Print help message and exit.'''
     if exit is not None:
@@ -151,7 +151,7 @@ Options:
 def version():
     print "rpmdev-rmdevelrpms version %s" % __version__
     print '''
-Copyright (c) 2004-2006 Fedora Project <http://fedoraproject.org/>.
+Copyright (c) 2004-2007 Fedora Project <http://fedoraproject.org/>.
 This  program is licensed under the GNU General Public License, see the
 file COPYING included in the distribution archive.
 
@@ -204,7 +204,7 @@ def main():
             # TODO: is there a way to get arch for the unresolved deps?
             unresolved = ts.check()
             if unresolved:
-                print "...but removal would cause unresolved dependencies:"
+                print "...whose removal would cause unresolved dependencies:"
                 unresolved.sort(lambda x, y: cmp(x[0][0], y[0][0]))
                 for t in unresolved:
                     dep = t[1][0]
@@ -237,7 +237,7 @@ def main():
                             print error
                         sys.exit(1)
                 else:
-                    print "Not removed."
+                    print "Not removed due to dependencies."
             else:
                 print "Not running as root, skipping remove."
         else:
