@@ -1,6 +1,6 @@
 %define emacs_sitestart_d  %{_datadir}/emacs/site-lisp/site-start.d
 %define xemacs_sitestart_d %{_datadir}/xemacs/site-packages/lisp/site-start.d
-%define spectool_version   1.0.8
+%define spectool_version   1.0.9
 
 Name:           rpmdevtools
 Version:        5.3
@@ -100,6 +100,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 15 2007 Ville Skyttä <ville.skytta at iki.fi>
+- Update spectool to 1.0.9 (#243731).
+
 * Wed Apr 11 2007 Ville Skyttä <ville.skytta at iki.fi>
 - Add --list-only option to rmdevelrpms (Thorsten Leemhuis).
 
