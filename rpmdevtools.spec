@@ -37,6 +37,7 @@ rpmdev-vercmp       RPM version comparison checker
 spectool            Expand and download sources and patches in specfiles
 rpmdev-wipetree     Erase all files within dirs created by rpmdev-setuptree
 rpmdev-extract      Extract various archives, "tar xvf" style
+...and many more.
 
 
 %prep
@@ -102,6 +103,7 @@ rm -rf $RPM_BUILD_ROOT
 * Sat Jun 16 2007 Ville Skyttä <ville.skytta at iki.fi>
 - Include rpmsodiff and dependencies (rpmargs, rpmelfsym, rpmfile, rpmpeek,
   rpmsoname) from ALT Linux's qa-robot package.
+- Include rpmls (#213778).
 
 * Fri Jun 15 2007 Ville Skyttä <ville.skytta at iki.fi>
 - Update spectool to 1.0.9 (#243731).

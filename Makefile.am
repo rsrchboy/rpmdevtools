@@ -8,7 +8,7 @@ rpmlibdir = $(libdir)/rpm
 
 dist_bin_SCRIPTS = rpmdev-checksig rpmdev-diff rpmdev-extract rpmdev-md5 \
 	rpmdev-newspec rpmdev-rmdevelrpms rpmdev-setuptree rpmdev-vercmp \
-	rpmdev-wipetree rpminfo
+	rpmdev-wipetree rpminfo rpmls
 
 dist_man1_MANS = rpmdev-diff.1 rpmdev-extract.1
 dist_man8_MANS = rpmdev-rmdevelrpms.8
