@@ -1,0 +1,63 @@
+#!/bin/sh -ef
+export LC_ALL=C
+
+rpmfile()
+{
+	rpm -qp --qf '[%{FILENAMES}\t%{FILEMODES:octal}\n]' "$1" >files
+	[ -s files ] || return 0
+	awk -F'\t' '{print"./"$1}' files |rpmpeek "$1" \
+		file -b -f - >types || [ -s types ] || return 1
+	paste files types
+}
+
+. rpmargs -c rpmfile "$@"
+
+: <<'__EOF__'
+
+=head1	NAME
+
+rpmfile - list file modes and types in RPM packages
+
+=head1	SYNOPSIS
+
+B<rpmfile> [B<-h>] [I<FILE>...] [I<DIR>...]
+
+=head1	DESCRIPTION
+
+B<rpmfile> produces three-column output: file name, file mode (octal),
+and file type, as determined by file(1).
+When processing a directory, an additional column is prepended to the
+output, which is typically RPM file basename.
+
+=head1	OPTIONS
+
+=over
+
+=item	B<-h>
+
+Display this help and exit.
+
+=back
+
+=head1	AUTHOR
+
+Written by Alexey Tourbin <at@altlinux.org>.
+
+=head1	COPYING
+
+Copyright (c) 2005 Alexey Tourbin, ALT Linux Team.
+
+This is free software; you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation;
+either version 2 of the License, or (at your option) any later version.
+
+=head1	SEE ALSO
+
+rpmargs(1),
+rpm(8),
+rpm2cpio(8),
+file(1)
+
+=cut
+
+__EOF__

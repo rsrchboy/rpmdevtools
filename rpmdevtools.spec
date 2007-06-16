@@ -18,7 +18,7 @@ BuildArch:      noarch
 Provides:       spectool = %{spectool_version}
 Obsoletes:      fedora-rpmdevtools < 5.0
 # Required for tool operations
-Requires:       rpm-python, python, cpio, sed, perl, wget, file
+Requires:       rpm-python, python, cpio, sed, perl, wget, file, fakeroot
 # Minimal RPM build requirements
 Requires:       rpm-build, gcc, gcc-c++, redhat-rpm-config, make, tar, patch
 Requires:       diffutils, gzip, bzip2, unzip
@@ -91,15 +91,18 @@ rm -rf $RPM_BUILD_ROOT
 %doc COPYING README*
 %config(noreplace) %{_sysconfdir}/rpmdevtools/
 %{_datadir}/rpmdevtools/
-%{_bindir}/rpmdev-*
-%{_bindir}/rpminfo
+%{_bindir}/rpm*
 %{_bindir}/spectool
 %{_prefix}/lib/rpm/check-*
 %ghost %{_datadir}/*emacs
-%{_mandir}/man[18]/rpmdev-*.[18]*
+%{_mandir}/man[18]/rpm*.[18]*
 
 
 %changelog
+* Sat Jun 16 2007 Ville Skyttä <ville.skytta at iki.fi>
+- Include rpmsodiff and dependencies (rpmargs, rpmelfsym, rpmfile, rpmpeek,
+  rpmsoname) from ALT Linux's qa-robot package.
+
 * Fri Jun 15 2007 Ville Skyttä <ville.skytta at iki.fi>
 - Update spectool to 1.0.9 (#243731).
 

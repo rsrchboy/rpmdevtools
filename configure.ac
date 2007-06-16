@@ -11,5 +11,6 @@ fi
 AC_OUTPUT(
 Makefile
 emacs/Makefile
+qa-robot/Makefile
 test/Makefile
 )

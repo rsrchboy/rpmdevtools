@@ -1,0 +1,110 @@
+#!/bin/sh -ef
+export LC_ALL=C
+
+rpmsoname()
+{
+	rpm -qp --qf '[%{PROVIDES}\n]' "$1" >prov || return
+	grep -oE '^lib[^/()]+[.]so\>[^/()]*' prov >sonames || return 0
+
+	# Files map to themselves; symbolic links cause a headache.
+	# Sample file entry:	perl5.8.7	/usr/bin/perl5.8.7
+	# Sample link entry:	libperl.so.5.8	/usr/lib/libperl.so.5.8	libperl.so.5.8.7
+	rpm -qp --qf '[%{BASENAMES}\t%{FILENAMES}\t%{FILELINKTOS}\n]' "$1" >list
+	awk -F'\t' '$NF==""{print$1"\t"$2}$NF{print>"/dev/fd/3"}' list >files 3>links
+
+	# Make links absolute.  Sample diff:
+	# 	-perl5	/usr/bin/perl5	perl5.8.7
+	# 	+perl5	/usr/bin/perl5	/usr/bin/perl5.8.7
+	perl -MFile::Spec::Functions=rel2abs -MFile::Basename=dirname -ni -aF'\t' -le \
+		'$F[-1]=rel2abs$F[-1],dirname$F[-2];{$F[-1]=~s$/[^/]+/\.\./$/$&&redo}$,="\t",print@F' links
+
+	# Now follow links (i.e. a->b,b->c => a->c,b->c). Sample diff:
+	#	-libpri.so       /usr/lib/libpri.so      /usr/lib/libpri.so.1
+	#	+libpri.so       /usr/lib/libpri.so      /usr/lib/libpri.so.1.0
+	#	 libpri.so.1     /usr/lib/libpri.so.1    /usr/lib/libpri.so.1.0
+	while :; do
+		sort -t$'\t' -o links1 -k3,3 links
+		sort -t$'\t' -o links2 -k2,2 links
+		join -t$'\t' -13 -22 -o '1.1 1.2 2.3' links1 links2 >elinks
+		[ -s elinks ] || break
+		sort -t$'\t' -o links -u -k1,2 elinks links
+	done
+
+	# Join links against files.
+	sort -t$'\t' -o files -k2 files
+	sort -t$'\t' -o links -k3 links
+	join -t$'\t' -12 -23 -o '2.1 2.3' files links >filelinks
+	join -t$'\t' -12 -23 -o '2.1 2.3' -v2 files links >externlinks
+
+	# Now ready to join sonames on files+filelinks.
+	sort -o sonames -u sonames
+	sort -o map -u files filelinks
+	join -t$'\t' -j 1 -o '2.1 2.2' sonames map >mapped
+	join -t$'\t' -j 1 -o 0 -v1 sonames map >unmapped
+
+	# The results.
+	awk -F'\t' '{print$2"\t"$1}' mapped |sort -u
+
+	# Now warnings.
+	join -t$'\t' -j 1 -o '1.1 1.2 2.2' mapped mapped |awk -F'\t' \
+		'$2!=$3{print$1"\t"$2}' >multimapped
+	if [ -s multimapped ]; then
+		echo "warning: ${1##*/}: multimapped sonames:"
+		sort -u multimapped
+	fi >&2
+	if [ -s unmapped ]; then
+		echo "warning: ${1##*/}: unmapped sonames:"
+		# TODO: extra analysis based on externlinks
+		sort -u unmapped
+	fi >&2
+}
+
+. rpmargs -c rpmsoname "$@"
+
+: <<'__EOF__'
+
+=head1	NAME
+
+rpmsoname - list files that provide sonames in RPM package(s)
+
+=head1	SYNOPSIS
+
+B<rpmsoname> [B<-h>] [I<options>] [I<FILE>...] [I<DIR>...]
+
+=head1	DESCRIPTION
+
+B<rpmsoname> produces two-column output (typically one line per each soname).
+Column one contains file path; column two contains corresponding soname.
+When processing a directory, an additional column is prepended to the
+output, which is typically RPM file basename.
+
+Note that the name B<rpmsoname> is probably a misnomer: the script does not
+deal with ELF C<DT_SONAME> entries.  What it does is try to map soname-like
+entries from RPM C<PROVIDES> list to regular files within the very same RPM
+package (using C<BASENAMES>, C<FILENAMES>, and C<FILELINKTOS> lists from RPM
+header).
+
+=head1	OPTIONS
+
+Options and arguments manage a set of RPM packages to be processed;
+they are those of rpmargs(1).
+
+=head1	AUTHOR
+
+Written by Alexey Tourbin <at@altlinux.org>.
+
+=head1	COPYING
+
+Copyright (c) 2006 Alexey Tourbin, ALT Linux Team.
+
+This is free software; you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation;
+either version 2 of the License, or (at your option) any later version.
+
+=head1	SEE ALSO
+
+rpmargs(1)
+
+=cut
+
+__EOF__

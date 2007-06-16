@@ -1,0 +1,98 @@
+#!/bin/sh -ef
+export LC_ALL=C
+
+while getopts h opt; do
+	case "$opt" in
+		h) pod2usage --exit=0 "$0"; exit 0 ;;
+		*) pod2usage --exit=2 "$0"; exit 2 ;;
+	esac
+done
+shift "$((OPTIND-1))"; OPTIND=1
+
+if [ $# -lt 2 ]; then
+	echo "${0##*/}: not enough arguments" >&2
+	pod2usage --exit=2 "$0"; exit 2
+fi
+if [ $# -gt 2 ]; then
+	echo "${0##*/}: too many arguments" >&2
+	pod2usage --exit=2 "$0"; exit 2
+fi
+
+rpm1="$(readlink -ev "$1")"
+rpm2="$(readlink -ev "$2")"
+set -- "$rpm1" "$rpm2"
+b1="${1##*/}"; bb1="${b1%.*.rpm}"
+b2="${2##*/}"; bb2="${b2%.*.rpm}"
+[ "$bb1" != "$bb2" ] || bb2="$bb2+"
+
+. @pkgdatadir@/tmpdir.sh
+cd "$TMPDIR"
+
+rpmsoname "$1" >so1; sort -t$'\t' -u -k2 -o so1 -u so1
+rpmsoname "$2" >so2; sort -t$'\t' -u -k2 -o so2 -u so2
+join -t$'\t' -j 2 so1 so2 >so3
+join -t$'\t' -j 2 -v1 so1 so2 >so3.1
+join -t$'\t' -j 2 -v2 so1 so2 >so3.2
+
+if [ -s so3.1 ]; then	echo "	sonames only in $bb1 [1]:"; cat so3.1; echo; fi
+if [ -s so3.2 ]; then	echo "	sonames only in $bb2 [2]:"; cat so3.2; echo; fi
+if [ -s so3 ];	then	echo "	common sonames:"; cat so3; echo;
+		else	echo "	no common sonames"; exit; fi
+
+rpmelfsym "$1" >sym1; sort -u sym1 -o sym1
+rpmelfsym "$2" >sym2; sort -u sym2 -o sym2
+cut -f1,2 so3 |sort -t$'\t' -u -k2 |join -t$'\t' -12 -21 -o '1.1 2.2 2.3' - sym1 |awk -F'\t' '$2~/[DTW]/' |sort -u >def1
+cut -f1,3 so3 |sort -t$'\t' -u -k2 |join -t$'\t' -12 -21 -o '1.1 2.2 2.3' - sym2 |awk -F'\t' '$2~/[DTW]/' |sort -u >def2
+mkdir "$bb1" "$bb2"
+cut -f1 so3 |sort -u |while read -r soname; do
+	echo "$soname" |join -t$'\t' -o '2.3 2.2' - def1 |sort -u >"$bb1/$soname"; touch -r "$1" "$bb1/$soname"
+	echo "$soname" |join -t$'\t' -o '2.3 2.2' - def2 |sort -u >"$bb2/$soname"; touch -r "$2" "$bb2/$soname"
+	if diff -U1 "$bb1/$soname" "$bb2/$soname"; then
+		echo "$soname definitions unchanged"; echo
+		continue
+	fi
+	echo
+	comm -23 "$bb1/$soname" "$bb2/$soname" >minus
+	comm -13 "$bb1/$soname" "$bb2/$soname" >plus
+	join -t$'\t' -v1 minus plus >removed
+	join -t$'\t' -v2 minus plus >added
+	join -t$'\t' minus plus >changed
+	[ -s removed ] && { echo "	$(wc -l <removed) symbols removed"; awk -F'\t' '{print$2,$1}' removed |sort -u; echo; }
+	[ -s added ] && { echo "	$(wc -l <added) symbols added"; awk -F'\t' '{print$2,$1}' added |sort -u; echo; }
+	[ -s changed ] && { echo "	$(wc -l <changed) symbols changed"; awk -F'\t' '{print$2,$3,$1}' changed |sort -u; echo; }
+	if [ -s added ]; then 
+		echo "# template for $soname version script"
+		echo "${bb2%-*} {" |sed 's/-.*-/_/;s/-/_/;s/.*/\U&/'
+		echo "    global:"
+		cut -f1 added |sort -u |sed 's/^/\t/;s/$/;/'
+		echo "};"
+		echo
+	fi
+done
+
+echo vim\:ft=diff
+
+: <<'__EOF__'
+
+=head1	NAME
+
+rpmsodiff - compare library symbols in two rpm packages
+
+=head1	SYNOPSIS
+
+B<rpmsodiff>
+[B<-h>]
+I<libname-v1-alt1.i586.rpm>
+I<libname-v2-alt2.i586.rpm>
+
+=head1	COPYING
+
+Copyright (c) 2006, 2007 Alexey Tourbin, ALT Linux Team.
+
+This is free software; you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation;
+either version 2 of the License, or (at your option) any later version.
+
+=cut
+
+__EOF__

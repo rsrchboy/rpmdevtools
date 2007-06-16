@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = foreign 1.5 dist-bzip2
 
-SUBDIRS = emacs test
+SUBDIRS = emacs qa-robot test
 
 pkgdatadir = $(datadir)/rpmdevtools
 pkgsysconfdir = $(sysconfdir)/rpmdevtools

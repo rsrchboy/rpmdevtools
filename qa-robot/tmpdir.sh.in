@@ -1,0 +1,50 @@
+#!/bin/sh
+
+: ${__real_TMPDIR:=}
+if [ -z "$__real_TMPDIR" ]; then
+	. @pkgdatadir@/trap.sh
+	# NB: don't export __real_TMPDIR
+	__real_TMPDIR="${TMPDIR:-/tmp}"
+	TMPDIR="$(mktemp -dt "${0##*/}.XXXXXXXX")" || exit
+	# TODO: ensure $TMPDIR can be used without quotes
+	# pathchk -pP -- "$TMPDIR"
+	# NB: traps are executed in reverse order (why?)
+	add_trap rm -rf $TMPDIR
+	add_trap chmod -Rf u+rwX $TMPDIR
+fi
+
+: <<'__EOF__'
+
+=head1	NAME
+
+tmpdir.sh - manage $TMPDIR
+
+=head1	SYNOPSIS
+
+  #!/bin/sh
+  . @pkgdatadir@/tmpdir.sh
+
+=head1	DESCRIPTION
+
+When sourced, this script provides private C<$TMPDIR>,
+which will be purged upon exit.
+
+=head1	AUTHOR
+
+Written by Alexey Tourbin <at@altlinux.org>.
+
+=head1	COPYING
+
+Copyright (c) 2006 Alexey Tourbin, ALT Linux Team.
+
+This is free software; you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation;
+either version 2 of the License, or (at your option) any later version.
+
+=head1	SEE ALSO
+
+trap.sh(1)
+
+=cut
+
+__EOF__

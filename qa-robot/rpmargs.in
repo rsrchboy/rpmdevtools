@@ -1,0 +1,95 @@
+#!/bin/sh -ef
+export LC_ALL=C
+
+rpmargs_cmd=
+while getopts c:h rpmargs_opt; do
+	case "$rpmargs_opt" in
+		c) rpmargs_cmd="${OPTARG:?}"
+			readonly rpmargs_cmd ;;
+		h) pod2usage --exit=0 "$0"; exit 0 ;;
+		*) pod2usage --exit=2 "$0"; exit 2 ;;
+	esac
+done
+shift "$((OPTIND-1))"; OPTIND=1
+
+if [ -z "$rpmargs_cmd" ]; then
+	echo "${0##*/}: command not specified" >&2
+	pod2usage --exit=2 "$0"; exit 2
+fi
+
+if [ -z "$*" ]; then
+	echo "${0##*/}: not enough arguments" >&2
+	pod2usage --exit=2 "$0"; exit 2
+fi
+
+rpmargs_files()
+{
+	ls -1 "$1" |grep -x '[^.].*[.]rpm' >rpmargs_files
+	sort -o rpmargs_files -u rpmargs_files
+	local f
+	while read -r f; do
+		$rpmargs_cmd "$1/$f" >rpmargs.out
+		[ -s rpmargs.out ] || continue
+		awk -v f="$f" '{print f"\t"$0}' rpmargs.out
+	done <rpmargs_files
+}
+
+. @pkgdatadir@/tmpdir.sh
+rpmargs_tmpdir=$TMPDIR
+
+for rpmarg; do
+	rpmarg="$(readlink -ev "${rpmarg:?}")"
+	cd "$rpmargs_tmpdir"
+	if [ -d "$rpmarg" ]; then
+		rpmargs_files "$rpmarg"
+	else 
+		$rpmargs_cmd "$rpmarg"
+	fi
+	cd - >/dev/null
+done
+
+: <<'__EOF__'
+
+=head1	NAME
+
+rpmargs - process RPM packages
+
+=head1	SYNOPSIS
+
+B<rpmargs>
+[B<-h>]
+B<-c> I<command>
+[I<FILE>...] [I<DIR>...]
+
+=head1	DESCRIPTION
+
+B<rpmargs> executes a I<command> against each RPM package given on the
+command line.  Extra word splitting is performed on the I<command>.
+Each I<FILE> is treated as RPM package.  Each I<DIR> is processed with C<*.rpm>
+pattern, and RPM file basename is prepended to the I<command> output.
+
+=head1	OPTIONS
+
+=over
+
+=item	B<-h>
+
+Display this help and exit.
+
+=back
+
+=head1	AUTHOR
+
+Written by Alexey Tourbin <at@altlinux.org>.
+
+=head1	COPYING
+
+Copyright (c) 2005 Alexey Tourbin, ALT Linux Team.
+
+This is free software; you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation;
+either version 2 of the License, or (at your option) any later version.
+
+=cut
+
+__EOF__

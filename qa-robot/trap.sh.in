@@ -1,0 +1,58 @@
+#!/bin/sh
+
+: ${__exit_traps:=}
+
+add_trap()
+{
+	# TODO: quote args
+	__exit_traps="$*
+$__exit_traps"
+}
+
+remove_trap()
+{
+	# TODO: quote args
+	__exit_traps="$(printf %s "$__exit_traps" |grep -Fvx "$*")"
+}
+
+trap_atexit()
+{
+	local t_rc=$?
+	trap - EXIT
+	eval "$__exit_traps"
+	exit $t_rc
+}
+
+if [ -z "$__exit_traps" ]; then
+	__exit_traps=:
+	trap trap_atexit EXIT HUP INT QUIT PIPE TERM
+fi
+
+: <<'__EOF__'
+
+=head1	NAME
+
+trap.sh - manage exit traps
+
+=head1	SYNOPSIS
+
+  #!/bin/sh
+  . @pkgdatadir@/trap.sh
+  lockfile -r0 "$workdir"/lock || exit
+  add_trap rm -f "$workdir"/lock
+
+=head1	AUTHOR
+
+Written by Alexey Tourbin <at@altlinux.org>.
+
+=head1	COPYING
+
+Copyright (c) 2006 Alexey Tourbin, ALT Linux Team.
+
+This is free software; you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation;
+either version 2 of the License, or (at your option) any later version.
+
+=cut
+
+__EOF__

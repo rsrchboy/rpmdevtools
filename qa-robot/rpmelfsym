@@ -1,0 +1,64 @@
+#!/bin/sh -ef
+export LC_ALL=C
+
+rpmelfsym()
+{
+	rpmfile "$1" >files
+	awk -F'\t' '$NF~/ELF.*(dynamic|shared)/{printf"./%s\0",$1}' files >elfs0
+	[ -s elfs0 ] || return 0
+	rpmpeek "$1" xargs -r0 nm -Do <elfs0 >nm.out
+	awk '{OFS="\t";sub("^./","",$1);sub(":[0-9a-fA-F]*$","",$1);print}' nm.out
+}
+
+. rpmargs -c rpmelfsym "$@"
+
+: <<'__EOF__'
+
+=head1	NAME
+
+rpmelfsym - list symbols from object files in RPM packages
+
+=head1	SYNOPSIS
+
+B<rpmelfsym> [B<-h>] [I<FILE>...] [I<DIR>...]
+
+=head1	DESCRIPTION
+
+B<rpmelfsym> produces three-column output: file name, symbol type,
+and symbol name, as determined by nm(1).  Only dynamically linked
+executable files and shared libraries are processed, and only dynamic
+symbols are listed.
+When processing a directory, an additional column is prepended to the
+output, which is typically RPM file basename.
+
+=head1	OPTIONS
+
+=over
+
+=item	B<-h>
+
+Display this help and exit.
+
+=back
+
+=head1	AUTHOR
+
+Written by Alexey Tourbin <at@altlinux.org>.
+
+=head1	COPYING
+
+Copyright (c) 2005 Alexey Tourbin, ALT Linux Team.
+
+This is free software; you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation;
+either version 2 of the License, or (at your option) any later version.
+
+=head1	SEE ALSO
+
+rpmfile(1),
+rpmpeek(1),
+nm(1)
+
+=cut
+
+__EOF__

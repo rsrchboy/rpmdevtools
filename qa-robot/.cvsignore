@@ -1,0 +1,13 @@
+Makefile
+Makefile.in
+rpmargs
+rpmargs.1
+rpmelfsym.1
+rpmfile.1
+rpmpeek
+rpmpeek.1
+rpmsodiff
+rpmsodiff.1
+rpmsoname.1
+tmpdir.sh
+trap.sh
