@@ -100,6 +100,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jun 27 2007 Ville Skyttä <ville.skytta at iki.fi>
+- Add 2-argument form for comparing EVR strings to rpmdev-vercmp
+  (available only if rpmUtils.miscutils is available).
+
 * Sat Jun 16 2007 Ville Skyttä <ville.skytta at iki.fi>
 - Include rpmsodiff and dependencies (rpmargs, rpmelfsym, rpmfile, rpmpeek,
   rpmsoname) from ALT Linux's qa-robot package.

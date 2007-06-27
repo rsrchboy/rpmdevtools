@@ -5,11 +5,19 @@
 import rpm
 import sys
 
+have_miscutils = 0
+try:
+    from rpmUtils.miscutils import stringToVersion
+    have_miscutils = 1
+except:
+    pass
+
 def usage():
     print """
-    rpmdev-vercmp epoch1, ver1, release1, epoch2, ver2, release2
-    or just let it ask you.
-    """
+rpmdev-vercmp <epoch1> <ver1> <release1> <epoch2> <ver2> <release2>
+rpmdev-vercmp <EVR1> <EVR2> # if rpmUtils.miscutils is available
+rpmdev-vercmp # with no arguments, prompt
+"""
 
 def vercmp((e1, v1, r1), (e2, v2, r2)):
    rc = rpm.labelCompare((e1, v1, r1), (e2, v2, r2))
@@ -24,6 +32,16 @@ def main():
     if len(sys.argv) > 1 and sys.argv[1] in ['-h', '--help', '-help', '--usage']:
         usage()
         sys.exit(0)
+    elif len(sys.argv) == 3:
+        if have_miscutils:
+            (e1, v1, r1) = stringToVersion(sys.argv[1])
+            (e2, v2, r2) = stringToVersion(sys.argv[2])
+        else:
+            print """
+Sorry, the 2-argument form is available only if rpmUtils.miscutils (which
+ships eg. with yum) is available."""
+            usage()
+            sys.exit(1)
     elif len(sys.argv) < 7:
         e1 = askforstuff('Epoch1')
         v1 = askforstuff('Version1')
@@ -38,15 +56,9 @@ def main():
     if rc > 0:
         print "%s:%s-%s is newer" % (e1, v1, r1)
     elif rc == 0:
-        print "These are Equal"
+        print "These are equal"
     elif rc < 0:
         print "%s:%s-%s is newer" % (e2, v2, r2)
 
 if __name__ == "__main__":
     main()
-
-        
-
-
-    
-
