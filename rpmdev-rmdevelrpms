@@ -24,7 +24,7 @@
 import getopt, os, re, rpm, stat, sys, types
 
 
-__version__ = "1.5"
+__version__ = "1.6"
 
 
 dev_re  = re.compile("-(?:de(?:buginfo|vel)|sdk|static)\\b", re.IGNORECASE)
@@ -40,12 +40,13 @@ jdev_re = re.compile("^java-.+-gcj-compat-devel$")
 
 def_devpkgs =\
 ("autoconf", "autoconf213", "automake", "automake14", "automake15",
- "automake16", "automake17", "bison", "byacc", "dev86", "djbfft",
+ "automake16", "automake17", "bison", "byacc", "cmake", "dev86", "djbfft",
  "docbook-utils-pdf", "doxygen", "flex", "gcc-g77", "gcc-gfortran", "gcc-gnat",
  "gcc-objc", "gcc32", "gcc34", "gcc34-c++", "gcc34-java", "gcc35", "gcc35-c++",
  "gcc4", "gcc4-c++", "gcc4-gfortran", "gettext", "glade", "glade2",
  "kernel-source", "kernel-sourcecode", "libtool", "m4", "nasm",
- "perl-Module-Build", "pkgconfig", "qt-designer", "swig", "texinfo", "yasm",
+ "perl-Module-Build", "pkgconfig", "qt-designer", "scons", "swig", "texinfo",
+ "yasm",
  )
 
 # zlib-devel: see #151622

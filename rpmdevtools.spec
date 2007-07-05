@@ -100,6 +100,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jul  5 2007 Ville Skyttä <ville.skytta at iki.fi>
+- Add cmake and scons to default devel package list in rpmdev-rmdevelrpms.
+
 * Wed Jun 27 2007 Ville Skyttä <ville.skytta at iki.fi>
 - Add 2-argument form for comparing EVR strings to rpmdev-vercmp
   (available only if rpmUtils.miscutils is available).
