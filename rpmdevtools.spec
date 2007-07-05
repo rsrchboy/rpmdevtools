@@ -18,10 +18,25 @@ BuildArch:      noarch
 Provides:       spectool = %{spectool_version}
 Obsoletes:      fedora-rpmdevtools < 5.0
 # Required for tool operations
-Requires:       rpm-python, python, cpio, sed, perl, wget, file, fakeroot
+Requires:       rpm-python
+Requires:       python
+Requires:       cpio
+Requires:       sed
+Requires:       perl
+Requires:       wget
+Requires:       file
+Requires:       fakeroot
 # Minimal RPM build requirements
-Requires:       rpm-build, gcc, gcc-c++, redhat-rpm-config, make, tar, patch
-Requires:       diffutils, gzip, bzip2, unzip
+Requires:       rpm-build >= 4.4.2.1
+Requires:       gcc
+Requires:       gcc-c++
+Requires:       redhat-rpm-config
+Requires:       make
+Requires:       tar
+Requires:       diffutils
+Requires:       gzip
+Requires:       bzip2
+Requires:       unzip
 
 %description
 This package contains scripts and (X)Emacs support files to aid in
@@ -64,10 +79,6 @@ for dir in %{emacs_sitestart_d} %{xemacs_sitestart_d} ; do
 done
 
 
-%check
-make check
-
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -94,13 +105,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/rpmdevtools/
 %{_bindir}/rpm*
 %{_bindir}/spectool
-%{_prefix}/lib/rpm/check-*
 %ghost %{_datadir}/*emacs
 %{_mandir}/man[18]/rpm*.[18]*
 
 
 %changelog
 * Thu Jul  5 2007 Ville Skyttä <ville.skytta at iki.fi>
+- Remove check-{buildroot,rpaths*}, now included in rpm-build >= 4.4.2.1.
+- Drop explicit dependency on patch, pulled in by recent rpm-build.
 - Add cmake and scons to default devel package list in rpmdev-rmdevelrpms.
 - Add LSB comment block to init script template.
 

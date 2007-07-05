@@ -1,10 +1,9 @@
 AUTOMAKE_OPTIONS = foreign 1.5 dist-bzip2
 
-SUBDIRS = emacs qa-robot test
+SUBDIRS = emacs qa-robot
 
 pkgdatadir = $(datadir)/rpmdevtools
 pkgsysconfdir = $(sysconfdir)/rpmdevtools
-rpmlibdir = $(libdir)/rpm
 
 dist_bin_SCRIPTS = rpmdev-checksig rpmdev-diff rpmdev-extract rpmdev-md5 \
 	rpmdev-newspec rpmdev-rmdevelrpms rpmdev-setuptree rpmdev-vercmp \
@@ -18,8 +17,6 @@ dist_pkgdata_DATA = template.init
 dist_pkgsysconf_DATA = spectemplate-lib.spec spectemplate-minimal.spec \
 	spectemplate-perl.spec spectemplate-php-pear.spec \
 	spectemplate-python.spec spectemplate-ruby.spec rmdevelrpms.conf
-
-dist_rpmlib_SCRIPTS = check-buildroot check-rpaths check-rpaths-worker
 
 EXTRA_DIST = $(PACKAGE).spec
 
