@@ -10,6 +10,19 @@
 # config:      </path/to/conffile2>
 # pidfile:     </path/to/pidfile>
 
+# http://fedoraproject.org/wiki/FCNewInit/Initscripts
+### BEGIN INIT INFO
+# Provides: 
+# Required-Start: 
+# Required-Stop: 
+# Should-Start: 
+# Should-Stop: 
+# Default-Start: 
+# Default-Stop: 
+# Short-Description: 
+# Description: 
+### END INIT INFO
+
 # Source function library.
 . /etc/rc.d/init.d/functions
 
@@ -28,7 +41,7 @@ lockfile=/var/lock/subsys/$prog
 
 start() {
     echo -n $"Starting $prog: "
-    # start it up here, usually something like "daemon $exec"
+    # if not running, start it up here, usually something like "daemon $exec"
     retval=$?
     echo
     [ $retval -eq 0 ] && touch $lockfile
