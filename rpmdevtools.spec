@@ -3,7 +3,7 @@
 %define spectool_version   1.0.9
 
 Name:           rpmdevtools
-Version:        5.3
+Version:        6.0
 Release:        1%{?dist}
 Summary:        RPM Development Tools
 
@@ -110,7 +110,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Jul  5 2007 Ville Skyttä <ville.skytta at iki.fi>
+* Thu Jul  5 2007 Ville Skyttä <ville.skytta at iki.fi> - 6.0-1
 - Remove check-{buildroot,rpaths*}, now included in rpm-build >= 4.4.2.1.
 - Drop explicit dependency on patch, pulled in by recent rpm-build.
 - Add cmake and scons to default devel package list in rpmdev-rmdevelrpms.

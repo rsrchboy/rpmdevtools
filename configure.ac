@@ -1,4 +1,4 @@
-AC_INIT(rpmdevtools, 5.3)
+AC_INIT(rpmdevtools, 6.0)
 AM_INIT_AUTOMAKE
 AC_PATH_PROG([HELP2MAN], [help2man], [no])
 if test "$HELP2MAN" = "no" ; then
