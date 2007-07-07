@@ -36,6 +36,10 @@ def main():
         if have_miscutils:
             (e1, v1, r1) = stringToVersion(sys.argv[1])
             (e2, v2, r2) = stringToVersion(sys.argv[2])
+            # stringToVersion in yum < 3.1.2 may return numeric (non-string)
+            # Epochs, and labelCompare does not like that.
+            if e1 is not None: e1 = str(e1)
+            if e2 is not None: e2 = str(e2)
         else:
             print """
 Sorry, the 2-argument form is available only if rpmUtils.miscutils (which
