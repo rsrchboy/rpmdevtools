@@ -112,6 +112,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Sat Jul  7 2007 Ville Skyttä <ville.skytta at iki.fi>
 - Fix Epoch handling in the 2-arg form of rpmdev-vercmp with yum < 3.1.2.
+- The long form of the list option in rmdevelrpms is --list-only, not --list.
 
 * Thu Jul  5 2007 Ville Skyttä <ville.skytta at iki.fi> - 6.0-1
 - Remove check-{buildroot,rpaths*}, now included in rpm-build >= 4.4.2.1.

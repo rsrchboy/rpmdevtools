@@ -24,7 +24,7 @@
 import getopt, os, re, rpm, stat, sys, types
 
 
-__version__ = "1.6"
+__version__ = "1.7"
 
 
 dev_re  = re.compile("-(?:de(?:buginfo|vel)|sdk|static)\\b", re.IGNORECASE)
@@ -167,7 +167,7 @@ def main():
         # TODO: implement -r|--root for checking a specified rpm root
         opts, args = getopt.getopt(sys.argv[1:],
                                    "ylvh",
-                                   ["yes", "list", "version", "help"])
+                                   ["yes", "list-only", "version", "help"])
     except getopt.GetoptError:
         usage(2)
     listonly = 0
@@ -177,7 +177,7 @@ def main():
             version()
         if o in ("-h", "--help"):
             help()
-        if o in ("-l", "--list"):
+        if o in ("-l", "--list-only"):
             listonly = 1
         elif o in ("-y", "--yes"):
             confirm = 0
