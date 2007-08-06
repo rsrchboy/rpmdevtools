@@ -112,7 +112,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Mon Aug  6 2007 Ville Skyttä <ville.skytta at iki.fi>
 - Work around #250990 in rpmls and rpmdev-extract.
-- Clarify copyright info of rpmdev-{rmdevelrpms,diff,extract} and rpmls.
+- Clarify copyright info of rpmdev-{rmdevelrpms,diff,extract,vercmp} and rpmls.
 
 * Sat Jul  7 2007 Ville Skyttä <ville.skytta at iki.fi>
 - Fix Epoch handling in the 2-arg form of rpmdev-vercmp with yum < 3.1.2.
