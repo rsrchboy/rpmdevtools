@@ -8,7 +8,8 @@ Release:        1%{?dist}
 Summary:        RPM Development Tools
 
 Group:          Development/Tools
-License:        GPL
+# rpmdev-setuptree is GPLv2, everything else GPLv2+
+License:        GPLv2 and GPLv2+
 URL:            http://fedoraproject.org/
 Source0:        %{name}-%{version}.tar.bz2
 Source1:        http://people.redhat.com/nphilipp/spectool/spectool-%{spectool_version}.tar.bz2
@@ -112,7 +113,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Mon Aug  6 2007 Ville Skyttä <ville.skytta at iki.fi>
 - Work around #250990 in rpmls and rpmdev-extract.
-- Clarify copyright info of rpmdev-{rmdevelrpms,diff,extract,vercmp} and rpmls.
+- Clarify copyright info of rpmdev-* and rpmls.
 
 * Sat Jul  7 2007 Ville Skyttä <ville.skytta at iki.fi>
 - Fix Epoch handling in the 2-arg form of rpmdev-vercmp with yum < 3.1.2.
