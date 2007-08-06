@@ -110,6 +110,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Aug  6 2007 Ville Skyttä <ville.skytta at iki.fi>
+- Work around #250990 in rpmls and rpmdev-extract.
+
 * Sat Jul  7 2007 Ville Skyttä <ville.skytta at iki.fi>
 - Fix Epoch handling in the 2-arg form of rpmdev-vercmp with yum < 3.1.2.
 - The long form of the list option in rmdevelrpms is --list-only, not --list.

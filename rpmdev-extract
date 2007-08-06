@@ -27,12 +27,14 @@ quiet=
 force=
 dir=
 
+shopt -s extglob
+
 version()
 {
     cat <<EOF
-rpmdev-extract version 1.0
+rpmdev-extract version 1.1
 
-Copyright (c) 2004-2006 Fedora Project <http://fedoraproject.org/>.
+Copyright (c) 2004-2007 Fedora Project <http://fedoraproject.org/>.
 This  program is licensed under the GNU General Public License, see the
 file COPYING included in the distribution archive.
 
@@ -142,7 +144,11 @@ unarch()
             cabextract -f "$f"
             ;;
         rpm)
-            name=`rpm -qp --qf "%{NAME}-%{VERSION}-%{RELEASE}" "$f"`
+            name=`rpm -qp --qf="%{NAME}-%{VERSION}-%{RELEASE}" "$f"`
+            if [ -z "$name" ] ; then # workaround for #250990
+                bname="`basename "$f"`"
+                name=${bname/?(\.*([^\.]))\.rpm/}
+            fi
             mkdir -p "$name"
             cd "$name"
             rpm2cpio "$f" \
