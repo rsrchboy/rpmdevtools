@@ -3,13 +3,13 @@
 %define spectool_version   1.0.9
 
 Name:           rpmdevtools
-Version:        6.0
+Version:        6.1
 Release:        1%{?dist}
 Summary:        RPM Development Tools
 
 Group:          Development/Tools
 # rpmdev-setuptree is GPLv2, everything else GPLv2+
-License:        GPLv2 and GPLv2+
+License:        GPLv2+ and GPLv2
 URL:            http://fedoraproject.org/
 Source0:        %{name}-%{version}.tar.bz2
 Source1:        http://people.redhat.com/nphilipp/spectool/spectool-%{spectool_version}.tar.bz2
@@ -111,6 +111,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Aug 10 2007 Ville Skyttä <ville.skytta at iki.fi> - 6.1-1
+- Sync COPYING with http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
+
 * Mon Aug  6 2007 Ville Skyttä <ville.skytta at iki.fi>
 - Work around #250990 in rpmls and rpmdev-extract.
 - Clarify copyright info of rpmdev-* and rpmls.
