@@ -9,5 +9,4 @@ config.*
 configure
 install-sh
 missing
-rpminfo
 spectool-*

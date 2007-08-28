@@ -1,0 +1,388 @@
+#!/bin/sh
+#
+# Prints information for executables and libraries
+#
+# Copyright (C) 2004,2007 Red Hat, Inc.
+# Authors:
+# Thomas Woerner <twoerner@redhat.com>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# version 2004-07-07-02
+
+
+LANG=C
+READELF=/usr/bin/readelf
+EU_READELF=/usr/bin/eu-readelf
+OBJDUMP=/usr/bin/objdump
+TMPDIR=/tmp
+
+progname=`basename $0`
+
+usage()  {
+    cat <<EOF
+Usage: $progname [-h] [-v] [-q] [-c] [-e | -l] [-p | -np | -P | -nP | -r]
+                 [-s] [-o <file>] {-i | [<rpm package>...]}
+
+  -h  | --help                 print help
+  -v  | --verbose              be more verbose (to stderr)
+  -q  | --quiet                only list files
+  -qq                          really quiet: do not print rpath in split mode
+  -i  | --installed            all installed packages
+  -e  | --executables          list executables
+  -l  | --libraries            list libraries
+  -p  | --pic                  list pic
+  -np | --no_pic               list no pic
+  -P  | --pie                  list pie
+  -nP | --no_pie               list no pie
+  -r  | --rpath                list files containing rpath
+  -ro | --rpath_odd            list files containing odd rpath
+  -s  | --split                split output (.pie, .pic, .dso_pic, .rpath..)
+                               output must be specified
+  -t  | --test                 test for odd rpath
+  -o <file> | --output=<file>  output in file <file>
+  -T <dir> | --tmp-dir=<dir>   temporary directory
+
+  Default options: -e -l -p -np -P -nP -r -t
+
+EOF
+    exit -1
+}
+
+opt() {
+    [ -z "$1" ] && return
+
+    if [ -n "$opts" ]; then
+	[ $split -eq 0 ] && opts="${opts}, " || opts="${opts},"
+    fi
+    opts="${opts}$1"
+}
+
+check_rpath() {
+    [ $rpath -ne 1 ] && return 
+
+    local path=`$OBJDUMP -p "$1" 2>/dev/null | grep RPATH `
+    if [ -n "$path" ]; then
+	path=`echo $path | awk '{print $2}'`
+        ## check rpath elements
+	local odd=0
+	if [ $test -eq 1 ]; then
+	    [ -z "$path" ] && odd=1
+	    OLDIFS=$IFS
+	    IFS=:
+	    for dir in $path; do
+		[ -z "$dir" ] && odd=1
+		[ "$dir" = "." ] && odd=2
+		[ "$dir" = "/lib" ] && odd=3
+		[ "$dir" = "/lib64" ] && odd=4
+		[ "$dir" = "/usr/lib" ] && odd=5
+		[ "$dir" = "/usr/lib64" ] && odd=6
+		[ "$dir" = "/usr/X11R6/lib" ] && odd=7
+		[ "$dir" = "/usr/X11R6/lib64" ] && odd=8
+		[ "${dir:0:10}" = "/usr/local" ] && odd=9
+		[ "${dir:0:12}" = "/usr/lib/qt-" ] && odd=10
+		[ "${dir:0:8}" = "/usr/src" ] && odd=11
+		echo $dir | egrep -q "/\." && odd=12
+	    done
+	    IFS=$OLDIFS
+	fi
+	[ $odd -eq 0 ] && opt "RPATH $path" || opt "-RPATH $path"
+    fi
+}
+
+check_file() {
+    local file=$1
+    
+    [ -L "$file" ] && return
+    [ ! -f "$file" ] && return
+    
+    file -b "$file" 2>/dev/null | grep -q ELF || return
+    
+    if $EU_READELF -h "$file" 2>/dev/null | egrep -q 'Type:[[:space:]]*EXEC';
+    then
+	if [ $exec -eq 1 ]; then
+	    if $READELF -d "$file" 2>/dev/null | grep -q TEXTREL; then
+		if [ -u "$file" ]; then
+		    [ $no_pie -eq 1 ] && opt "!PIE"
+		else
+		    [ $no_pic -eq 1 ] && opt "!PIC"
+		fi
+	    else
+		# suid
+		if [ -u "$file" ]; then
+		    [ $no_pie -eq 1 ] && opt "!PIE"
+		else
+		    [ $pic -eq 1 ] && opt "PIC"
+		fi
+	    fi
+	    check_rpath "$file"
+	fi
+    else
+	if $EU_READELF -d "$file" 2>/dev/null | egrep -q '  DEBUG[[:space:]]*$';
+	then
+	    if [ $exec -eq 1 ]; then
+		[ $pie -eq 1 ] && opt "PIE"
+		check_rpath "$file"
+	    fi
+	else
+	    if [ $lib -eq 1 ]; then
+		if $READELF -d "$file" 2>/dev/null | grep -q TEXTREL; then
+		    [ $no_pic -eq 1 ] && opt "DSO !PIC"
+		else
+		    [ $pic -eq 1 ] && opt "DSO PIC"
+		fi
+		check_rpath "$file"
+	    fi
+	fi
+    fi
+}
+
+check_package() {
+    package=$1
+
+    local pkg=
+    local prefix=
+    local files=`rpm -ql $package 2>/dev/null`
+
+    if echo $files | grep -q "not installed"; then
+	# not installed
+	if [ -f $package ]; then
+	    rpm -qp $package >& /dev/null
+	    if [ $? -eq 1 ]; then
+		# no rpm package
+		package=
+	    else
+		prefix=$temp_prefix`basename $package`
+		if [ ${package:0:1} != "/" ]; then
+		    package=`pwd`"/"$package
+		fi
+		local error=0
+		mkdir $prefix 2> /dev/null && pushd "$prefix" >& /dev/null
+		if [ $? -eq 0 ]; then
+		    rpm2cpio "$package" \
+			| cpio -i --make-directories >& /dev/null
+		    [ $? -eq 0 ] || echo "Error while extracting package '$package'.. ignoring!" > /dev/stderr
+		    files=`rpm -qlp $package 2>/dev/null`
+		    popd >& /dev/null
+		    chmod -R u+rwx $prefix 2>/dev/null 
+		else
+		    error=1
+		fi
+		if [ $error -eq 1 ]; then
+		    echo "Can not create package directory.. skipping package '$package'!" > /dev/stderr
+		    return
+		fi
+	    fi 
+	else
+	    # not a file
+	    package=
+	fi
+    fi
+
+    if [ -z "$package" ]; then
+	echo "'$1' is not installed and is no rpm package..  skipping!" > /dev/stderr
+	return
+    fi
+
+    local in_pie=0
+    local in_non_pie=0
+    local in_pic=0
+    local in_dso_pic=0
+    local in_non_pic=0
+    local in_dso_non_pic=0
+    local in_rpath=0
+    local in_rpath_odd=0
+
+    for file in $files; do
+	opts=
+
+	check_file "$prefix$file"
+
+	[ -z "$opts" ] && continue
+		
+	if [ $split -eq 1 ]; then
+	    pkg=`basename $package`
+	    OLDIFS=$IFS
+	    IFS=,
+	    for opt in $opts; do
+		o=
+		[ "$opt" = "PIE" ] && o=pie
+		[ "$opt" = "!PIE" ] && o=non_pie
+		[ "$opt" = "PIC" ] && o=pic
+		[ "$opt" = "DSO PIC" ] && o=dso_pic
+		[ "$opt" = "!PIC" ] && o=non_pic
+		[ "$opt" = "DSO !PIC" ] && o=dso_non_pic
+		[ "${opt:0:6}" = "RPATH " ] && o=rpath && opt=${opt:6}
+		[ "${opt:0:7}" = "-RPATH " ] && o=rpath_odd && opt=${opt:7}
+		if [ -n "$o" ]; then
+		    eval local in=\${in_$o}
+		    if [ $in -eq 0 ]; then
+			echo -e "\n$pkg" >> $output.$o
+			eval in_$o=1
+		    fi
+		    if [ "${o:0:5}" = "rpath" -a $quiet -lt 2 ]; then
+			echo -e "\t$file\tRPATH $opt" >> $output.$o
+		    else
+			echo -e "\t$file" >> $output.$o
+		    fi
+		fi
+	    done
+	    IFS=$OLDIFS
+	else
+	    if [ -z "$pkg" ]; then
+		pkg=`basename $package`
+		echo -e "\n$pkg" >> $output
+	    fi
+	    
+	    if [ $quiet -eq 0 ]; then
+		echo -e "\t$file\t$opts" >> $output
+	    else
+		echo -e "\t$file" >> $output
+	    fi
+	fi
+    done
+
+    if [ -n "$prefix" ]; then
+	rm -rf $prefix
+    fi
+}
+
+verbose=0
+quiet=0
+installed=0
+exec=0
+lib=0
+pic=0
+no_pic=0
+pie=0
+no_pie=0
+rpath=0
+split=0
+test=0
+output=
+packages=
+while [ $OPTIND -le $# ]; do
+    eval pkg=\${$OPTIND}
+
+    if [ ${pkg:0:1} = "-" ]; then
+	[ "$pkg" = "-h" -o "$pkg" = "--help" ] && usage
+	[ "$pkg" = "-v" -o "$pkg" = "--verbose" ] && verbose=1
+	[ "$pkg" = "-q" -o "$pkg" = "--quiet" ] && quiet=1
+	[ "$pkg" = "-qq" ] && quiet=2
+	[ "$pkg" = "-i" -o "$pkg" = "--installed" ] && installed=1
+	[ "$pkg" = "-e" -o "$pkg" = "--executables" ] && exec=1
+	[ "$pkg" = "-l" -o "$pkg" = "--libraries" ] && lib=1
+	[ "$pkg" = "-p" -o "$pkg" = "--pic" ] && pic=1
+	[ "$pkg" = "-np" -o "$pkg" = "--no_pic" ] && no_pic=1
+	[ "$pkg" = "-P" -o "$pkg" = "--pie" ] && pie=1
+	[ "$pkg" = "-nP" -o "$pkg" = "--no_pie" ] && no_pie=1
+	[ "$pkg" = "-r" -o "$pkg" = "--rpath" ] && rpath=1
+	[ "$pkg" = "-s" -o "$pkg" = "--split" ] && split=1
+	[ "$pkg" = "-t" -o "$pkg" = "--test" ] && test=1
+	if [ "$pkg" = "-o" ]; then
+	    OPTIND=$((OPTIND+1))
+	    eval output=\${$OPTIND}
+	fi
+	if [ "${pkg:0:9}" = "--output=" ]; then
+	    output=${pkg:9};
+	fi
+	if [ "$pkg" = "-T" ]; then
+	    OPTIND=$((OPTIND+1))
+	    eval TMPDIR=\${$OPTIND}
+	fi
+	if [ "${pkg:0:10}" = "--tmp-dir=" ]; then
+	    TMPDIR=${pkg:10};
+	fi
+    else
+	packages="$packages $pkg"
+    fi
+    
+    OPTIND=$((OPTIND+1))
+done
+
+if [ ! -x "$READELF" ]; then
+    echo "$progname: '$READELF' does not exist or is not executable.. exiting!"
+    exit -1
+fi
+if [ ! -x "$EU_READELF" ]; then
+    echo "$progname: '$EU_READELF' does not exist or is not executable.. exiting!"
+    exit -1
+fi
+if [ ! -x "$OBJDUMP" ]; then
+    echo "$progname: '$OBJDUMP' does not exist or is not executable.. exiting!"
+    exit -1
+fi
+
+if [ ! -d "$TMPDIR" -o ! -w "$TMPDIR" ]; then
+    echo "$progname: '$TMPDIR' does not exist or is not writable.. exiting!"
+    exit -1
+fi
+
+[ -z "$packages" -a $installed -eq 0 ] && usage
+
+if [ $exec -eq 0 -a $lib -eq 0 ]; then
+    exec=1; lib=1
+fi
+
+if [ $pic -eq 0 -a $no_pic -eq 0 -a $pie -eq 0 -a $no_pie -eq 0 -a $rpath -eq 0 ]; then
+    pic=1; no_pic=1; pie=1; no_pie=1; rpath=1; test=1
+fi
+
+if [ $split -eq 1 ]; then
+    if [ -z "$output" ]; then
+	echo "You can not use split without an output file prefix.. exiting!"
+	exit -1
+    else
+	rm -f $output.*
+    fi
+fi
+[ -n "$output" ] && rm -f $output || output=/dev/stdout
+
+temp_prefix=`mktemp -d -q $TMPDIR/$progname.XXXXXX`
+if [ $? -ne 0 -o -z $temp_prefix ]; then
+    echo "Could not create temporary directory.. exiting!" > /dev/stderr
+    exit -1
+fi
+temp_prefix="$temp_prefix/"
+
+trap "chmod -R u+rwx $temp_prefix 2>/dev/null; rm -rf $temp_prefix; exit -1" 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30
+
+pkg_num=0
+for pkg in $packages; do
+    pkg_num=$((pkg_num+1))
+done
+pkg_no=1
+for pkg in $packages; do
+    tmp=`rpm -q $pkg | sort -u 2>/dev/null`
+    [ $verbose -eq 1 ] && \
+	printf "(%*d/%d) => %s\n" ${#pkg_num} $pkg_no $pkg_num $pkg \
+	> /dev/stderr
+    if echo $tmp | grep -q "not installed"; then
+	check_package $pkg
+    else
+	for package in $tmp; do
+	    check_package $package
+	done
+    fi
+    pkg_no=$((pkg_no+1))
+done
+
+if [ $installed -eq 1 ]; then
+    rpmqa=`rpm -qa | sort -u`
+    for i in $rpmqa; do
+	check_package "$i"
+    done
+fi
+
+exit 0
