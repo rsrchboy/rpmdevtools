@@ -111,6 +111,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Sep  6 2007 Ville Skyttä <ville.skytta at iki.fi>
+- Init script template cleanups.
+
 * Tue Aug 28 2007 Ville Skyttä <ville.skytta at iki.fi>
 - Update rpminfo to version 2004-07-07-02.
 

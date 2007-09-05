@@ -26,12 +26,6 @@
 # Source function library.
 . /etc/rc.d/init.d/functions
 
-# Source networking configuration.
-. /etc/sysconfig/network
-
-# Check that networking is up.
-[ "$NETWORKING" = "no" ] && exit 0
-
 exec="/path/to/<daemonname>"
 prog=$(basename $exec)
 
@@ -62,32 +56,27 @@ restart() {
     start
 }
 
-reload() {
-    restart
-}
-
-force_reload() {
-    restart
-}
-
-fdr_status() {
-    status $prog
-}
-
 case "$1" in
     start|stop|restart|reload)
         $1
         ;;
     force-reload)
-        force_reload
+        restart
         ;;
     status)
-        fdr_status
+        status $prog
         ;;
-    condrestart|try-restart)
-  	[ ! -f $lockfile ] || restart
+    try-restart|condrestart)
+        if status $prog >/dev/null ; then
+            restart
+        fi
 	;;
+    reload)
+        # If config can be reloaded without restarting, implement it here,
+        # remove the "exit", and add "reload" to the usage message below.
+        action $"Service $prog does not support the reload action: " /bin/false
+        exit 3
     *)
-        echo $"Usage: $0 {start|stop|status|restart|try-restart|reload|force-reload}"
+        echo $"Usage: $0 {start|stop|status|restart|try-restart|force-reload}"
         exit 2
 esac
