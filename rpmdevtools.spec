@@ -18,26 +18,38 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 Provides:       spectool = %{spectool_version}
 Obsoletes:      fedora-rpmdevtools < 5.0
-# Required for tool operations
-Requires:       rpm-python
-Requires:       python
-Requires:       cpio
-Requires:       sed
-Requires:       perl
-Requires:       wget
-Requires:       file
-Requires:       fakeroot
 # Minimal RPM build requirements
-Requires:       rpm-build >= 4.4.2.1
+Requires:       bash
+Requires:       bzip2
+Requires:       coreutils
+Requires:       cpio
+Requires:       diffutils
+Requires:       findutils
+Requires:       gawk
 Requires:       gcc
 Requires:       gcc-c++
-Requires:       redhat-rpm-config
-Requires:       make
-Requires:       tar
-Requires:       diffutils
+Requires:       grep
 Requires:       gzip
-Requires:       bzip2
+Requires:       info
+Requires:       make
+Requires:       patch
+Requires:       redhat-release
+Requires:       redhat-rpm-config
+Requires:       rpm-build >= 4.4.2.1
+Requires:       sed
+Requires:       tar
 Requires:       unzip
+Requires:       util-linux
+Requires:       which
+# Additionally required for tool operations
+#Requires:      cpio
+Requires:       fakeroot
+Requires:       file
+Requires:       perl
+Requires:       python
+Requires:       rpm-python
+#Requires:      sed
+Requires:       wget
 
 %description
 This package contains scripts and (X)Emacs support files to aid in
@@ -111,6 +123,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Sep  8 2007 Ville Skyttä <ville.skytta at iki.fi>
+- Sync deps with Fedora's new "assumed present in buildroots" packages list.
+
 * Thu Sep  6 2007 Ville Skyttä <ville.skytta at iki.fi>
 - Init script template cleanups.
 
