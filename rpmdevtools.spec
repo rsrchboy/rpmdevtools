@@ -3,7 +3,7 @@
 %define spectool_version   1.0.9
 
 Name:           rpmdevtools
-Version:        6.1
+Version:        6.2
 Release:        1%{?dist}
 Summary:        RPM Development Tools
 
@@ -123,7 +123,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sat Sep  8 2007 Ville Skyttä <ville.skytta at iki.fi>
+* Sat Sep  8 2007 Ville Skyttä <ville.skytta at iki.fi> - 6.2-1
 - Sync deps with Fedora's new "assumed present in buildroots" packages list.
 
 * Thu Sep  6 2007 Ville Skyttä <ville.skytta at iki.fi>
