@@ -16,7 +16,8 @@ dist_pkgdata_DATA = template.init
 
 dist_pkgsysconf_DATA = spectemplate-lib.spec spectemplate-minimal.spec \
 	spectemplate-perl.spec spectemplate-php-pear.spec \
-	spectemplate-python.spec spectemplate-ruby.spec rmdevelrpms.conf
+	spectemplate-python.spec spectemplate-ruby.spec \
+	spectemplate-fonts.spec newspec.conf rmdevelrpms.conf
 
 EXTRA_DIST = $(PACKAGE).spec
 
