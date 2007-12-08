@@ -29,8 +29,10 @@ BuildRequires:
 
 %install
 rm -rf $RPM_BUILD_ROOT
+
 install -dm 755 $RPM_BUILD_ROOT%{fontdir}
-# install eg. *.ttf and *.otf to $RPM_BUILD_ROOT%{fontdir} with perms 644
+# for example: install -pm 644 *.ttf *.otf $RPM_BUILD_ROOT%{fontdir}
+
 install -dm 755 $RPM_BUILD_ROOT%{fontconfdir}
 install -pm 644 %{SOURCE1} $RPM_BUILD_ROOT%{fontconfdir}/<XX>-%{fontname}.conf
 
