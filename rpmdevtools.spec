@@ -125,6 +125,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Sat Dec  8 2007 Ville Skyttä <ville.skytta at iki.fi>
 - Add fonts spec template from the Fedora Fonts SIG (#407781).
+- Add option to use macro style instead of shell style variables to newspec.
 
 * Fri Oct 12 2007 Lubomir Kundrak <lkundrak@redhat.com> - 6.4-1
 - Import the previous fix into CVS to resync, bump version
