@@ -92,6 +92,10 @@ if [ -z "$spectype" ] ; then
         lib*|*-lib|*-libs)
             spectype=lib
             ;;
+        *-fonts)
+            spectype=fonts
+            specfilter="; s/\\bFONTNAME\\b/${appname%%-fonts}/"
+            ;;
         *)
             spectype=$DEFTYPE
             ;;
@@ -113,7 +117,7 @@ elif [ "$specfile" = "-" ] ; then
     specfile=/dev/stdout
 fi
 
-cat "$tempspec" | sed -e "s/^\\(Name:\\s*\\)/\\1$appname/ $specfilter" \
+cat "$tempspec" | sed -e "s/^\\(Name:\\s*\\)$/\\1$appname/ $specfilter" \
   > "$specfile"
 
 if [ "$specfile" != "/dev/stdout" ] ; then
