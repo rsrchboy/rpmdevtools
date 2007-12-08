@@ -25,7 +25,7 @@
 import getopt, os, re, rpm, stat, sys, types
 
 
-__version__ = "1.8"
+__version__ = "1.9"
 
 
 dev_re  = re.compile("-(?:de(?:buginfo|vel)|sdk|static)\\b", re.IGNORECASE)
@@ -130,7 +130,8 @@ packages from the list use "nondevpkgs" in it.  Exclusion overrides inclusion.
 
 The system wide configuration file is /etc/rpmdevtools/rmdevelrpms.conf, and
 per user settings (which override system ones) can be specified in
-~/.rmdevelrpmsrc.  These files are written in Python.
+~/.config/rpmdevtools/rmdevelrpms.conf or ~/.rmdevelrpmsrc (deprecated).
+These files are written in Python.
 '''
     usage(None)
     print '''
@@ -262,7 +263,9 @@ def main():
 
 
 for conf in ("/etc/rpmdevtools/rmdevelrpms.conf",
-             os.path.join(os.environ["HOME"], ".rmdevelrpmsrc")):
+             os.path.join(os.environ["HOME"], ".rmdevelrpmsrc"), # deprecated
+             os.path.join(os.environ["HOME"],
+                          ".config/rpmdevtools/rmdevelrpms.conf")):
     try:
         execfile(conf)
     except IOError:
