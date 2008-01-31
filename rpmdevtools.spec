@@ -123,6 +123,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Feb  1 2008 Ville Skyttä <ville.skytta at iki.fi>
+- Add ';;' to the init script template's reload action.
+
 * Sat Dec  8 2007 Ville Skyttä <ville.skytta at iki.fi>
 - Add fonts spec template from the Fedora Fonts SIG (#407781).
 - Add option to use macro style instead of shell style variables to newspec.

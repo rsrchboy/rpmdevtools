@@ -76,6 +76,7 @@ case "$1" in
         # remove the "exit", and add "reload" to the usage message below.
         action $"Service $prog does not support the reload action: " /bin/false
         exit 3
+        ;;
     *)
         echo $"Usage: $0 {start|stop|status|restart|try-restart|force-reload}"
         exit 2
