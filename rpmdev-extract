@@ -3,7 +3,7 @@
 
 # rpmdev-extract -- Extract various archives in "tar xvf" style
 #
-# Copyright (c) 2004-2007 Fedora Project <http://fedoraproject.org/>.
+# Copyright (c) 2004-2008 Fedora Project <http://fedoraproject.org/>.
 # Author: Ville Skyttä <scop at fedoraproject.org>
 #
 # This program is free software; you can redistribute it and/or modify
@@ -35,9 +35,9 @@ shopt -s extglob
 version()
 {
     cat <<EOF
-rpmdev-extract version 1.1
+rpmdev-extract version 1.2
 
-Copyright (c) 2004-2007 Fedora Project <http://fedoraproject.org/>.
+Copyright (c) 2004-2008 Fedora Project <http://fedoraproject.org/>.
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
@@ -87,27 +87,22 @@ fmime()
         application/x-zoo)                                  ftype=zoo  ;;
         application/x-lha*)                                 ftype=lha  ;;
         application/x-rar)                                  ftype=rar  ;;
+        application/x-compress|application/x-gzip)  decomp="gzip -dc"  ;;
+        application/x-bzip2)                        decomp="bzip2 -dc" ;;
     esac
 }
 
 ftype()
 {
-    t=`file -ibL "$1" 2>/dev/null`
+    t=$(file -ibL "$1" 2>/dev/null)
     fmime "$t"
     [ -n "$ftype" ] && return
 
-    case "$t" in
-        application/x-compress|application/x-gzip)  decomp="gzip -dc"  ;;
-        application/x-bzip2)                        decomp="bzip2 -dc" ;;
-    esac
+    t=$(file -zibL "$1" 2>/dev/null)
+    fmime "$t"
+    [ -n "$ftype" ] && return
 
-    if [ -n "$decomp" ] ; then
-        t=`file -zibL "$1" 2>/dev/null`
-        fmime "$t"
-        [ -n "$ftype" ] && return
-    fi
-
-    t=`file -${decomp:+z}bL "$1" 2>/dev/null`
+    t=$(file -zbL "$1" 2>/dev/null)
     case "$t" in
         *Z[iI][pP]\ *archive*)                              ftype=zip  ;;
         *tar\ archive*)                                     ftype=tar  ;;
@@ -149,9 +144,9 @@ unarch()
             cabextract -f "$f"
             ;;
         rpm)
-            name=`rpm -qp --qf="%{NAME}-%{VERSION}-%{RELEASE}" "$f"`
+            name=$(rpm -qp --qf="%{NAME}-%{VERSION}-%{RELEASE}" "$f")
             if [ -z "$name" ] ; then # workaround for #250990
-                bname="`basename "$f"`"
+                bname=$(basename "$f")
                 name=${bname/?(\.*([^\.]))\.rpm/}
             fi
             mkdir -p "$name"
