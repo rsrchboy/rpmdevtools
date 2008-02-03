@@ -104,6 +104,7 @@ ftype()
 
     t=$(file -zbL "$1" 2>/dev/null)
     case "$t" in
+        *7-zip\ archive*)                                   ftype=7z   ;;
         *Z[iI][pP]\ *archive*)                              ftype=zip  ;;
         *tar\ archive*)                                     ftype=tar  ;;
         *ar\ archive*|*Debian\ *package*)                   ftype=ar   ;;
@@ -178,6 +179,10 @@ unarch()
             ;;
         lha)
             lha x${force:+f} "$f" < /dev/null
+            ;;
+        7z)
+            # -y is as close to force as we have as of p7zip 4.51
+            7za x ${force:+-y} "$f"
             ;;
         *)
             echo "Error: unrecognized archive: '$f'" >&2
