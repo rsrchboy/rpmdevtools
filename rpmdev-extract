@@ -102,6 +102,11 @@ ftype()
     fmime "$t"
     [ -n "$ftype" ] && return
 
+    t=$(file -bL "$1" 2>/dev/null)
+    case "$t" in
+        *lzop\ compressed*)                          decomp="lzop -dc" ;;
+    esac
+
     t=$(file -zbL "$1" 2>/dev/null)
     case "$t" in
         *7-zip\ archive*)                                   ftype=7z   ;;
@@ -117,6 +122,20 @@ ftype()
         *LHa\ *archive*)                                    ftype=lha  ;;
         *RAR\ *archive*)                                    ftype=rar  ;;
     esac
+
+    # Fallback stuff for things not (enough) supported by file(1).
+    if [ -z "$ftype" ] ; then
+        # No lzma support as of 4.23, and some lzma files lack magic anyway
+        if [[ -z "$decomp" && "$1" == *.lzma ]] ; then
+            decomp="lzma -dc"
+        fi
+        if [ -n "$decomp" ] ; then
+            case "$1" in
+                *.tar.*|*.tzo)                              ftype=tar  ;;
+                *.cpio.*)                                   ftype=cpio ;;
+            esac
+        fi
+    fi
 }
 
 unarch()
