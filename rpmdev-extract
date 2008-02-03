@@ -126,12 +126,12 @@ ftype()
     # Fallback stuff for things not (enough) supported by file(1).
     if [ -z "$ftype" ] ; then
         # No lzma support as of 4.23, and some lzma files lack magic anyway
-        if [[ -z "$decomp" && "$1" == *.lzma ]] ; then
+        if [[ -z "$decomp" && "$1" == *.@(lzma|tlz) ]] ; then
             decomp="lzma -dc"
         fi
         if [ -n "$decomp" ] ; then
             case "$1" in
-                *.tar.*|*.tzo)                              ftype=tar  ;;
+                *.tar.*|*.tzo|*.tlz)                        ftype=tar  ;;
                 *.cpio.*)                                   ftype=cpio ;;
             esac
         fi
