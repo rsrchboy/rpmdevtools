@@ -123,6 +123,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Feb  3 2008 Ville Skyttä <ville.skytta at iki.fi>
+- Add support for 7-zip, lzma and lzo in rpmdev-extract.
+
 * Fri Feb  1 2008 Ville Skyttä <ville.skytta at iki.fi>
 - Add ';;' to the init script template's reload action.
 
