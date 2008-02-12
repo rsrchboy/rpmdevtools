@@ -2,10 +2,12 @@
 export LC_ALL=C
 
 rpmargs_cmd=
-while getopts c:h rpmargs_opt; do
+rpmargs_pkg=
+while getopts c:ph rpmargs_opt; do
 	case "$rpmargs_opt" in
 		c) rpmargs_cmd="${OPTARG:?}"
 			readonly rpmargs_cmd ;;
+		p) rpmargs_pkg=1 ;;
 		h) pod2usage --exit=0 "$0"; exit 0 ;;
 		*) pod2usage --exit=2 "$0"; exit 2 ;;
 	esac
@@ -34,13 +36,27 @@ rpmargs_files()
 	done <rpmargs_files
 }
 
+rpmargs_packages()
+{
+	packages "$1" >rpmargs_packages
+	sort -t$'\t' -o rpmargs_packages -u -k1,1 rpmargs_packages
+	local p v f
+	while IFS=$'\t' read -r p v f _; do
+		$rpmargs_cmd "$1/$f" >rpmargs.out
+		[ -s rpmargs.out ] || continue
+		awk -v p="$p" '{print p"\t"$0}' rpmargs.out
+	done <rpmargs_packages
+}
+
 . @pkgdatadir@/tmpdir.sh
 rpmargs_tmpdir=$TMPDIR
 
 for rpmarg; do
 	rpmarg="$(readlink -ev "${rpmarg:?}")"
 	cd "$rpmargs_tmpdir"
-	if [ -d "$rpmarg" ]; then
+	if [ -d "$rpmarg" -a -n "$rpmargs_pkg" ]; then
+		rpmargs_packages "$rpmarg"
+	elif [ -d "$rpmarg" -a -z "$rpmargs_pkg" ]; then
 		rpmargs_files "$rpmarg"
 	else 
 		$rpmargs_cmd "$rpmarg"
@@ -59,6 +75,7 @@ rpmargs - process RPM packages
 B<rpmargs>
 [B<-h>]
 B<-c> I<command>
+[B<-p>]
 [I<FILE>...] [I<DIR>...]
 
 =head1	DESCRIPTION
@@ -71,6 +88,12 @@ pattern, and RPM file basename is prepended to the I<command> output.
 =head1	OPTIONS
 
 =over
+
+=item	B<-p>
+
+When processing a directory, list package names, not file names;
+furthermore, enable special treatment of packages with the same name;
+that is, process only the one with the latest version.
 
 =item	B<-h>
 

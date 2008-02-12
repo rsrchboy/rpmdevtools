@@ -123,6 +123,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Feb 12 2008 Ville Skyttä <ville.skytta at iki.fi>
+- Sync with qa-robot upstream.
+
 * Sun Feb  3 2008 Ville Skyttä <ville.skytta at iki.fi>
 - Add support for 7-zip, lzma and lzo in rpmdev-extract.
 

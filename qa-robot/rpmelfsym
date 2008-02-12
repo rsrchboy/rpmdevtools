@@ -4,7 +4,7 @@ export LC_ALL=C
 rpmelfsym()
 {
 	rpmfile "$1" >files
-	awk -F'\t' '$NF~/ELF.*(dynamic|shared)/{printf"./%s\0",$1}' files >elfs0
+	awk -F'\t' '$NF~/\<ELF .*(dynamically linked|shared object)/{printf"./%s\0",$1}' files >elfs0
 	[ -s elfs0 ] || return 0
 	rpmpeek "$1" xargs -r0 nm -Do <elfs0 >nm.out
 	awk '{OFS="\t";sub("^./","",$1);sub(":[0-9a-fA-F]*$","",$1);print}' nm.out
@@ -20,7 +20,7 @@ rpmelfsym - list symbols from object files in RPM packages
 
 =head1	SYNOPSIS
 
-B<rpmelfsym> [B<-h>] [I<FILE>...] [I<DIR>...]
+B<rpmelfsym> [B<-h>] [B<-p>] [I<FILE>...] [I<DIR>...]
 
 =head1	DESCRIPTION
 
@@ -34,6 +34,12 @@ output, which is typically RPM file basename.
 =head1	OPTIONS
 
 =over
+
+=item	B<-p>
+
+When processing a directory, list package names, not file names;
+furthermore, enable special treatment of packages with the same name;
+that is, process only the one with the latest version.
 
 =item	B<-h>
 
