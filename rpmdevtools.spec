@@ -1,6 +1,6 @@
 %define emacs_sitestart_d  %{_datadir}/emacs/site-lisp/site-start.d
 %define xemacs_sitestart_d %{_datadir}/xemacs/site-packages/lisp/site-start.d
-%define spectool_version   1.0.9
+%define spectool_version   1.0.10
 
 Name:           rpmdevtools
 Version:        6.4
@@ -125,6 +125,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Tue Feb 12 2008 Ville Skyttä <ville.skytta at iki.fi>
 - Sync with qa-robot upstream.
+- Update spectool to 1.0.10.
 
 * Sun Feb  3 2008 Ville Skyttä <ville.skytta at iki.fi>
 - Add support for 7-zip, lzma and lzo in rpmdev-extract.
