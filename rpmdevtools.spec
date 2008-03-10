@@ -65,6 +65,7 @@ rpmdev-vercmp       RPM version comparison checker
 spectool            Expand and download sources and patches in specfiles
 rpmdev-wipetree     Erase all files within dirs created by rpmdev-setuptree
 rpmdev-extract      Extract various archives, "tar xvf" style
+rpmdev-bumpspec     Bump revision in specfile
 ...and many more.
 
 
@@ -123,6 +124,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Mar 11 2008 Ville Skyttä <ville.skytta at iki.fi>
+- Include Michael Schwendt's bumspecfile.py (as rpmdev-bumpspec).
+
 * Tue Feb 12 2008 Ville Skyttä <ville.skytta at iki.fi>
 - Sync with qa-robot upstream.
 - Update spectool to 1.0.10.
