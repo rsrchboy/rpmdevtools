@@ -125,7 +125,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Tue Mar 11 2008 Ville Skyttä <ville.skytta at iki.fi>
-- Include Michael Schwendt's bumspecfile.py (as rpmdev-bumpspec).
+- Include Michael Schwendt's bumpspecfile.py (as rpmdev-bumpspec).
 
 * Tue Feb 12 2008 Ville Skyttä <ville.skytta at iki.fi>
 - Sync with qa-robot upstream.
