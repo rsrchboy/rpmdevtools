@@ -14,10 +14,11 @@ dist_man8_MANS = rpmdev-rmdevelrpms.8
 
 dist_pkgdata_DATA = template.init
 
-dist_pkgsysconf_DATA = spectemplate-lib.spec spectemplate-minimal.spec \
+dist_pkgsysconf_DATA = newspec.conf rmdevelrpms.conf \
+	spectemplate-lib.spec spectemplate-minimal.spec \
 	spectemplate-perl.spec spectemplate-php-pear.spec \
 	spectemplate-python.spec spectemplate-ruby.spec \
-	spectemplate-fonts.spec newspec.conf rmdevelrpms.conf
+	spectemplate-fonts.spec spectemplate-ocaml.spec
 
 EXTRA_DIST = $(PACKAGE).spec
 

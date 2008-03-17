@@ -100,6 +100,10 @@ if [ -z "$spectype" ] ; then
         ruby-*)
             spectype=ruby
             ;;
+        ocaml-*)
+            spectype=ocaml
+            specfilter="; s/\\bLIBNAME\\b/${appname##ocaml-}/"
+            ;;
         lib*|*-lib|*-libs)
             spectype=lib
             ;;

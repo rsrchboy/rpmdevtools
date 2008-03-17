@@ -124,6 +124,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Mar 17 2008 Ville Skyttä <ville.skytta at iki.fi>
+- Include ocaml spec template.
+
 * Tue Mar 11 2008 Ville Skyttä <ville.skytta at iki.fi>
 - Include Michael Schwendt's bumpspecfile.py (as rpmdev-bumpspec).
 
