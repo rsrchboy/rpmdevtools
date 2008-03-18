@@ -38,7 +38,7 @@ developing applications that use %{name}.
 
 
 %build
-# You may need a ./configure step here.
+# You may need a %%configure step here (or ./configure if it doesn't work).
 make byte
 %if %opt
 make opt
