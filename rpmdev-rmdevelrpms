@@ -25,7 +25,7 @@
 import getopt, os, re, rpm, stat, sys, types
 
 
-__version__ = "1.9"
+__version__ = "1.10"
 
 
 dev_re  = re.compile("-(?:de(?:buginfo|vel)|sdk|static)\\b", re.IGNORECASE)
@@ -50,9 +50,8 @@ def_devpkgs =\
  "yasm",
  )
 
-# zlib-devel: see #151622
 def_nondevpkgs =\
-("glibc-devel", "libstdc++-devel", "libgcj-devel", "zlib-devel",
+("glibc-devel", "libstdc++-devel",
  )
 
 

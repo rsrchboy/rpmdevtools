@@ -124,6 +124,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Mar 22 2008 Ville Skyttä <ville.skytta at iki.fi>
+- Remove libgcj-devel and zlib-devel from rmdevelrpms' internal exclusion
+  list, they're not essential on non-devel systems any more.
+
 * Mon Mar 17 2008 Ville Skyttä <ville.skytta at iki.fi>
 - Include ocaml spec template.
 
