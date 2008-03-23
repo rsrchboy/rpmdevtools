@@ -29,7 +29,7 @@ MAINTAINERCLEANFILES = rpminfo
 all: $(bin_SCRIPTS) $(man1_MANS) $(man8_MANS)
 
 %: %.in
-	sed -e 's|__SYSCONFDIR__|$(sysconfdir)|g' $< > $@
+	$(SED) -e 's|__SYSCONFDIR__|$(sysconfdir)|g' $< > $@
 	chmod +x $@
 
 %.1: %

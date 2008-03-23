@@ -14,7 +14,7 @@ MOSTLYCLEANFILES = $(bin_SCRIPTS) $(man1_MANS) $(pkgdata_DATA)
 all: $(bin_SCRIPTS) $(man1_MANS)
 
 %: %.in
-	sed -e 's|__PKGDATADIR__|$(pkgdatadir)|g' $< > $@
+	$(SED) -e 's|__PKGDATADIR__|$(pkgdatadir)|g' $< > $@
 	chmod +x $@
 
 %.1: %
