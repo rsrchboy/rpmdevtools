@@ -14,7 +14,7 @@ if [ $# -lt 2 ]; then
 	pod2usage --exit=2 "$0"; exit 2
 fi
 
-. @pkgdatadir@/tmpdir.sh
+. __PKGDATADIR__/tmpdir.sh
 rpm2cpio "$1" |(cd "$TMPDIR"; fakeroot -s .fakedata -- \
 	cpio -idmu --quiet --no-absolute-filenames) || exit 2
 shift

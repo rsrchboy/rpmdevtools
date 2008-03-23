@@ -25,7 +25,7 @@ b1="${1##*/}"; bb1="${b1%.*.rpm}"
 b2="${2##*/}"; bb2="${b2%.*.rpm}"
 [ "$bb1" != "$bb2" ] || bb2="$bb2+"
 
-. @pkgdatadir@/tmpdir.sh
+. __PKGDATADIR__/tmpdir.sh
 cd "$TMPDIR"
 
 rpmsoname "$1" >so1; sort -t$'\t' -u -k2 -o so1 -u so1

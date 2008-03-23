@@ -37,7 +37,7 @@ trap.sh - manage exit traps
 =head1	SYNOPSIS
 
   #!/bin/sh
-  . @pkgdatadir@/trap.sh
+  . __PKGDATADIR__/trap.sh
   lockfile -r0 "$workdir"/lock || exit
   add_trap rm -f "$workdir"/lock
 

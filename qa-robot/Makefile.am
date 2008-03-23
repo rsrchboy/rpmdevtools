@@ -8,13 +8,13 @@ pkgdata_DATA = tmpdir.sh trap.sh
 
 man1_MANS = rpmargs.1 rpmelfsym.1 rpmfile.1 rpmpeek.1 rpmsodiff.1 rpmsoname.1
 
-DIST_SOURCES = rpmargs.in rpmpeek.in rpmsodiff.in tmpdir.sh.in trap.sh.in
+EXTRA_DIST = rpmargs.in rpmpeek.in rpmsodiff.in tmpdir.sh.in trap.sh.in
 MOSTLYCLEANFILES = $(bin_SCRIPTS) $(man1_MANS) $(pkgdata_DATA)
 
 all: $(bin_SCRIPTS) $(man1_MANS)
 
 %: %.in
-	sed -e 's|@pkgdatadir@|$(pkgdatadir)|g' $< > $@
+	sed -e 's|__PKGDATADIR__|$(pkgdatadir)|g' $< > $@
 	chmod +x $@
 
 %.1: %

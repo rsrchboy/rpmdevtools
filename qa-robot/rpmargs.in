@@ -48,7 +48,7 @@ rpmargs_packages()
 	done <rpmargs_packages
 }
 
-. @pkgdatadir@/tmpdir.sh
+. __PKGDATADIR__/tmpdir.sh
 rpmargs_tmpdir=$TMPDIR
 
 for rpmarg; do
