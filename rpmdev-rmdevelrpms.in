@@ -126,8 +126,8 @@ To include additional packages in the list of ones treated as development
 packages, use the "devpkgs" option in the configuration file.  To exclude
 packages from the list use "nondevpkgs" in it.  Exclusion overrides inclusion.
 
-The system wide configuration file is /etc/rpmdevtools/rmdevelrpms.conf, and
-per user settings (which override system ones) can be specified in
+The system wide configuration file is __SYSCONFDIR__/rpmdevtools/rmdevelrpms.conf,
+and per user settings (which override system ones) can be specified in
 ~/.config/rpmdevtools/rmdevelrpms.conf or ~/.rmdevelrpmsrc (deprecated).
 These files are written in Python.
 '''
@@ -258,7 +258,7 @@ def main():
         del ts
 
 
-for conf in ("/etc/rpmdevtools/rmdevelrpms.conf",
+for conf in ("__SYSCONFDIR__/rpmdevtools/rmdevelrpms.conf",
              os.path.join(os.environ["HOME"], ".rmdevelrpmsrc"), # deprecated
              os.path.join(os.environ["HOME"],
                           ".config/rpmdevtools/rmdevelrpms.conf")):

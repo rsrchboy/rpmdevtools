@@ -19,10 +19,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-SPECDIR="/etc/rpmdevtools"
+SPECDIR="__SYSCONFDIR__/rpmdevtools"
 DEFTYPE="minimal"
 DEFSPEC="newpackage.spec"
-CONFIG="/etc/rpmdevtools/newspec.conf"
+CONFIG="__SYSCONFDIR__/rpmdevtools/newspec.conf"
 
 if [ -f "$CONFIG" ] ; then
     . "$CONFIG"

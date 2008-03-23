@@ -5,9 +5,10 @@ SUBDIRS = emacs qa-robot
 pkgdatadir = $(datadir)/rpmdevtools
 pkgsysconfdir = $(sysconfdir)/rpmdevtools
 
+bin_SCRIPTS = rpmdev-newspec rpmdev-rmdevelrpms
 dist_bin_SCRIPTS = rpmdev-checksig rpmdev-diff rpmdev-extract rpmdev-md5 \
-	rpmdev-newspec rpmdev-rmdevelrpms rpmdev-setuptree rpmdev-vercmp \
-	rpmdev-wipetree rpminfo rpmls rpmdev-bumpspec
+	rpmdev-setuptree rpmdev-vercmp rpmdev-wipetree rpminfo rpmls \
+	rpmdev-bumpspec
 
 man1_MANS = rpmdev-diff.1 rpmdev-extract.1 rpmdev-bumpspec.1
 man8_MANS = rpmdev-rmdevelrpms.8
@@ -20,12 +21,16 @@ dist_pkgsysconf_DATA = newspec.conf rmdevelrpms.conf \
 	spectemplate-python.spec spectemplate-ruby.spec \
 	spectemplate-fonts.spec spectemplate-ocaml.spec
 
-EXTRA_DIST = $(PACKAGE).spec
+EXTRA_DIST = $(PACKAGE).spec rpmdev-newspec.in rpmdev-rmdevelrpms.in
 
-MOSTLYCLEANFILES = $(man1_MANS) $(man8_MANS)
+MOSTLYCLEANFILES = $(bin_SCRIPTS) $(man1_MANS) $(man8_MANS)
 MAINTAINERCLEANFILES = rpminfo
 
-all: $(man1_MANS) $(man8_MANS)
+all: $(bin_SCRIPTS) $(man1_MANS) $(man8_MANS)
+
+%: %.in
+	sed -e 's|__SYSCONFDIR__|$(sysconfdir)|g' $< > $@
+	chmod +x $@
 
 %.1: %
 	chmod +x $<
