@@ -16,6 +16,8 @@ Source1:        http://people.redhat.com/nphilipp/spectool/spectool-%{spectool_v
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
+BuildRequires:  help2man
+BuildRequires:  %{_bindir}/pod2man
 Provides:       spectool = %{spectool_version}
 Obsoletes:      fedora-rpmdevtools < 5.0
 # Minimal RPM build requirements
@@ -124,6 +126,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Mar 23 2008 Ville Skyttä <ville.skytta at iki.fi>
+- Generate man pages at build time.
+
 * Sat Mar 22 2008 Ville Skyttä <ville.skytta at iki.fi>
 - Remove libgcj-devel and zlib-devel from rmdevelrpms' internal exclusion
   list, they're not essential on non-devel systems any more.

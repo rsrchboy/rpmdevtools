@@ -9,8 +9,8 @@ dist_bin_SCRIPTS = rpmdev-checksig rpmdev-diff rpmdev-extract rpmdev-md5 \
 	rpmdev-newspec rpmdev-rmdevelrpms rpmdev-setuptree rpmdev-vercmp \
 	rpmdev-wipetree rpminfo rpmls rpmdev-bumpspec
 
-dist_man1_MANS = rpmdev-diff.1 rpmdev-extract.1 rpmdev-bumpspec.1
-dist_man8_MANS = rpmdev-rmdevelrpms.8
+man1_MANS = rpmdev-diff.1 rpmdev-extract.1 rpmdev-bumpspec.1
+man8_MANS = rpmdev-rmdevelrpms.8
 
 dist_pkgdata_DATA = template.init
 
@@ -22,9 +22,10 @@ dist_pkgsysconf_DATA = newspec.conf rmdevelrpms.conf \
 
 EXTRA_DIST = $(PACKAGE).spec
 
-MAINTAINERCLEANFILES = $(dist_man1_MANS) $(dist_man8_MANS) rpminfo
+MOSTLYCLEANFILES = $(man1_MANS) $(man8_MANS)
+MAINTAINERCLEANFILES = rpminfo
 
-all:
+all: $(man1_MANS) $(man8_MANS)
 
 %.1: %
 	chmod +x $<

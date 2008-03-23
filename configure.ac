@@ -1,6 +1,13 @@
 AC_INIT(rpmdevtools, 6.4)
 AM_INIT_AUTOMAKE
-AC_PATH_PROG([HELP2MAN], [help2man], [/bin/false])
+AC_PATH_PROG([HELP2MAN], [help2man])
+if test -z "$HELP2MAN" ; then
+    AC_MSG_ERROR([help2man is required])
+fi
+AC_PATH_PROG([POD2MAN], [pod2man])
+if test -z "$POD2MAN" ; then
+    AC_MSG_ERROR([pod2man is required])
+fi
 AC_PATH_PROG([WGET], [wget], [/bin/false])
 AC_OUTPUT(
 Makefile
