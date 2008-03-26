@@ -3,7 +3,7 @@
 %define spectool_version   1.0.10
 
 Name:           rpmdevtools
-Version:        6.4
+Version:        6.5
 Release:        1%{?dist}
 Summary:        RPM Development Tools
 
@@ -126,6 +126,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Mar 26 2008 Ville Skyttä <ville.skytta at iki.fi> - 6.5-1
+- 6.5.
+
 * Sun Mar 23 2008 Ville Skyttä <ville.skytta at iki.fi>
 - Generate man pages at build time.
 
