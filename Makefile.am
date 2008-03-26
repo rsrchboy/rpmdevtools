@@ -34,13 +34,11 @@ all: $(bin_SCRIPTS) $(man1_MANS) $(man8_MANS)
 
 %.1: %
 	chmod +x $<
-	env PATH=$(top_srcdir):$$PATH \
-	$(HELP2MAN) --section=1 --no-info -h -h -v -v $< --output=$@
+	$(HELP2MAN) --section=1 --no-info -h -h -v -v $(<D)/$(<F) --output=$@
 
 %.8: %
 	chmod +x $<
-	env PATH=$(top_srcdir):$$PATH \
-	$(HELP2MAN) --section=8 --no-info $< --output=$@
+	$(HELP2MAN) --section=8 --no-info $(<D)/$(<F) --output=$@
 
 rpminfo:
 	$(WGET) -N http://people.redhat.com/twoerner/rpminfo/bin/rpminfo -O $@

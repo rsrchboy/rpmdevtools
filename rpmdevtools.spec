@@ -16,8 +16,11 @@ Source1:        http://people.redhat.com/nphilipp/spectool/spectool-%{spectool_v
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
+# All build deps for man page generation
 BuildRequires:  help2man
 BuildRequires:  %{_bindir}/pod2man
+BuildRequires:  python
+BuildRequires:  rpm-python
 Provides:       spectool = %{spectool_version}
 Obsoletes:      fedora-rpmdevtools < 5.0
 # Minimal RPM build requirements
@@ -126,6 +129,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Mar 27 2008 Ville Skyttä <ville.skytta at iki.fi>
+- Fix man page generation.
+
 * Wed Mar 26 2008 Ville Skyttä <ville.skytta at iki.fi> - 6.5-1
 - 6.5.
 
