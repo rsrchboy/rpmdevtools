@@ -129,6 +129,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Apr 18 2008 Ville Skyttä <ville.skytta at iki.fi>
+- Remove duplicate "reload" from case block in init script template.
+
 * Thu Mar 27 2008 Ville Skyttä <ville.skytta at iki.fi> - 6.6-1
 - Fix man page generation.
 
