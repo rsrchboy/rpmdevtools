@@ -129,6 +129,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Apr 20 2008 Ville Skyttä <ville.skytta at iki.fi>
+- Include rpm arch in dir names created by rpmdev-extract (#443266).
+
 * Fri Apr 18 2008 Ville Skyttä <ville.skytta at iki.fi>
 - Remove duplicate "reload" from case block in init script template.
 - Fix exit status of "reload" in case service is not running in init

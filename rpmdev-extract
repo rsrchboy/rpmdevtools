@@ -34,7 +34,7 @@ shopt -s extglob
 version()
 {
     cat <<EOF
-rpmdev-extract version 1.2
+rpmdev-extract version 1.3
 
 Copyright (c) 2004-2008 Ville Skyttä <ville.skytta at iki.fi>
 This program is free software; you can redistribute it and/or modify
@@ -161,10 +161,12 @@ unarch()
             cabextract -f "$f"
             ;;
         rpm)
-            name=$(rpm -qp --qf="%{NAME}-%{VERSION}-%{RELEASE}" "$f")
+            arch="%{ARCH}"
+            [[ "$f" =~ '\.s(rc\.r)?pm$' ]] && arch=src
+            name=$(rpm -qp --qf="%{NAME}-%{VERSION}-%{RELEASE}.$arch" "$f")
             if [ -z "$name" ] ; then # workaround for #250990
                 bname=$(basename "$f")
-                name=${bname/?(\.*([^\.]))\.rpm/}
+                name=${bname/\.[rs]pm/}
             fi
             mkdir -p "$name"
             cd "$name"
