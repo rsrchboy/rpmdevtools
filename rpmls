@@ -27,6 +27,9 @@ qf="[%-11{filemodes:perms} $owner%{filenames}\\n]"
 
 for arg in "$@" ; do
     case "$arg" in
+        http://*|https://*|ftp://*)
+            rpm -qp --qf="$qf" "$arg"
+            ;;
         *.[rs]pm)
             # dirname/basename: workaround for #250990
             cd "$(dirname "$arg")"

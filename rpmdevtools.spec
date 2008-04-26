@@ -129,6 +129,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Apr 26 2008 Ville Skyttä <ville.skytta at iki.fi>
+- Make rpmls work with URLs.
+
 * Sun Apr 20 2008 Ville Skyttä <ville.skytta at iki.fi>
 - Include rpm arch in dir names created by rpmdev-extract (#443266).
 
