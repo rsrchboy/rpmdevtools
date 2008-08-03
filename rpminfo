@@ -20,6 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # version 2004-07-07-02.rpmdevtools
+# Upstream: http://people.redhat.com/twoerner/rpminfo/bin/rpminfo
 
 
 LANG=C
