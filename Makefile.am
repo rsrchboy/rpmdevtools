@@ -24,7 +24,6 @@ dist_pkgsysconf_DATA = newspec.conf rmdevelrpms.conf \
 EXTRA_DIST = $(PACKAGE).spec rpmdev-newspec.in rpmdev-rmdevelrpms.in
 
 MOSTLYCLEANFILES = $(bin_SCRIPTS) $(man1_MANS) $(man8_MANS)
-MAINTAINERCLEANFILES = rpminfo
 
 all: $(bin_SCRIPTS) $(man1_MANS) $(man8_MANS)
 
@@ -39,6 +38,3 @@ all: $(bin_SCRIPTS) $(man1_MANS) $(man8_MANS)
 %.8: %
 	chmod +x $<
 	$(HELP2MAN) --section=8 --no-info $(<D)/$(<F) --output=$@
-
-rpminfo:
-	$(WGET) -N http://people.redhat.com/twoerner/rpminfo/bin/rpminfo -O $@

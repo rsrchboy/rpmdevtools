@@ -13,8 +13,6 @@ if test -z "$POD2MAN" ; then
     AC_MSG_ERROR([pod2man is required])
 fi
 
-AC_PATH_PROG([WGET], [wget], [/bin/false])
-
 AC_OUTPUT(
 Makefile
 emacs/Makefile
