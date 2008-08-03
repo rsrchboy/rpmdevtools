@@ -19,14 +19,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# version 2004-07-07-02
+# version 2004-07-07-02.rpmdevtools
 
 
 LANG=C
 READELF=/usr/bin/readelf
 EU_READELF=/usr/bin/eu-readelf
 OBJDUMP=/usr/bin/objdump
-TMPDIR=/tmp
+TMPDIR=${TMPDIR:-/tmp}
 
 progname=`basename $0`
 

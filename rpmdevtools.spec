@@ -129,6 +129,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Aug  3 2008 Ville Skyttä <ville.skytta at iki.fi>
+- Make rpmdev-diff, rpmdev-md5 and rpminfo honor TMPDIR.
+
 * Sat Apr 26 2008 Ville Skyttä <ville.skytta at iki.fi>
 - Make rpmls work with URLs.
 

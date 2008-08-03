@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 
 # Copyright (C) 2003 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de>
 #  
@@ -18,7 +18,7 @@
 while test "$1"; do
     case "$1" in
 	--help)		echo $"Usage: rpmdev-md5 <package>"; exit 0;;
-	--version)	echo $"rpmdev-md5 0.4"; exit 0;;
+	--version)	echo $"rpmdev-md5 0.5"; exit 0;;
 	--)		shift; break;;
 	*)		break
     esac
@@ -32,7 +32,7 @@ test "$1" || {
 
 
 unset CDPATH
-tmp=`mktemp -d /var/tmp/fedmd5.XXXXXX`
+tmp=`mktemp -d ${TMPDIR:-/tmp}/rpmdev-md5.XXXXXX`
 trap "rm -rf $tmp" EXIT
 
 rpm2cpio - <"$1" | ( cd $tmp; cpio -i --quiet )

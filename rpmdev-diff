@@ -3,7 +3,7 @@
 
 # rpmdev-diff -- Diff contents of two archives
 #
-# Copyright (c) 2004-2007 Ville Skyttä <ville.skytta at iki.fi>
+# Copyright (c) 2004-2008 Ville Skyttä <ville.skytta at iki.fi>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -36,9 +36,9 @@ cleanup()
 version()
 {
     cat <<EOF
-rpmdev-diff version 1.1
+rpmdev-diff version 1.2
 
-Copyright (c) 2004-2007 Ville Skyttä <ville.skytta@iki.fi>
+Copyright (c) 2004-2008 Ville Skyttä <ville.skytta@iki.fi>
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
@@ -55,7 +55,7 @@ See rpmdev-extract(1) for information about supported archive types.
 EOF
     usage
     echo ""
-    echo "Report bugs to <http://bugzilla.redhat.com/>."
+    echo "Report bugs to <https://bugzilla.redhat.com/>."
 }
 
 usage()
@@ -97,7 +97,7 @@ done
 
 diffopts="-r ${diffopts:--Nu}"
 
-tmpdir=`mktemp -d /tmp/rpmdev-diff.XXXXXX`
+tmpdir=`mktemp -d ${TMPDIR:-/tmp}/rpmdev-diff.XXXXXX`
 
 mkdir "$tmpdir/old" "$tmpdir/new"
 rpmdev-extract -q -C "$tmpdir/old" "$1"
