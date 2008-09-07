@@ -129,6 +129,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep  7 2008 Ville Skyttä <ville.skytta at iki.fi>
+- Improve arch specific %%files in perl spec template (#461177, Chris Weyl).
+
 * Sun Aug  3 2008 Ville Skyttä <ville.skytta at iki.fi> - 6.7-1
 - 6.7.
 - Make rpmdev-diff, rpmdev-md5 and rpminfo honor TMPDIR.

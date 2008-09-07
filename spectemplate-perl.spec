@@ -51,8 +51,8 @@ rm -rf $RPM_BUILD_ROOT
 # For noarch packages: vendorlib
 %{perl_vendorlib}/*
 # For arch-specific packages: vendorarch
-%{perl_vendorarch}/auto/*
-%{perl_vendorarch}/everything-except-"auto"
+%{perl_vendorarch}/*
+%exclude %dir %{perl_vendorarch}/auto/
 %{_mandir}/man3/*.3*
 
 
