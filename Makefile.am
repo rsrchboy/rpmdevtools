@@ -1,4 +1,4 @@
-AUTOMAKE_OPTIONS = foreign 1.5 dist-bzip2
+AUTOMAKE_OPTIONS = foreign 1.10.1 dist-lzma
 
 SUBDIRS = emacs qa-robot
 

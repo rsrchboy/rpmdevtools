@@ -11,12 +11,14 @@ Group:          Development/Tools
 # rpmdev-setuptree is GPLv2, everything else GPLv2+
 License:        GPLv2+ and GPLv2
 URL:            https://fedorahosted.org/rpmdevtools/
-Source0:        https://fedorahosted.org/releases/r/p/rpmdevtools/%{name}-%{version}.tar.bz2
+Source0:        https://fedorahosted.org/releases/r/p/rpmdevtools/%{name}-%{version}.tar.lzma
 Source1:        http://people.redhat.com/nphilipp/spectool/spectool-%{spectool_version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
-# All build deps for man page generation
+# lzma for unpacking the tarball
+BuildRequires:  lzma
+# help2man, pod2man, *python for creating man pages
 BuildRequires:  help2man
 BuildRequires:  %{_bindir}/pod2man
 BuildRequires:  python
@@ -129,6 +131,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Sep 22 2008 Ville Skyttä <ville.skytta at iki.fi>
+- Switch to lzma compressed tarball.
+
 * Sun Sep  7 2008 Ville Skyttä <ville.skytta at iki.fi>
 - Improve arch specific %%files in perl spec template (#461177, Chris Weyl).
 
