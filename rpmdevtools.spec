@@ -131,6 +131,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Sep 25 2008 Ville Skyttä <ville.skytta at iki.fi>
+- Bring rpmdev-bumpspec copyright holder closer to truth (Michael Schwendt).
+
 * Mon Sep 22 2008 Ville Skyttä <ville.skytta at iki.fi>
 - Switch to lzma compressed tarball.
 
