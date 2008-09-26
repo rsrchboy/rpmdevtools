@@ -22,14 +22,15 @@ import re
 import time
 from optparse import OptionParser
 
-__version__ = "1.0"
+__version__ = "1.0.1"
 
 class BumpSpecError(Exception):
     pass
 
 class SpecFile:
-    def __init__(self, filename, verbose=False):
+    def __init__(self, filename, verbose=False, rightmost=False):
         self.verbose = verbose
+        self.rightmost = rightmost
 
         self.filename = filename
         f = open(filename,"r")
@@ -135,7 +136,9 @@ class SpecFile:
     def increase(self, match):
         old = match.group(1)  # only the release value
         try:
-            if old.find('jpp')>0:
+            if self.rightmost:
+                new = self.increaseFallback(old)
+            elif old.find('jpp')>0:
                 new = self.increaseJPP(old)
             else:
                 new = self.increaseMain(old)
@@ -174,6 +177,8 @@ the Free Software Foundation; either version 2 of the License, or
                       help="changelog comment (default:\"- rebuilt\")")
     parser.add_option("-u", "--userstring", default=None,
                       help="user name+email string")
+    parser.add_option("-r", "--rightmost", default=False, action='store_true',
+                      help="bump the rightmost integer or add a .1")
     parser.add_option("-V", "--verbose", default=False, action='store_true',
                       help="more output")
     parser.add_option("-v", "--version", default=False, action='store_true',
@@ -192,7 +197,7 @@ the Free Software Foundation; either version 2 of the License, or
         userstring = opts.userstring
 
     for aspec in args:
-        s = SpecFile(aspec, opts.verbose)
+        s = SpecFile(aspec, opts.verbose, opts.rightmost)
         s.bumpRelease()
         s.writeFile(aspec)
 
