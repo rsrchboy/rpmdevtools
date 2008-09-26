@@ -133,6 +133,8 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Fri Sep 26 2008 Ville Skyttä <ville.skytta at iki.fi>
 - Add -r/--rightmost option to rpmdev-bumpspec (ticket #1, Thorsten Leemhuis).
+- Add %%packager from rpm config to the set of defaults for rpmdev-bumpspec's
+  user string.
 
 * Thu Sep 25 2008 Ville Skyttä <ville.skytta at iki.fi>
 - Bring rpmdev-bumpspec copyright holder closer to truth (Michael Schwendt).

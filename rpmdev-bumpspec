@@ -20,9 +20,10 @@
 import errno, os, sys
 import re
 import time
+from commands import getstatusoutput
 from optparse import OptionParser
 
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 
 class BumpSpecError(Exception):
     pass
@@ -174,9 +175,11 @@ the Free Software Foundation; either version 2 of the License, or
 
     parser = OptionParser(usage=usage)
     parser.add_option("-c", "--comment", default='- rebuilt',
-                      help="changelog comment (default:\"- rebuilt\")")
+                      help="changelog comment (default: \"- rebuilt\")")
     parser.add_option("-u", "--userstring", default=None,
-                      help="user name+email string")
+                      help="user name+email string (default: %packager from "+
+                      "rpm configuration, or $RPM_PACKAGER, or $MAILTO from "+
+                      "environment)")
     parser.add_option("-r", "--rightmost", default=False, action='store_true',
                       help="bump the rightmost integer or add a .1")
     parser.add_option("-V", "--verbose", default=False, action='store_true',
@@ -189,12 +192,21 @@ the Free Software Foundation; either version 2 of the License, or
         print version
         sys.exit(0)
 
-    userstring = os.getenv('RPM_PACKAGER') or os.getenv('MAILTO')
-    if not userstring and not opts.userstring:
-        print 'ERROR: Set $RPM_PACKAGER environment variable or use option -u!'
-        sys.exit(errno.EINVAL)
-    if opts.userstring:
-        userstring = opts.userstring
+    userstring = opts.userstring
+    if not userstring:
+        # first, $RPM_PACKAGER
+        userstring = os.getenv('RPM_PACKAGER')
+        # then, %packager
+        if not userstring:
+            (status, userstring) = getstatusoutput("rpm --eval '%packager'")
+            if status or userstring == '%packager':
+                userstring = None
+        # finally, $MAILTO
+        if not userstring:
+            userstring = os.getenv('MAILTO')
+        # if still not available, bail out
+        if not userstring and not opts.userstring:
+            parser.error('Userstring required, see option -u')
 
     for aspec in args:
         s = SpecFile(aspec, opts.verbose, opts.rightmost)
