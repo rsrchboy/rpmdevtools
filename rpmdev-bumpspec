@@ -192,6 +192,9 @@ the Free Software Foundation; either version 2 of the License, or
         print version
         sys.exit(0)
 
+    if not args:
+        parser.error('No specfiles specified')
+
     userstring = opts.userstring
     if not userstring:
         # first, $RPM_PACKAGER
