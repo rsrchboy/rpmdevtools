@@ -131,6 +131,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Oct 13 2008 Ville Skyttä <ville.skytta at iki.fi>
+- Show available types in rpmdev-newspec --help (ticket #6, Todd Zullinger).
+
 * Fri Sep 26 2008 Ville Skyttä <ville.skytta at iki.fi>
 - Add -r/--rightmost option to rpmdev-bumpspec (ticket #1, Thorsten Leemhuis).
 - Add %%packager from rpm config to the set of defaults for rpmdev-bumpspec's
