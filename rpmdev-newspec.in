@@ -23,9 +23,6 @@ SPECDIR="__SYSCONFDIR__/rpmdevtools"
 DEFTYPE="minimal"
 DEFSPEC="newpackage.spec"
 CONFIG="__SYSCONFDIR__/rpmdevtools/newspec.conf"
-SPECTYPES=$(ls $SPECDIR/spectemplate-*.spec | \
-            sed 's,.*spectemplate-,,;s,\.spec$,,' | tr '\n' ' ' | \
-            fmt -w 60 | sed 's/^/               /')
 
 if [ -f "$CONFIG" ] ; then
     . "$CONFIG"
@@ -33,6 +30,13 @@ fi
 
 usage() {
     ret=${1:-0}
+
+    indent="               "
+    types=$(ls $SPECDIR/spectemplate-*.spec 2>/dev/null | \
+        sed 's,.*spectemplate-,,;s,\.spec$,,' | tr '\n' ' ' | \
+        fmt -w 60 | sed "s/^/$indent/")
+    [ -z "$types" ] && types="${indent}None ($SPECDIR/spectemplate-*.spec)"
+
     cat <<EOF
 Usage: rpmdev-newspec [option]... [appname]
 
@@ -43,7 +47,7 @@ Options:
            from <appname>, falling back to "$DEFTYPE" if the guesswork
            does not result in a more specific one or if <appname> is not
            given.  Available types:
-$SPECTYPES
+$types
   -m       Emit templates that use macros instead of shell style variables.
   -h       Show this usage message
 
