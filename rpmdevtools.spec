@@ -24,38 +24,15 @@ BuildRequires:  %{_bindir}/pod2man
 BuildRequires:  python
 BuildRequires:  rpm-python
 Provides:       spectool = %{spectool_version}
-Obsoletes:      fedora-rpmdevtools < 5.0
-# Minimal RPM build requirements
-Requires:       bash
-Requires:       bzip2
-Requires:       coreutils
-Requires:       cpio
 Requires:       diffutils
-Requires:       findutils
-Requires:       gawk
-Requires:       gcc
-Requires:       gcc-c++
-Requires:       grep
-Requires:       gzip
-Requires:       info
-Requires:       make
-Requires:       patch
-Requires:       redhat-release
-Requires:       redhat-rpm-config
-Requires:       rpm-build >= 4.4.2.1
-Requires:       sed
-Requires:       tar
-Requires:       unzip
-Requires:       util-linux
-Requires:       which
-# Additionally required for tool operations
-#Requires:      cpio
 Requires:       fakeroot
 Requires:       file
-Requires:       perl
-Requires:       python
+Requires:       findutils
+Requires:       gawk
+Requires:       grep
+Requires:       rpm-build >= 4.4.2.1
 Requires:       rpm-python
-#Requires:      sed
+Requires:       sed
 Requires:       wget
 
 %description
@@ -131,6 +108,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 20 2008 Ville Skyttä <ville.skytta at iki.fi>
+- Drop "minimal buildroot" dependencies.
+- Drop fedora-rpmdevtools Obsoletes.
+
 * Mon Oct 13 2008 Ville Skyttä <ville.skytta at iki.fi>
 - Show available types in rpmdev-newspec --help (ticket #6, Todd Zullinger).
 
