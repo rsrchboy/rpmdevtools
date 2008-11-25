@@ -108,6 +108,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Nov 26 2008 Ville Skyttä <ville.skytta at iki.fi>
+- Add vamp-plugin-sdk to nondevpkgs in default rmdevelrpms.conf
+  (#472641, Michael Schwendt).
+
 * Thu Nov 20 2008 Ville Skyttä <ville.skytta at iki.fi>
 - Drop "minimal buildroot" dependencies.
 - Drop fedora-rpmdevtools Obsoletes.
