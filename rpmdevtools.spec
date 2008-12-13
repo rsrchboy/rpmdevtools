@@ -44,7 +44,7 @@ rpmdev-newspec      Creates new .spec from template
 rpmdev-rmdevelrpms  Find (and optionally remove) "development" RPMs
 rpmdev-checksig     Check package signatures using alternate RPM keyring
 rpminfo             Print information about executables and libraries
-rpmdev-md5          Display the md5sum of all files in an RPM
+rpmdev-md5/sha*     Display checksums of all files in an RPM package file
 rpmdev-vercmp       RPM version comparison checker
 spectool            Expand and download sources and patches in specfiles
 rpmdev-wipetree     Erase all files within dirs created by rpmdev-setuptree
@@ -108,6 +108,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Dec 13 2008 Ville Skyttä <ville.skytta at iki.fi>
+- Add rpmdev-sha*/*sum companions to rpmdev-md5 (ticket #7).
+
 * Wed Nov 26 2008 Ville Skyttä <ville.skytta at iki.fi>
 - Add vamp-plugin-sdk to nondevpkgs in default rmdevelrpms.conf
   (#472641, Michael Schwendt).

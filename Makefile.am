@@ -25,6 +25,8 @@ EXTRA_DIST = $(PACKAGE).spec rpmdev-newspec.in rpmdev-rmdevelrpms.in
 
 MOSTLYCLEANFILES = $(bin_SCRIPTS) $(man1_MANS) $(man8_MANS)
 
+sums = sum cksum sha1 sha224 sha256 sha384 sha512
+
 all: $(bin_SCRIPTS) $(man1_MANS) $(man8_MANS)
 
 %: %.in
@@ -38,3 +40,11 @@ all: $(bin_SCRIPTS) $(man1_MANS) $(man8_MANS)
 %.8: %
 	chmod +x $<
 	$(HELP2MAN) --section=8 --no-info $(<D)/$(<F) --output=$@
+
+install-exec-hook:
+	cd $(DESTDIR)$(bindir) && \
+	for sum in $(sums) ; do ln rpmdev-md5 rpmdev-$$sum ; done
+
+uninstall-hook:
+	cd $(DESTDIR)$(bindir) && \
+	for sum in $(sums) ; do $(RM) rpmdev-$$sum ; done
