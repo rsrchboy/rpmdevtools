@@ -50,7 +50,7 @@ def_devpkgs =\
  )
 
 def_nondevpkgs =\
-("glibc-devel", "libstdc++-devel",
+("glibc-devel", "libstdc++-devel", "vamp-plugin-sdk",
  )
 
 

@@ -115,7 +115,7 @@ rm -rf $RPM_BUILD_ROOT
 - Add rpmdev-sha*/*sum companions to rpmdev-md5 (ticket #7).
 
 * Wed Nov 26 2008 Ville Skyttä <ville.skytta at iki.fi>
-- Add vamp-plugin-sdk to nondevpkgs in default rmdevelrpms.conf
+- Add vamp-plugin-sdk to internal list of non-devel packages in rmdevelrpms.
   (#472641, Michael Schwendt).
 
 * Thu Nov 20 2008 Ville Skyttä <ville.skytta at iki.fi>
