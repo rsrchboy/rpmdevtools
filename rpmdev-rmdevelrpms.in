@@ -24,7 +24,7 @@
 import getopt, os, re, rpm, stat, sys, types
 
 
-__version__ = "1.10"
+__version__ = "1.11"
 
 
 dev_re  = re.compile("-(?:de(?:buginfo|vel)|sdk|static)\\b", re.IGNORECASE)
@@ -43,8 +43,8 @@ def_devpkgs =\
  "automake16", "automake17", "bison", "byacc", "cmake", "dev86", "djbfft",
  "docbook-utils-pdf", "doxygen", "flex", "gcc-g77", "gcc-gfortran", "gcc-gnat",
  "gcc-objc", "gcc32", "gcc34", "gcc34-c++", "gcc34-java", "gcc35", "gcc35-c++",
- "gcc4", "gcc4-c++", "gcc4-gfortran", "gettext", "glade", "glade2",
- "kernel-source", "kernel-sourcecode", "libtool", "m4", "nasm",
+ "gcc4", "gcc4-c++", "gcc4-gfortran", "gettext", "glade", "glade2", "imake",
+ "intltool", "kernel-source", "kernel-sourcecode", "libtool", "m4", "nasm",
  "perl-Module-Build", "pkgconfig", "qt-designer", "scons", "swig", "texinfo",
  "yasm",
  )
@@ -67,6 +67,7 @@ def isDevelPkg(hdr):
     name = hdr[rpm.RPMTAG_NAME]
     if not name: return 0
     na = "%s.%s" % (name, hdr[rpm.RPMTAG_ARCH])
+    # Check nondevpkgs first (exclusion overrides inclusion)
     if name in nondevpkgs or na in nondevpkgs: return 0
     if name in devpkgs or na in devpkgs: return 1
     if name in def_nondevpkgs or na in def_nondevpkgs: return 0

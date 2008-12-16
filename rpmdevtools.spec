@@ -108,6 +108,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Dec 16 2008 Ville Skyttä <ville.skytta at iki.fi>
+- Add imake and intltool to internal list of devel packages in rmdevelrpms.
+
 * Sat Dec 13 2008 Ville Skyttä <ville.skytta at iki.fi>
 - Add rpmdev-sha*/*sum companions to rpmdev-md5 (ticket #7).
 
