@@ -19,7 +19,7 @@ dist_pkgsysconf_DATA = newspec.conf rmdevelrpms.conf \
 	spectemplate-lib.spec spectemplate-minimal.spec \
 	spectemplate-perl.spec spectemplate-php-pear.spec \
 	spectemplate-python.spec spectemplate-ruby.spec \
-	spectemplate-fonts.spec spectemplate-ocaml.spec
+	spectemplate-ocaml.spec
 
 EXTRA_DIST = $(PACKAGE).spec rpmdev-newspec.in rpmdev-rmdevelrpms.in
 
