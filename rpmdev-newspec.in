@@ -3,7 +3,7 @@
 # rpmdev-newspec -- generate new rpm .spec file from template
 #
 # Copyright (c) Warren Togami <warren@togami.com>,
-#               Ville Skyttä <scop@fedoraproject.org>
+#               Ville Skyttä <ville.skytta at iki.fi>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,14 +28,42 @@ if [ -f "$CONFIG" ] ; then
     . "$CONFIG"
 fi
 
-usage() {
-    ret=${1:-0}
+version()
+{
+    cat <<EOF
+rpmdev-newspec version 1.0
 
-    indent="               "
-    types=$(ls $SPECDIR/spectemplate-*.spec 2>/dev/null | \
-        sed 's,.*spectemplate-,,;s,\.spec$,,' | tr '\n' ' ' | \
-        fmt -w 60 | sed "s/^/$indent/")
-    [ -z "$types" ] && types="${indent}None ($SPECDIR/spectemplate-*.spec)"
+Copyright (c) Warren Togami <warren@togami.com>, Ville Skyttä
+<ville.skytta at iki.fi>
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+EOF
+}
+
+help()
+{
+    cat <<EOF
+rpmdev-newspec generates new rpm .spec files from templates.
+
+EOF
+    usage
+    echo ""
+    echo "Report bugs at <https://bugzilla.redhat.com/>."
+}
+
+usage() {
+    # Don't emit available types at build time to avoid them from being
+    # embedded in the man page.
+    types=
+    if [ -z "$RPM_BUILD_ROOT" ] ; then
+        indent="               "
+        types=$(ls $SPECDIR/spectemplate-*.spec 2>/dev/null | \
+            sed 's,.*spectemplate-,,;s,\.spec$,,' | tr '\n' ' ' | \
+            fmt -w 60 | sed "s/^/$indent/")
+        [ -z "$types" ] && types="${indent}None ($SPECDIR/spectemplate-*.spec)"
+    fi
 
     cat <<EOF
 Usage: rpmdev-newspec [option]... [appname[.spec]]
@@ -46,14 +74,14 @@ Options:
   -t TYPE  Force use of the TYPE spec template.  The default is guessed
            from <appname>, falling back to "$DEFTYPE" if the guesswork
            does not result in a more specific one or if <appname> is not
-           given.  Available types:
-$types
+           given.${types:+  Available types:
+$types}
   -m       Emit templates that use macros instead of shell style variables.
-  -h       Show this usage message
+  -h       Show this usage message and exit.
+  -v       Print version information and exit.
 
 System wide configuration file is $CONFIG.
 EOF
-    exit $ret
 }
 
 appname=
@@ -76,7 +104,12 @@ while [ -n "$1" ] ; do
             NEWSPEC_PREFER_MACROS=1
             ;;
         -h|--help)
-            usage 0
+            help
+            exit 0
+            ;;
+        -v|--version)
+            version
+            exit 0
             ;;
         *.spec)
             [ -z "$specfile" ] && specfile="$1"

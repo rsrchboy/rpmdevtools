@@ -10,7 +10,7 @@ dist_bin_SCRIPTS = rpmdev-checksig rpmdev-diff rpmdev-extract rpmdev-md5 \
 	rpmdev-setuptree rpmdev-vercmp rpmdev-wipetree rpminfo rpmls \
 	rpmdev-bumpspec
 
-man1_MANS = rpmdev-diff.1 rpmdev-extract.1 rpmdev-bumpspec.1
+man1_MANS = rpmdev-diff.1 rpmdev-extract.1 rpmdev-bumpspec.1 rpmdev-newspec.1
 man8_MANS = rpmdev-rmdevelrpms.8
 
 dist_pkgdata_DATA = template.init
