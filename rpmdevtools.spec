@@ -31,7 +31,7 @@ Requires:       findutils
 Requires:       gawk
 Requires:       grep
 Requires:       rpm-build >= 4.4.2.1
-Requires:       rpm-python
+Requires:       rpm-python >= 4.4.2.2
 Requires:       sed
 Requires:       wget
 
@@ -108,6 +108,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Dec 26 2008 Ville Skyttä <ville.skytta at iki.fi>
+- Add minimum version to rpm-python dependency (for rpmdev-bumpspec).
+
 * Fri Dec 26 2008 Ville Skyttä <ville.skytta at iki.fi> - 7.0-1
 - 7.0.
 - Drop fonts spec template, adapt to new ones from Fedora fonts SIG (#477055).

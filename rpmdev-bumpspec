@@ -201,7 +201,7 @@ the Free Software Foundation; either version 2 of the License, or
         userstring = os.getenv('RPM_PACKAGER')
         # then, %packager
         if not userstring:
-            userstring = rpm.expandMacro('%packager')
+            userstring = rpm.expandMacro('%packager') # rpm-python >= 4.4.2.2
             if userstring == '%packager':
                 userstring = None
         # finally, $MAILTO
