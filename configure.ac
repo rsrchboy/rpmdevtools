@@ -1,4 +1,4 @@
-AC_INIT(rpmdevtools, 6.7)
+AC_INIT(rpmdevtools, 7.0)
 AM_INIT_AUTOMAKE
 
 AC_PROG_SED
