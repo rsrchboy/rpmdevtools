@@ -108,6 +108,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Dec 26 2008 Ville Skyttä <ville.skytta at iki.fi>
+- Drop fonts spec template, adapt to new ones from Fedora fonts SIG (#477055).
+
 * Tue Dec 16 2008 Ville Skyttä <ville.skytta at iki.fi>
 - Add imake and intltool to internal list of devel packages in rmdevelrpms.
 

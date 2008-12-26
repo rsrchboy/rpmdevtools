@@ -38,11 +38,11 @@ usage() {
     [ -z "$types" ] && types="${indent}None ($SPECDIR/spectemplate-*.spec)"
 
     cat <<EOF
-Usage: rpmdev-newspec [option]... [appname]
+Usage: rpmdev-newspec [option]... [appname[.spec]]
 
 Options:
   -o FILE  Output the specfile to FILE.  "-" means stdout.  The default is
-           "<appname>.spec", or "$DEFSPEC" if appname is not given.
+           derived from <appname>, or "$DEFSPEC" if appname is not given.
   -t TYPE  Force use of the TYPE spec template.  The default is guessed
            from <appname>, falling back to "$DEFTYPE" if the guesswork
            does not result in a more specific one or if <appname> is not
@@ -59,6 +59,7 @@ EOF
 appname=
 specfile=
 spectype=
+specfile_set=
 
 while [ -n "$1" ] ; do
     case "$1" in
@@ -69,6 +70,7 @@ while [ -n "$1" ] ; do
         -o|--output)
             shift
             specfile="$1"
+            specfile_set=1
             ;;
         -m|--macros)
             NEWSPEC_PREFER_MACROS=1
@@ -115,9 +117,17 @@ if [ -z "$spectype" ] ; then
         lib*|*-lib|*-libs)
             spectype=lib
             ;;
-        *-fonts)
-            spectype=fonts
-            specfilter="; s/\\bFONTNAME\\b/${appname%%-fonts}/"
+        *-fonts|*-fonts-simple)
+            spectype=fonts-simple
+            appname="${appname%%-simple}"
+            specfilter="; s/<FONTNAME>/${appname%%-fonts}/"
+            [ -n "$specfile_set" ] || specfile="$appname.spec"
+            ;;
+        *-fonts-multi)
+            spectype=fonts-multi
+            appname="${appname%%-multi}"
+            specfilter="; s/<FONTNAME>/${appname%%-fonts}/"
+            [ -n "$specfile_set" ] || specfile="$appname.spec"
             ;;
         *)
             spectype=$DEFTYPE
