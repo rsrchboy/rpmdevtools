@@ -108,6 +108,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jan 26 2009 Ville Skyttä <ville.skytta at iki.fi>
+- Add result dependent exit statuses to rpmdev-vercmp.
+
 * Fri Dec 26 2008 Ville Skyttä <ville.skytta at iki.fi>
 - Add minimum version to rpm-python dependency (for rpmdev-bumpspec).
 

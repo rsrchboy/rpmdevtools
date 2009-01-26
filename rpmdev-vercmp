@@ -33,6 +33,9 @@ def usage():
 rpmdev-vercmp <epoch1> <ver1> <release1> <epoch2> <ver2> <release2>
 rpmdev-vercmp <EVR1> <EVR2> # if rpmUtils.miscutils is available
 rpmdev-vercmp # with no arguments, prompt
+
+Exit status is 0 if the EVR's are equal, 11 if EVR1 is newer, and 12 if EVR2
+is newer.  Other exit statuses indicate problems.
 """
 
 def vercmp((e1, v1, r1), (e2, v2, r2)):
@@ -75,10 +78,13 @@ ships eg. with yum) is available."""
     rc = vercmp((e1, v1, r1), (e2, v2, r2))
     if rc > 0:
         print "%s:%s-%s is newer" % (e1, v1, r1)
+        rc = 11
     elif rc == 0:
         print "These are equal"
     elif rc < 0:
         print "%s:%s-%s is newer" % (e2, v2, r2)
+        rc = 12
+    sys.exit(rc)
 
 if __name__ == "__main__":
     main()
