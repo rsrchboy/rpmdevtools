@@ -1,5 +1,5 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%define pear_name Foo_Bar
+%global pear_name Foo_Bar
 
 Name:           
 Version:        

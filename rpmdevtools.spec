@@ -1,6 +1,6 @@
-%define emacs_sitestart_d  %{_datadir}/emacs/site-lisp/site-start.d
-%define xemacs_sitestart_d %{_datadir}/xemacs/site-packages/lisp/site-start.d
-%define spectool_version   1.0.10
+%global emacs_sitestart_d  %{_datadir}/emacs/site-lisp/site-start.d
+%global xemacs_sitestart_d %{_datadir}/xemacs/site-packages/lisp/site-start.d
+%global spectool_version   1.0.10
 
 Name:           rpmdevtools
 Version:        7.0
@@ -109,6 +109,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Sun Feb 22 2009 Ville Skyttä <ville.skytta at iki.fi>
+- Use %%global instead of %%define in spec templates.
 - Handle %%global in addition to %%define in rpmdev-bumpspec.
 
 * Mon Jan 26 2009 Ville Skyttä <ville.skytta at iki.fi>
