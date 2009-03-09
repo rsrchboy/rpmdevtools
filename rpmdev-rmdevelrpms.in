@@ -64,7 +64,6 @@ def_nondevpkgs =\
 devpkgs = ()
 nondevpkgs = ()
 
-
 def isDevelPkg(hdr):
     """
     Decides whether a package is a devel one, based on name, configuration
@@ -111,8 +110,10 @@ def callback(what, bytes, total, h, user):
     sys.stdout.flush()
 
 
-def help():
-    print '''rpmdev-rmdevelrpms is a script for finding and optionally removing
+def _usage():
+    return '''rpmdev-rmdevelrpms [options]
+
+rpmdev-rmdevelrpms is a script for finding and optionally removing
 "development" packages, for example for cleanup purposes before starting to
 build a new package.
 
@@ -138,24 +139,8 @@ The system wide configuration file is __SYSCONFDIR__/rpmdevtools/rmdevelrpms.con
 and per user settings (which override system ones) can be specified in
 ~/.config/rpmdevtools/rmdevelrpms.conf or ~/.rmdevelrpmsrc (deprecated).
 These files are written in Python.
-'''
-    usage(None)
-    print '''
+
 Report bugs to <http://bugzilla.redhat.com/>.'''
-    sys.exit(0)
-
-
-def usage(exit=1):
-    print '''
-Usage: rpmdev-rmdevelrpms [OPTION]...
-
-Options:
-  -y, --yes         Remove without prompting (no-op if not root).
-  -l, --list-only   Output condensed list of found packages, do not remove.
-  -v, --version     Print program version and exit.
-  -h, --help        Print help message and exit.'''
-    if exit is not None:
-        sys.exit(exit)
 
 
 def version():
@@ -173,7 +158,7 @@ def main():
     "Da meat."
 
     # TODO: implement -r|--root for checking a specified rpm root
-    op = optparse.OptionParser()
+    op = optparse.OptionParser(usage=_usage())
     op.add_option("-l", "--list-only", dest="listonly", action="store_true",
                   help="Output condensed list of packages, do not remove.")
     op.add_option("-y", "--yes", dest="yes", action="store_true",
