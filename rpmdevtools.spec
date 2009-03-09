@@ -108,6 +108,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Mar  9 2009 Ville Skyttä <ville.skytta at iki.fi>
+- Add query format option to rmdevelrpms, sort output by NEVRA.
+
 * Sun Feb 22 2009 Ville Skyttä <ville.skytta at iki.fi>
 - Use %%global instead of %%define in spec templates.
 - Handle %%global in addition to %%define in rpmdev-bumpspec.

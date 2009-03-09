@@ -63,6 +63,7 @@ def_nondevpkgs =\
 
 devpkgs = ()
 nondevpkgs = ()
+qf = '%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}'
 
 def isDevelPkg(hdr):
     """
@@ -108,6 +109,12 @@ def callback(what, bytes, total, h, user):
     "Callback called during rpm transaction."
     sys.stdout.write(".")
     sys.stdout.flush()
+
+
+def _hdrcmp(x, y):
+    "Comparison function for rpm headers."
+    return cmp(x[rpm.RPMTAG_NAME], y[rpm.RPMTAG_NAME]) or cmp(x, y) or \
+           cmp(x[rpm.RPMTAG_ARCH], y[rpm.RPMTAG_ARCH])
 
 
 def _usage():
@@ -161,6 +168,8 @@ def main():
     op = optparse.OptionParser(usage=_usage())
     op.add_option("-l", "--list-only", dest="listonly", action="store_true",
                   help="Output condensed list of packages, do not remove.")
+    op.add_option("--qf", "--queryformat", dest="qf", action="store",
+                  default=qf, help="Query format to use for output.")
     op.add_option("-y", "--yes", dest="yes", action="store_true",
                   help="Root only: remove without prompting; ignored with -l.")
     op.add_option("-v", "--version", dest="version", action="store_true",
@@ -174,31 +183,22 @@ def main():
     ts = rpm.TransactionSet("/")
     ts.setVSFlags(~(rpm._RPMVSF_NOSIGNATURES|rpm._RPMVSF_NODIGESTS))
     mi = ts.dbMatch()
-    for pkg in mi:
-        if isDevelPkg(pkg):
+    hdrs = []
+    for hdr in mi:
+        if isDevelPkg(hdr):
+            hdrs.append(hdr)
             ts.addErase(mi.instance())
     ts.order()
-    pkgs = []
+
     try:
-        te = ts.next()
-        while te:
-            arch = te.A()
-            if arch:
-                pkgs.append("%s.%s" % (te.NEVR(), arch))
-            else:
-                pkgs.append(te.NEVR())
-            te = ts.next()
-    except StopIteration:
-        pass
-    try:
-        if len(pkgs) > 0:
-            pkgs.sort()
+        if len(hdrs) > 0:
+            hdrs.sort(_hdrcmp)
             indent = ""
             if not opts.listonly:
                 indent = "  "
-                print "Found %d devel packages:" % len(pkgs)
-            for pkg in pkgs:
-                print indent + pkg
+                print "Found %d devel packages:" % len(hdrs)
+            for hdr in hdrs:
+                print indent + hdr.sprintf(opts.qf)
             if opts.listonly:
                 pass
             else:
