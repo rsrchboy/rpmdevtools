@@ -21,7 +21,14 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-import getopt, os, re, rpm, stat, sys, types
+import getopt
+import os
+import re
+import stat
+import sys
+import types
+
+import rpm
 
 
 __version__ = "1.11"
