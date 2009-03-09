@@ -21,7 +21,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-import getopt
+import optparse
 import os
 import re
 import stat
@@ -171,24 +171,21 @@ the Free Software Foundation; either version 2 of the License, or
 
 def main():
     "Da meat."
-    try:
-        # TODO: implement -r|--root for checking a specified rpm root
-        opts, args = getopt.getopt(sys.argv[1:],
-                                   "ylvh",
-                                   ["yes", "list-only", "version", "help"])
-    except getopt.GetoptError:
-        usage(2)
-    listonly = 0
-    confirm = 1
-    for o, a in opts:
-        if o in ("-v", "--version"):
-            version()
-        if o in ("-h", "--help"):
-            help()
-        if o in ("-l", "--list-only"):
-            listonly = 1
-        elif o in ("-y", "--yes"):
-            confirm = 0
+
+    # TODO: implement -r|--root for checking a specified rpm root
+    op = optparse.OptionParser()
+    op.add_option("-l", "--list-only", dest="listonly", action="store_true",
+                  help="Output condensed list of packages, do not remove.")
+    op.add_option("-y", "--yes", dest="yes", action="store_true",
+                  help="Root only: remove without prompting; ignored with -l.")
+    op.add_option("-v", "--version", dest="version", action="store_true",
+                  help="Print program version and exit.")
+
+    (opts, args) = op.parse_args()
+
+    if opts.version:
+        version()
+
     ts = rpm.TransactionSet("/")
     ts.setVSFlags(~(rpm._RPMVSF_NOSIGNATURES|rpm._RPMVSF_NODIGESTS))
     mi = ts.dbMatch()
@@ -212,12 +209,12 @@ def main():
         if len(pkgs) > 0:
             pkgs.sort()
             indent = ""
-            if not listonly:
+            if not opts.listonly:
                 indent = "  "
                 print "Found %d devel packages:" % len(pkgs)
             for pkg in pkgs:
                 print indent + pkg
-            if listonly:
+            if opts.listonly:
                 pass
             else:
                 # TODO: is there a way to get arch for the unresolved deps?
@@ -243,7 +240,7 @@ def main():
                         print "  %s-%s-%s %s" % (t[0][0], t[0][1], t[0][2], dep)
                     print "Not removed due to dependencies."
                 elif os.geteuid() == 0:
-                    if confirm:
+                    if not opts.yes:
                         proceed = raw_input("Remove them? [y/N] ")
                     else:
                         proceed = "y"
