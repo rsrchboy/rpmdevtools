@@ -34,6 +34,8 @@ Requires:       rpm-build >= 4.4.2.1
 Requires:       rpm-python >= 4.4.2.2
 Requires:       sed
 Requires:       wget
+# For _get_cword in bash completion snippet
+Conflicts:      bash-completion < 20080705
 
 %description
 This package contains scripts and (X)Emacs support files to aid in
@@ -100,6 +102,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc COPYING README*
 %config(noreplace) %{_sysconfdir}/rpmdevtools/
+%{_sysconfdir}/bash_completion.d/
 %{_datadir}/rpmdevtools/
 %{_bindir}/rpm*
 %{_bindir}/spectool

@@ -1,0 +1,102 @@
+# -*- mode: shell-script; sh-basic-offset: 8; indent-tabs-mode: t -*-
+# ex: ts=8 sw=8 noet filetype=sh
+#
+# bash completion for rpmdevtools
+# Requires bash-completion >= 20080705 (for _get_cword)
+
+# TODO: rpmdev-diff, rpmdev-extract, rpmdev-newspec, rpmdev-vercmp
+
+_rpmdev_rpmfiles()
+{
+	local cur=`_get_cword`
+	_filedir '[rs]pm'
+}
+
+complete -F _rpmdev_rpmfiles $filenames \
+	rpmdev-{cksum,md5,sha{1,224,256,384,512},sum} rpmdev-checksig
+
+_rpmdev_specfiles()
+{
+	local cur=`_get_cword`
+	_filedir spec
+}
+
+_spectool()
+{
+	COMPREPLY=()
+
+	for i in ${COMP_WORDS[@]} ; do
+		[[ "$i" == -@(h|-help) ]] && return 0
+	done
+
+	local prev=${COMP_WORDS[COMP_CWORD-1]}
+	case "$prev" in
+		-@(C|-directory))
+			_filedir -d
+			return 0
+			;;
+		-@(s|-source|p|-patch|d|-define))
+			# TODO: do better with these
+			return 0
+			;;
+	esac
+
+	local cur=`_get_cword`
+	if [[ "$cur" == -* ]] ; then
+		COMPREPLY=( $( compgen -W '-l --lf --list-files -g --gf \
+			--get-files -h --help -A --all -S --sources -P \
+			--patches -s --source -p --patch -d --define -C \
+			--directory -R --sourcedir -n --dryrun --dry-run \
+			-D --debug' -- $cur ) )
+	else
+		_rpmdev_specfiles
+	fi
+}
+complete -F _spectool $filenames spectool
+
+_rpmdev_bumpspec()
+{
+	COMPREPLY=()
+
+	for i in ${COMP_WORDS[@]} ; do
+		[[ "$i" == -@(h|-help|v|-version) ]] && return 0
+	done
+
+	local prev=${COMP_WORDS[COMP_CWORD-1]}
+	[[ "$prev" == -@(c|-comment|u|-userstring) ]] && return 0
+
+	local cur=`_get_cword`
+	if [[ "$cur" == -* ]] ; then
+		COMPREPLY=( $( compgen -W '-h --help -c --comment -u \
+			--userstring -r --rightmost -V --verbose -v \
+			--version' -- $cur ) )
+	else
+		_rpmdev_specfiles
+	fi
+}
+complete -F _rpmdev_bumpspec $filenames rpmdev-bumpspec
+
+_rpmdev_rmdevelrpms()
+{
+	COMPREPLY=()
+
+	for i in ${COMP_WORDS[@]} ; do
+		[[ "$i" == -@(h|-help|v|-version) ]] && return 0
+	done
+
+	local prev=${COMP_WORDS[COMP_CWORD-1]}
+	[[ "$prev" == --@(qf|queryformat) ]] && return 0
+
+	COMPREPLY=( $( compgen -W '-h --help -l --list-only -y --yes \
+			-v --version --qf --queryformat' -- `_get_cword` ) )
+}
+complete -F _rpmdev_rmdevelrpms rpmdev-rmdevelrpms
+
+_rpmdev_setuptree()
+{
+	local cur=`_get_cword`
+	if [[ "$cur" == -* ]] ; then
+		COMPREPLY=( $( compgen -W '-d' -- `_get_cword` ) )
+	fi
+}
+complete -F _rpmdev_setuptree rpmdev-setuptree

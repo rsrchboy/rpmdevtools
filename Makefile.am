@@ -4,6 +4,7 @@ SUBDIRS = emacs qa-robot
 
 pkgdatadir = $(datadir)/rpmdevtools
 pkgsysconfdir = $(sysconfdir)/rpmdevtools
+bashcompdir = $(sysconfdir)/bash_completion.d
 
 bin_SCRIPTS = rpmdev-newspec rpmdev-rmdevelrpms
 dist_bin_SCRIPTS = rpmdev-checksig rpmdev-diff rpmdev-extract rpmdev-md5 \
@@ -20,6 +21,8 @@ dist_pkgsysconf_DATA = newspec.conf rmdevelrpms.conf \
 	spectemplate-perl.spec spectemplate-php-pear.spec \
 	spectemplate-python.spec spectemplate-ruby.spec \
 	spectemplate-ocaml.spec
+
+dist_bashcomp_DATA = rpmdevtools.bash-completion
 
 EXTRA_DIST = $(PACKAGE).spec rpmdev-newspec.in rpmdev-rmdevelrpms.in
 
