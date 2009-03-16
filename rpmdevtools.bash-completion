@@ -4,7 +4,7 @@
 # bash completion for rpmdevtools
 # Requires bash-completion >= 20080705 (for _get_cword)
 
-# TODO: rpmdev-diff, rpmdev-extract, rpmdev-newspec, rpmdev-vercmp
+# TODO: rpmdev-diff, rpmdev-extract, rpmdev-newspec, rpmdev-vercmp, rpminfo
 
 _rpmdev_rpmfiles()
 {
@@ -100,3 +100,18 @@ _rpmdev_setuptree()
 	fi
 }
 complete -F _rpmdev_setuptree rpmdev-setuptree
+
+_rpmls()
+{
+	COMPREPLY=()
+	local cur=`_get_cword`
+
+	if [[ "$cur" == -* ]] ; then
+		COMPREPLY=( $( compgen -W '-l' -- $cur ) )
+		return 0
+	fi
+
+	_rpm_installed_packages
+	_rpmdev_rpmfiles
+}
+complete -F _rpmls $filenames rpmls
