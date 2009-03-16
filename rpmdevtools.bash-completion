@@ -96,7 +96,7 @@ _rpmdev_setuptree()
 {
 	local cur=`_get_cword`
 	if [[ "$cur" == -* ]] ; then
-		COMPREPLY=( $( compgen -W '-d' -- `_get_cword` ) )
+		COMPREPLY=( $( compgen -W '-d' -- $cur ) )
 	fi
 }
 complete -F _rpmdev_setuptree rpmdev-setuptree
