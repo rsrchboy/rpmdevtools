@@ -3,7 +3,7 @@
 %global spectool_version   1.0.10
 
 Name:           rpmdevtools
-Version:        7.0
+Version:        7.1
 Release:        1%{?dist}
 Summary:        RPM Development Tools
 
@@ -111,7 +111,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sat Apr  4 2009 Ville Skyttä <ville.skytta at iki.fi>
+* Sat Apr  4 2009 Ville Skyttä <ville.skytta at iki.fi> - 7.1-1
+- 7.1.
 - Make rpmdev-md5 and friends work on non-srpm package files too.
 
 * Sun Mar 15 2009 Ville Skyttä <ville.skytta at iki.fi>
