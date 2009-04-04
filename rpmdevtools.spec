@@ -114,6 +114,9 @@ rm -rf $RPM_BUILD_ROOT
 * Sat Apr  4 2009 Ville Skyttä <ville.skytta at iki.fi>
 - Make rpmdev-md5 and friends work on non-srpm package files too.
 
+* Sun Mar 15 2009 Ville Skyttä <ville.skytta at iki.fi>
+- Add bash completion.
+
 * Mon Mar  9 2009 Ville Skyttä <ville.skytta at iki.fi>
 - Add query format option to rmdevelrpms, sort output by NEVRA.
 
