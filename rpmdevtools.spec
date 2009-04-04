@@ -11,7 +11,7 @@ Group:          Development/Tools
 # rpmdev-setuptree is GPLv2, everything else GPLv2+
 License:        GPLv2+ and GPLv2
 URL:            https://fedorahosted.org/rpmdevtools/
-Source0:        https://fedorahosted.org/releases/r/p/rpmdevtools/%{name}-%{version}.tar.lzma
+Source0:        https://fedorahosted.org/released/rpmdevtools/%{name}-%{version}.tar.lzma
 Source1:        http://people.redhat.com/nphilipp/spectool/spectool-%{spectool_version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
