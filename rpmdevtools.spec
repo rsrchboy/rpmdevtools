@@ -111,6 +111,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Apr  7 2009 Ville Skyttä <ville.skytta at iki.fi>
+- Speed up rpmls bash completion.
+
 * Sat Apr  4 2009 Ville Skyttä <ville.skytta at iki.fi> - 7.1-1
 - 7.1.
 - Make rpmdev-md5 and friends work on non-srpm package files too.

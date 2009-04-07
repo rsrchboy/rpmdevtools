@@ -111,7 +111,7 @@ _rpmls()
 		return 0
 	fi
 
-	_rpm_installed_packages
+	[[ "$cur" == */* ]] || _rpm_installed_packages
 	_rpmdev_rpmfiles
 }
 complete -F _rpmls $filenames rpmls
