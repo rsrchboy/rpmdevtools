@@ -2,29 +2,28 @@ AUTOMAKE_OPTIONS = foreign 1.10.1 dist-lzma
 
 SUBDIRS = emacs qa-robot
 
-pkgdatadir = $(datadir)/rpmdevtools
 pkgsysconfdir = $(sysconfdir)/rpmdevtools
 bashcompdir = $(sysconfdir)/bash_completion.d
 
-bin_SCRIPTS = rpmdev-newspec rpmdev-rmdevelrpms
+bin_SCRIPTS = rpmdev-newinit rpmdev-newspec rpmdev-rmdevelrpms
 dist_bin_SCRIPTS = rpmdev-checksig rpmdev-diff rpmdev-extract rpmdev-md5 \
 	rpmdev-setuptree rpmdev-vercmp rpmdev-wipetree rpminfo rpmls \
 	rpmdev-bumpspec
 
-man1_MANS = rpmdev-diff.1 rpmdev-extract.1 rpmdev-bumpspec.1 rpmdev-newspec.1
+man1_MANS = rpmdev-diff.1 rpmdev-extract.1 rpmdev-bumpspec.1 rpmdev-newinit.1 \
+	rpmdev-newspec.1
 man8_MANS = rpmdev-rmdevelrpms.8
-
-dist_pkgdata_DATA = template.init
 
 dist_pkgsysconf_DATA = newspec.conf rmdevelrpms.conf \
 	spectemplate-lib.spec spectemplate-minimal.spec \
 	spectemplate-perl.spec spectemplate-php-pear.spec \
 	spectemplate-python.spec spectemplate-ruby.spec \
-	spectemplate-ocaml.spec
+	spectemplate-ocaml.spec template.init
 
 dist_bashcomp_DATA = rpmdevtools.bash-completion
 
-EXTRA_DIST = $(PACKAGE).spec rpmdev-newspec.in rpmdev-rmdevelrpms.in
+EXTRA_DIST = $(PACKAGE).spec rpmdev-newinit.in rpmdev-newspec.in \
+	rpmdev-rmdevelrpms.in
 
 MOSTLYCLEANFILES = $(bin_SCRIPTS) $(man1_MANS) $(man8_MANS)
 

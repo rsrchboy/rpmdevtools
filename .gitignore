@@ -10,5 +10,6 @@ configure
 install-sh
 missing
 spectool-*
+rpmdev-newinit
 rpmdev-newspec
 rpmdev-rmdevelrpms

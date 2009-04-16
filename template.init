@@ -1,14 +1,10 @@
 #!/bin/sh
 #
-# <daemonname> <summary>
+# APPNAME - <summary>
 #
 # chkconfig:   <default runlevel(s)> <start> <stop>
 # description: <description, split multiple lines with \
 #              a backslash>
-# processname: <daemonname>
-# config:      </path/to/conffile1>
-# config:      </path/to/conffile2>
-# pidfile:     </path/to/pidfile>
 
 # http://fedoraproject.org/wiki/FCNewInit/Initscripts
 ### BEGIN INIT INFO
@@ -26,7 +22,7 @@
 # Source function library.
 . /etc/rc.d/init.d/functions
 
-exec="/path/to/<daemonname>"
+exec="/usr/sbin/APPNAME"
 prog=$(basename $exec)
 
 [ -e /etc/sysconfig/$prog ] && . /etc/sysconfig/$prog
@@ -72,10 +68,12 @@ case "$1" in
         fi
 	;;
     reload)
-        status $prog >/dev/null || exit 7
         # If config can be reloaded without restarting, implement it here,
         # remove the "exit", and add "reload" to the usage message below.
-        action $"Service $prog does not support the reload action: " /bin/false
+        # For example:
+        # status $prog >/dev/null || exit 7
+        # killproc $prog -HUP
+        action $"Service ${0##*/} does not support the reload action: " /bin/false
         exit 3
         ;;
     *)

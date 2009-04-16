@@ -1,0 +1,110 @@
+#!/bin/bash
+
+# rpmdev-newinit -- generate new init script from template
+#
+# Copyright (c) 2009 Ville Skyttä <ville.skytta at iki.fi>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+TEMPLATE="__SYSCONFDIR__/rpmdevtools/template.init"
+DEFNAME="newinitscript.init"
+
+version()
+{
+    cat <<EOF
+rpmdev-newinit version 1.0
+
+Copyright (c) 2009 Ville Skyttä <ville.skytta at iki.fi>
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+EOF
+}
+
+help()
+{
+    cat <<EOF
+rpmdev-newinit generates new init script from a template
+
+EOF
+    usage
+    echo ""
+    echo "Report bugs at <https://bugzilla.redhat.com/>, component rpmdevtools,"
+    echo "or at <https://fedorahosted.org/rpmdevtools/>."
+}
+
+usage() {
+    cat <<EOF
+Usage: rpmdev-newinit [option]... [appname[.init]]
+
+Options:
+  -o FILE  Output the init script to FILE.  "-" means stdout.  The default is
+           derived from <appname>, or "$DEFNAME" if appname is not given.
+  -h       Show this usage message and exit.
+  -v       Print version information and exit.
+
+The template used is $TEMPLATE.
+EOF
+}
+
+appname=
+output=
+output_set=
+
+while [ -n "$1" ] ; do
+    case "$1" in
+        -o|--output)
+            shift
+            output="$1"
+            output_set=1
+            ;;
+        -h|--help)
+            help
+            exit 0
+            ;;
+        -v|--version)
+            version
+            exit 0
+            ;;
+        *.init)
+            [ -z "$output" ] && output="$1"
+            [ -z "$appname"  ] && appname="$(basename $1 .init)"
+            ;;
+        *)
+            appname="$1"
+            [ -z "$output" ] && output="$appname.init"
+            ;;
+    esac
+    shift
+done
+
+[ -z "$output" ] && output="$DEFNAME"
+if [ -f "$output" ] ; then
+    echo "Output file \"$output\" already exists, exiting."
+    exit 2
+elif [ "$output" = "-" ] ; then
+    output=/dev/stdout
+fi
+
+if [ -z "$appname" ] ; then
+    cat "$TEMPLATE" > "$output"
+else
+    sed -e "s|APPNAME|$appname|g" "$TEMPLATE" > "$output"
+fi
+
+if [ "$output" != "/dev/stdout" ] ; then
+    echo "Skeleton init script has been created to \"$output\"."
+fi

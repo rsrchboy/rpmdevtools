@@ -111,6 +111,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Apr 16 2009 Ville Skyttä <ville.skytta at iki.fi>
+- Add rpmdev-newinit for easier access to the init script template, move the
+  template to %%{_sysconfdir}/rpmdevtools, improve reload action example.
+
 * Tue Apr  7 2009 Ville Skyttä <ville.skytta at iki.fi>
 - Speed up rpmls bash completion.
 
