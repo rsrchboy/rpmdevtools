@@ -50,7 +50,8 @@ rpmdev-newspec generates new rpm .spec files from templates.
 EOF
     usage
     echo ""
-    echo "Report bugs at <https://bugzilla.redhat.com/>."
+    echo "Report bugs at <https://bugzilla.redhat.com/>, component rpmdevtools,"
+    echo "or at <https://fedorahosted.org/rpmdevtools/>."
 }
 
 usage() {
