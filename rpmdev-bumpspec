@@ -23,7 +23,7 @@ import rpm
 import time
 from optparse import OptionParser
 
-__version__ = "1.0.3"
+__version__ = "1.0.4"
 
 class BumpSpecError(Exception):
     pass
@@ -217,7 +217,7 @@ the Free Software Foundation; either version 2 of the License, or
         s.writeFile(aspec)
 
         # Get EVR for changelog entry.
-        (epoch,ver,rel) = os.popen("LC_ALL=C rpm --specfile -q --qf '%%{epoch} %%{version} %%{release}\n' --define 'dist %%{nil}' %s | head -1" % aspec).read().strip().split(' ')
+        (epoch,ver,rel) = os.popen("LC_ALL=C rpm --specfile -q --qf '%%{epoch} %%{version} %%{release}\n' --define 'dist %%{nil}' %s | head -n 1" % aspec).read().strip().split(' ')
         if epoch != '(none)':
             evr = str(epoch)+':'
         else:

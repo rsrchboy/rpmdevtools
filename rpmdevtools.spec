@@ -111,6 +111,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Apr 18 2009 Ville Skyttä <ville.skytta at iki.fi>
+- Make bumpspec's use of "head" POSIX compliant.
+
 * Thu Apr 16 2009 Ville Skyttä <ville.skytta at iki.fi>
 - Add rpmdev-newinit for easier access to the init script template, move the
   template to %%{_sysconfdir}/rpmdevtools, improve reload action example.
