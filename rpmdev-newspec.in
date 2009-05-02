@@ -31,7 +31,7 @@ fi
 version()
 {
     cat <<EOF
-rpmdev-newspec version 1.0
+rpmdev-newspec version 1.1
 
 Copyright (c) Warren Togami <warren@togami.com>, Ville Skyttä
 <ville.skytta at iki.fi>
@@ -100,6 +100,9 @@ while [ -n "$1" ] ; do
             shift
             specfile="$1"
             specfile_set=1
+            case "$specfile" in
+                *.spec) [ -z "$appname" ] && appname="$(basename $1 .spec)" ;;
+            esac
             ;;
         -m|--macros)
             NEWSPEC_PREFER_MACROS=1
@@ -114,7 +117,7 @@ while [ -n "$1" ] ; do
             ;;
         *.spec)
             [ -z "$specfile" ] && specfile="$1"
-            [ -z "$appname"  ] && appname="$(basename $1 .spec)"
+            appname="$(basename $1 .spec)"
             ;;
         *)
             appname="$1"

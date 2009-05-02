@@ -111,6 +111,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat May  2 2009 Ville Skyttä <ville.skytta at iki.fi>
+- Improve newspec/newinit when only "-o foo" argument is given (#498588,
+  thanks to Edwin ten Brink).
+
 * Sat Apr 18 2009 Ville Skyttä <ville.skytta at iki.fi>
 - Make bumpspec's use of "head" POSIX compliant.
 

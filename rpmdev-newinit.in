@@ -24,7 +24,7 @@ DEFNAME="newinitscript.init"
 version()
 {
     cat <<EOF
-rpmdev-newinit version 1.0
+rpmdev-newinit version 1.1
 
 Copyright (c) 2009 Ville Skyttä <ville.skytta at iki.fi>
 This program is free software; you can redistribute it and/or modify
@@ -70,6 +70,9 @@ while [ -n "$1" ] ; do
             shift
             output="$1"
             output_set=1
+            case "$output" in
+                *.init) [ -z "$appname" ] && appname="$(basename $1 .init)" ;;
+            esac
             ;;
         -h|--help)
             help
@@ -81,7 +84,7 @@ while [ -n "$1" ] ; do
             ;;
         *.init)
             [ -z "$output" ] && output="$1"
-            [ -z "$appname"  ] && appname="$(basename $1 .init)"
+            appname="$(basename $1 .init)"
             ;;
         *)
             appname="$1"
