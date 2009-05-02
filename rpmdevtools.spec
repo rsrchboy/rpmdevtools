@@ -114,6 +114,8 @@ rm -rf $RPM_BUILD_ROOT
 * Sat May  2 2009 Ville Skyttä <ville.skytta at iki.fi>
 - Improve newspec/newinit when only "-o foo" argument is given (#498588,
   thanks to Edwin ten Brink).
+- Try to get packager mail address for *Emacs rpm-spec-mode from ~/.fedora.cert
+  if rpm-spec-user-mail-address is not set.
 
 * Sat Apr 18 2009 Ville Skyttä <ville.skytta at iki.fi>
 - Make bumpspec's use of "head" POSIX compliant.
