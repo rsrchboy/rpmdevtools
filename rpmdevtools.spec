@@ -116,6 +116,7 @@ rm -rf $RPM_BUILD_ROOT
   thanks to Edwin ten Brink).
 - Try to get packager mail address for *Emacs rpm-spec-mode from ~/.fedora.cert
   if rpm-spec-user-mail-address is not set.
+- Add xz support to rpmdev-extract.
 
 * Sat Apr 18 2009 Ville Skyttä <ville.skytta at iki.fi>
 - Make bumpspec's use of "head" POSIX compliant.

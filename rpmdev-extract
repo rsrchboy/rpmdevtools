@@ -34,7 +34,7 @@ shopt -s extglob
 version()
 {
     cat <<EOF
-rpmdev-extract version 1.3
+rpmdev-extract version 1.4
 
 Copyright (c) 2004-2008 Ville Skyttä <ville.skytta at iki.fi>
 This program is free software; you can redistribute it and/or modify
@@ -126,9 +126,13 @@ ftype()
         if [[ -z "$decomp" && "$1" == *.@(lzma|tlz) ]] ; then
             decomp="lzma -dc"
         fi
+        # No xz support as of 5.00
+        if [[ -z "$decomp" && "$1" == *.@(xz|txz) ]] ; then
+            decomp="xz -dc"
+        fi
         if [ -n "$decomp" ] ; then
             case "$1" in
-                *.tar.*|*.tzo|*.tlz)                        ftype=tar  ;;
+                *.tar.*|*.tzo|*.tlz|*.txz)                  ftype=tar  ;;
                 *.cpio.*)                                   ftype=cpio ;;
             esac
         fi
