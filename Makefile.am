@@ -18,7 +18,7 @@ dist_pkgsysconf_DATA = newspec.conf rmdevelrpms.conf \
 	spectemplate-lib.spec spectemplate-minimal.spec \
 	spectemplate-perl.spec spectemplate-php-pear.spec \
 	spectemplate-python.spec spectemplate-ruby.spec \
-	spectemplate-ocaml.spec template.init
+	spectemplate-ocaml.spec spectemplate-dummy.spec template.init
 
 dist_bashcomp_DATA = rpmdevtools.bash-completion
 

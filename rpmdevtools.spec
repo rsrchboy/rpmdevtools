@@ -111,6 +111,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun May  3 2009 Ville Skyttä <ville.skytta at iki.fi>
+- Add dummy spec template for ad-hoc testing.
+
 * Sat May  2 2009 Ville Skyttä <ville.skytta at iki.fi>
 - Improve newspec/newinit when only "-o foo" argument is given (#498588,
   thanks to Edwin ten Brink).
