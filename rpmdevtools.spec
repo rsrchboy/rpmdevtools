@@ -3,7 +3,7 @@
 %global spectool_version   1.0.10
 
 Name:           rpmdevtools
-Version:        7.1
+Version:        7.2
 Release:        1%{?dist}
 Summary:        RPM Development Tools
 
@@ -111,6 +111,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed May 20 2009 Ville Skyttä <ville.skytta at iki.fi> - 7.2-1
+- Release 7.2.
+
 * Sun May  3 2009 Ville Skyttä <ville.skytta at iki.fi>
 - Add dummy spec template for ad-hoc testing.
 
