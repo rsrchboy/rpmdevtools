@@ -3,7 +3,7 @@
 
 # rpmdev-extract -- Extract various archives in "tar xvf" style
 #
-# Copyright (c) 2004-2008 Ville Skyttä <ville.skytta at iki.fi>
+# Copyright (c) 2004-2009 Ville Skyttä <ville.skytta at iki.fi>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -34,9 +34,9 @@ shopt -s extglob
 version()
 {
     cat <<EOF
-rpmdev-extract version 1.4
+rpmdev-extract version 1.5
 
-Copyright (c) 2004-2008 Ville Skyttä <ville.skytta at iki.fi>
+Copyright (c) 2004-2009 Ville Skyttä <ville.skytta at iki.fi>
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
@@ -75,7 +75,7 @@ EOF
 
 fmime()
 {
-    case "$1" in
+    case "${1%%;*}" in
         application/x-zip|application/zip)                  ftype=zip  ;;
         application/x-tar*)                                 ftype=tar  ;;
         application/x-rpm)                                  ftype=rpm  ;;
