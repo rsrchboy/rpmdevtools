@@ -111,6 +111,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat May 23 2009 Ville Skyttä <ville.skytta at iki.fi>
+- Add rpmdev-packager - script for getting rpm packager info.
+
 * Wed May 20 2009 Ville Skyttä <ville.skytta at iki.fi> - 7.2-1
 - Release 7.2.
 

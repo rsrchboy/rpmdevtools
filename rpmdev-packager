@@ -1,0 +1,105 @@
+#!/bin/bash
+
+# rpmdev-packager -- guess rpm packager info from various sources
+#
+# Copyright (c) 2009 Ville Skyttä <ville.skytta at iki.fi>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+version()
+{
+    cat <<EOF
+rpmdev-packager version 1.0
+
+Copyright (c) 2009 Ville Skyttä <ville.skytta at iki.fi>
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+EOF
+}
+
+help()
+{
+    cat <<EOF
+rpmdev-packager guesses rpm packager info from various sources
+
+EOF
+    usage
+    echo ""
+    echo "Report bugs at <https://bugzilla.redhat.com/>, component rpmdevtools,"
+    echo "or at <https://fedorahosted.org/rpmdevtools/>."
+}
+
+usage() {
+    cat <<EOF
+Usage: rpmdev-packager [option]...
+
+Options:
+  -h, --help      Show this usage message and exit.
+  -v, --version   Print version information and exit.
+EOF
+}
+
+while [ -n "$1" ] ; do
+    case "$1" in
+        -h|--help)
+            help
+            exit 0
+            ;;
+        -v|--version)
+            version
+            exit 0
+            ;;
+        *)
+            usage
+            exit 1
+            ;;
+    esac
+done
+
+fullname="$( getent passwd $( id -un ) 2>/dev/null | cut -d: -f5 )"
+certs=(~/.fedora.cert)
+
+# Try $RPM_PACKAGER
+packager="$RPM_PACKAGER"
+
+# Try rpm %packager
+[ -z "$packager" ] && packager="$( rpm --eval '%packager' )"
+[ "$packager" = "%packager" ] && packager=
+
+# Try packager certificates
+if [ -z "$packager" ] ; then
+    for cert in $certs ; do
+        if [ -f "$cert" ] ; then
+            packager="$( openssl x509 -noout -email -in "$cert" 2>/dev/null )"
+            [ -n "$packager" -a -n "$fullname" ] && \
+                packager="$fullname <$packager>"
+            [ -n "$packager" ] && break
+        fi
+    done
+fi
+
+# Try $MAILTO
+if [ -z "$packager" ] ; then
+    packager="$MAILTO"
+    [ -n "$packager" -a -n "$fullname" ] && packager="$fullname <$packager>"
+fi
+
+# Fall back to full name only
+[ -z "$packager" ] && packager="$fullname"
+
+# Done
+[ -n "$packager" ] && echo "$packager"
