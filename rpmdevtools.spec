@@ -31,7 +31,7 @@ Requires:       findutils
 Requires:       gawk
 Requires:       grep
 Requires:       rpm-build >= 4.4.2.1
-Requires:       rpm-python >= 4.4.2.2
+Requires:       rpm-python
 Requires:       sed
 Requires:       wget
 # For _get_cword in bash completion snippet
@@ -113,6 +113,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Sat May 23 2009 Ville Skyttä <ville.skytta at iki.fi>
 - Add rpmdev-packager - script for getting rpm packager info.
+- Use rpmdev-packager in rpmdev-bumpspec.
 
 * Wed May 20 2009 Ville Skyttä <ville.skytta at iki.fi> - 7.2-1
 - Release 7.2.

@@ -17,13 +17,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-import errno, os, sys
+import commands
+import os
 import re
-import rpm
+import sys
 import time
 from optparse import OptionParser
 
-__version__ = "1.0.4"
+__version__ = "1.0.5"
 
 class BumpSpecError(Exception):
     pass
@@ -167,19 +168,20 @@ rpmdev-bumpspec bumps release tags in specfiles.'''
 
     version = '''rpmdev-bumpspec version %s
 
-Copyright (c) 2005-2008 Fedora Project
+Copyright (c) 2005-2009 Fedora Project
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.''' % __version__
 
+    userstring = commands.getoutput("rpmdev-packager 2>/dev/null") or None
+
     parser = OptionParser(usage=usage)
     parser.add_option("-c", "--comment", default='- rebuilt',
                       help="changelog comment (default: \"- rebuilt\")")
-    parser.add_option("-u", "--userstring", default=None,
-                      help="user name+email string (default: %packager from "+
-                      "rpm configuration, or $RPM_PACKAGER, or $MAILTO from "+
-                      "environment)")
+    parser.add_option("-u", "--userstring", default=userstring,
+                      help="user name+email string (default: output from "+
+                      "rpmdev-packager(1))")
     parser.add_option("-r", "--rightmost", default=False, action='store_true',
                       help="bump the rightmost integer or add a .1")
     parser.add_option("-V", "--verbose", default=False, action='store_true',
@@ -195,21 +197,8 @@ the Free Software Foundation; either version 2 of the License, or
     if not args:
         parser.error('No specfiles specified')
 
-    userstring = opts.userstring
-    if not userstring:
-        # first, $RPM_PACKAGER
-        userstring = os.getenv('RPM_PACKAGER')
-        # then, %packager
-        if not userstring:
-            userstring = rpm.expandMacro('%packager') # rpm-python >= 4.4.2.2
-            if userstring == '%packager':
-                userstring = None
-        # finally, $MAILTO
-        if not userstring:
-            userstring = os.getenv('MAILTO')
-        # if still not available, bail out
-        if not userstring and not opts.userstring:
-            parser.error('Userstring required, see option -u')
+    if not opts.userstring:
+        parser.error('Userstring required, see option -u')
 
     for aspec in args:
         s = SpecFile(aspec, opts.verbose, opts.rightmost)
@@ -224,7 +213,7 @@ the Free Software Foundation; either version 2 of the License, or
             evr = ''
         evr += ver+'-'+rel
 
-        s.addChangelogEntry(evr, opts.comment, userstring)
+        s.addChangelogEntry(evr, opts.comment, opts.userstring)
         s.writeFile(aspec)
 
 sys.exit(0)
