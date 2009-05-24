@@ -113,7 +113,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Sat May 23 2009 Ville Skyttä <ville.skytta at iki.fi>
 - Add rpmdev-packager - script for getting rpm packager info.
-- Use rpmdev-packager in rpmdev-bumpspec.
+- Use rpmdev-packager in rpmdev-bumpspec and rpmdev-init.el.
 - Fix rpmdev-extract MIME type comparisons with file(1) output containing
   parameters.
 

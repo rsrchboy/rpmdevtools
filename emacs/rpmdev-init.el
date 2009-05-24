@@ -1,21 +1,31 @@
+(defvar rpmdev-packager-user-full-name nil)
 (defvar rpmdev-packager-mail-address nil)
 
+(defun rpmdev-init-packager ()
+  "Initialize packager info."
+  (let ((packager (shell-command-to-string "rpmdev-packager 2>/dev/null")))
+    (cond
+     ((string-match "\\(.*\\)\\s-+<\\([^>]+\\)>" packager)
+      (setq rpmdev-packager-user-full-name (match-string 1 packager))
+      (setq rpmdev-packager-mail-address (match-string 2 packager)))
+     ((string-match "\\([^\\s<]+@[^\\s>]+\\)" packager)
+      (setq rpmdev-packager-mail-address (match-string 1 packager)))
+     ((string-match "^\\s-*\\(.*\\)\\s-*$" packager)
+      (setq rpmdev-packager-user-full-name (match-string 1 packager))))))
+
 (defun rpmdev-packager-mail-address ()
-  "Get packager mail address from ~/.fedora.cert."
+  "Get packager mail address."
   (if rpmdev-packager-mail-address
        rpmdev-packager-mail-address
-    (let ((certfile (expand-file-name "~/.fedora.cert")))
-      (if (file-readable-p certfile)
-          (let ((email (shell-command-to-string
-                        (format
-                         "openssl x509 -noout -email -in %s 2>/dev/null"
-                         (shell-quote-argument certfile)))))
-            (if email
-                (setq rpmdev-packager-mail-address
-                      (replace-regexp-in-string "\n.*" "" email))))))
-    (unless rpmdev-packager-mail-address
-      (setq rpmdev-packager-mail-address ""))
+    (rpmdev-init-packager)
     rpmdev-packager-mail-address))
+    
+(defun rpmdev-packager-user-full-name ()
+  "Get packager full name."
+  (if rpmdev-packager-user-full-name
+       rpmdev-packager-user-full-name
+    (rpmdev-init-packager)
+    rpmdev-packager-user-full-name))
 
 (defun rpmdev-new-rpm-spec-file-init ()
   (delete-region (point-min) (point-max))
@@ -29,7 +39,10 @@
   (set-buffer-modified-p nil)
   (unless rpm-spec-user-mail-address
     (set (make-local-variable 'rpm-spec-user-mail-address)
-         (rpmdev-packager-mail-address))))
+         (rpmdev-packager-mail-address)))
+  (unless rpm-spec-user-full-name
+    (set (make-local-variable 'rpm-spec-user-full-name)
+         (rpmdev-packager-user-full-name))))
 
 (remove-hook 'rpm-spec-mode-new-file-hook 'rpm-spec-initialize)
 (add-hook 'rpm-spec-mode-new-file-hook 'rpmdev-new-rpm-spec-file-init t)
