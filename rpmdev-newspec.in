@@ -31,7 +31,7 @@ fi
 version()
 {
     cat <<EOF
-rpmdev-newspec version 1.1
+rpmdev-newspec version 1.2
 
 Copyright (c) Warren Togami <warren@togami.com>, Ville Skyttä
 <ville.skytta at iki.fi>
@@ -150,6 +150,9 @@ if [ -z "$spectype" ] ; then
         ocaml-*)
             spectype=ocaml
             specfilter="; s/\\bLIBNAME\\b/${appname##ocaml-}/"
+            ;;
+        R-*)
+            spectype=R
             ;;
         lib*|*-lib|*-libs)
             spectype=lib

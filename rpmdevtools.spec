@@ -111,6 +111,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 12 2009 Ville Skyttä <ville.skytta at iki.fi>
+- Add R spec template (#215927).
+
 * Mon May 25 2009 Ville Skyttä <ville.skytta at iki.fi> - 7.3-1
 - Release 7.3.
 
