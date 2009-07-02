@@ -111,6 +111,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jul  3 2009 Ville Skyttä <ville.skytta at iki.fi>
+- Fix formatting error in rpmdev-bumpspec man page (ticket #9).
+
 * Fri Jun 12 2009 Ville Skyttä <ville.skytta at iki.fi>
 - Add R spec template (#215927).
 
