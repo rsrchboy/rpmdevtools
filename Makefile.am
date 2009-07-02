@@ -38,11 +38,11 @@ all: $(bin_SCRIPTS) $(man1_MANS) $(man8_MANS)
 
 %.1: %
 	chmod +x $<
-	COLUMNS=1000 $(HELP2MAN) --section=1 --no-info -h -h -v -v $(<D)/$(<F) --output=$@
+	COLUMNS=1000 $(HELP2MAN) -s 1 -N -h -h -v -v $(<D)/$(<F) -o $@
 
 %.8: %
 	chmod +x $<
-	COLUMNS=1000 $(HELP2MAN) --section=8 --no-info $(<D)/$(<F) --output=$@
+	COLUMNS=1000 $(HELP2MAN) -s 8 -N $(<D)/$(<F) -o $@
 
 install-exec-hook:
 	cd $(DESTDIR)$(bindir) && \
