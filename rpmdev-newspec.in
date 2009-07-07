@@ -138,21 +138,12 @@ if [ -z "$spectype" ] ; then
             ;;
         php-pear-*)
             spectype=php-pear
-            pearname="$(echo ${appname##php-pear-} | tr - _)"
-            specfilter="; s/\\bFoo_Bar\\b/$pearname/"
             ;;
         [Pp]y*)
             spectype=python
             ;;
-        ruby-*)
-            spectype=ruby
-            ;;
-        ocaml-*)
-            spectype=ocaml
-            specfilter="; s/\\bLIBNAME\\b/${appname##ocaml-}/"
-            ;;
-        R-*)
-            spectype=R
+        ruby-*|ocaml-*|R-*)
+            spectype="${appname%%-*}"
             ;;
         lib*|*-lib|*-libs)
             spectype=lib

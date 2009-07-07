@@ -113,6 +113,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Tue Jul  7 2009 Ville Skyttä <ville.skytta at iki.fi>
 - Document packager info sources for rpmdev-packager (ticket #10).
+- Make php-pear and ocaml spec templates more useful without newspec.
 
 * Fri Jul  3 2009 Ville Skyttä <ville.skytta at iki.fi>
 - Fix formatting error in rpmdev-bumpspec man page (ticket #9).

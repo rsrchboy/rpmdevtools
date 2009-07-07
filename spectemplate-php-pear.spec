@@ -1,5 +1,5 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name Foo_Bar
+%global pear_name $(echo %{name} | sed -e 's/^php-pear-//' -e 's/-/_/g')
 
 Name:           
 Version:        
@@ -8,7 +8,7 @@ Summary:
 
 Group:          
 License:        
-URL:            http://pear.php.net/package/Foo_Bar
+URL:            http://pear.php.net/package/%{pear_name}
 Source0:        http://pear.php.net/get/%{pear_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
