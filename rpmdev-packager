@@ -38,8 +38,8 @@ rpmdev-packager guesses rpm packager info from various sources:
 
   $RPM_PACKAGER   from environment (full name + email address)
   %packager       from rpm configuration (full name + email address)
-  certificates    ~/.fedora.cert (full name + email address)
   /etc/passwd     gecos (full name)
+  certificates    ~/.fedora.cert (email address)
   $MAILTO         from environment (email address)
 
 EOF
