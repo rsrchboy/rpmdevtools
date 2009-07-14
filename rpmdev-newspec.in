@@ -59,7 +59,7 @@ usage() {
     # embedded in the man page.
     types=
     if [ -z "$RPM_BUILD_ROOT" ] ; then
-        indent="               "
+        indent="                     "
         types=$(ls $SPECDIR/spectemplate-*.spec 2>/dev/null | \
             sed 's,.*spectemplate-,,;s,\.spec$,,' | tr '\n' ' ' | \
             fmt -w 60 | sed "s/^/$indent/")
@@ -70,16 +70,19 @@ usage() {
 Usage: rpmdev-newspec [option]... [appname[.spec]]
 
 Options:
-  -o FILE  Output the specfile to FILE.  "-" means stdout.  The default is
-           derived from <appname>, or "$DEFSPEC" if appname is not given.
-  -t TYPE  Force use of the TYPE spec template.  The default is guessed
-           from <appname>, falling back to "$DEFTYPE" if the guesswork
-           does not result in a more specific one or if <appname> is not
-           given.${types:+  Available types:
+  -o FILE, --output FILE
+                 Output the specfile to FILE. "-" means stdout. The default is
+                 derived from <appname>, or "$DEFSPEC" if <appname> is
+                 not given.
+  -t TYPE, --type TYPE
+                 Force use of the TYPE spec template. The default is guessed
+                 from <appname>, falling back to "$DEFTYPE" if the guesswork
+                 does not result in a more specific one or if <appname> is not
+                 given.${types:+ Available types:
 $types}
-  -m       Emit templates that use macros instead of shell style variables.
-  -h       Show this usage message and exit.
-  -v       Print version information and exit.
+  -m, --macros   Emit templates using macros instead of shell style variables.
+  -h, --help     Show this usage message and exit.
+  -v, --version  Print version information and exit.
 
 System wide configuration file is $CONFIG.
 EOF

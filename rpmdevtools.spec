@@ -111,6 +111,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jul 14 2009 Ville Skyttä <ville.skytta at iki.fi>
+- Document rpmdev-newspec's long options.
+
 * Tue Jul  7 2009 Ville Skyttä <ville.skytta at iki.fi>
 - Document packager info sources for rpmdev-packager (ticket #10).
 - Make php-pear and ocaml spec templates more useful without newspec.
