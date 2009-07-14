@@ -4,7 +4,7 @@
 # bash completion for rpmdevtools
 # Requires bash-completion >= 20080705 (for _get_cword)
 
-# TODO: rpmdev-diff, rpmdev-extract, rpmdev-newspec, rpmdev-vercmp, rpminfo
+# TODO: rpmdev-diff, rpmdev-extract, rpmdev-vercmp, rpminfo
 
 _rpmdev_rpmfiles()
 {
@@ -115,3 +115,37 @@ _rpmls()
 	_rpmdev_rpmfiles
 }
 complete -F _rpmls $filenames rpmls
+
+_rpmdev_newspec()
+{
+	COMPREPLY=()
+
+	for i in ${COMP_WORDS[@]} ; do
+		[[ "$i" == -@(h|-help|v|-version) ]] && return 0
+	done
+
+	local cur=`_get_cword`
+	local prev=${COMP_WORDS[COMP_CWORD-1]}
+	case "$prev" in
+		-o|--output)
+			_filedir spec
+			return 0
+			;;
+		-t|--type)
+			COMPREPLY=( $( command ls __SYSCONFDIR__/rpmdevtools/spectemplate-*.spec 2>/dev/null ) )
+			COMPREPLY=( ${COMPREPLY[@]%.spec} )
+			COMPREPLY=( ${COMPREPLY[@]#__SYSCONFDIR__/rpmdevtools/spectemplate-} )
+			COMPREPLY=( $( compgen -W '${COMPREPLY[@]}' -- $cur ) )
+			return 0
+			;;
+	esac
+
+	if [[ "$cur" == -* ]] ; then
+		COMPREPLY=( $( compgen -W '-t --type -o --output -m --macros \
+			-h --help -v --version' -- $cur ) )
+		return 0
+	fi
+
+	_filedir spec
+}
+complete -F _rpmdev_newspec $filenames rpmdev-newspec

@@ -21,20 +21,19 @@ dist_pkgsysconf_DATA = newspec.conf rmdevelrpms.conf \
 	spectemplate-ocaml.spec spectemplate-R.spec spectemplate-dummy.spec \
 	template.init
 
-dist_bashcomp_DATA = rpmdevtools.bash-completion
+bashcomp_DATA = rpmdevtools.bash-completion
 
 EXTRA_DIST = $(PACKAGE).spec rpmdev-newinit.in rpmdev-newspec.in \
-	rpmdev-rmdevelrpms.in
+	rpmdev-rmdevelrpms.in rpmdevtools.bash-completion.in
 
-MOSTLYCLEANFILES = $(bin_SCRIPTS) $(man1_MANS) $(man8_MANS)
+MOSTLYCLEANFILES = $(bin_SCRIPTS) $(man1_MANS) $(man8_MANS) $(bashcomp_DATA)
 
 sums = sum cksum sha1 sha224 sha256 sha384 sha512
 
-all: $(bin_SCRIPTS) $(man1_MANS) $(man8_MANS)
+all: $(bin_SCRIPTS) $(man1_MANS) $(man8_MANS) $(bashcomp_DATA)
 
 %: %.in
 	$(SED) -e 's|__SYSCONFDIR__|$(sysconfdir)|g' $< > $@
-	chmod +x $@
 
 %.1: %
 	chmod +x $<

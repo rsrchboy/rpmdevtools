@@ -113,6 +113,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Tue Jul 14 2009 Ville Skyttä <ville.skytta at iki.fi>
 - Document rpmdev-newspec's long options.
+- Add rpmdev-newspec bash completion.
 
 * Tue Jul  7 2009 Ville Skyttä <ville.skytta at iki.fi>
 - Document packager info sources for rpmdev-packager (ticket #10).

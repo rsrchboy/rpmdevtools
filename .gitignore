@@ -13,3 +13,4 @@ spectool-*
 rpmdev-newinit
 rpmdev-newspec
 rpmdev-rmdevelrpms
+rpmdevtools.bash-completion
