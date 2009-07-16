@@ -23,7 +23,7 @@ csum="${csum%%sum}"
 while test "$1"; do
     case "$1" in
 	--help)		echo $"Usage: $name <package-file>"; exit 0;;
-	--version)	echo $"$name 0.7"; exit 0;;
+	--version)	echo $"$name 0.8"; exit 0;;
 	--)		shift; break;;
 	*)		break
     esac
@@ -41,8 +41,10 @@ tmp=`mktemp -d ${TMPDIR:-/tmp}/"$name.XXXXXX"`
 trap "rm -rf '$tmp'" EXIT
 
 cd -- `dirname -- "$1"`
-"${csum}sum" -- `basename -- "$1"`
+dir=`pwd`
+file=`basename -- "$1"`
+"${csum}sum" -- "$file"
 
 cd "$tmp"
-rpmdev-extract -q "$1"
+rpmdev-extract -q "$dir/$file"
 find . -type f -print0 | xargs -0r "${csum}sum" | sed -e 's|\(\s\)./[^/]*/|\1|'

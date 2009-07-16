@@ -111,6 +111,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jul 16 2009 Ville Skyttä <ville.skytta at iki.fi>
+- Fix rpmdev-md5 and friends with relative paths to archives.
+
 * Tue Jul 14 2009 Ville Skyttä <ville.skytta at iki.fi>
 - Document rpmdev-newspec's long options.
 - Add rpmdev-newspec bash completion.
