@@ -36,8 +36,7 @@ _spectool()
 	done
 
 	local cur=`_get_cword`
-	local prev=${COMP_WORDS[COMP_CWORD-1]}
-	case "$prev" in
+	case $3 in
 		-@(C|-directory))
 			_filedir -d
 			return 0
@@ -68,8 +67,7 @@ _rpmdev_bumpspec()
 		[[ "$i" == -@(h|-help|v|-version) ]] && return 0
 	done
 
-	local prev=${COMP_WORDS[COMP_CWORD-1]}
-	[[ "$prev" == -@(c|-comment|u|-userstring) ]] && return 0
+	[[ $3 == -@(c|-comment|u|-userstring) ]] && return 0
 
 	local cur=`_get_cword`
 	if [[ "$cur" == -* ]] ; then
@@ -90,8 +88,7 @@ _rpmdev_rmdevelrpms()
 		[[ "$i" == -@(h|-help|v|-version) ]] && return 0
 	done
 
-	local prev=${COMP_WORDS[COMP_CWORD-1]}
-	[[ "$prev" == --@(qf|queryformat) ]] && return 0
+	[[ $3 == --@(qf|queryformat) ]] && return 0
 
 	COMPREPLY=( $( compgen -W '-h --help -l --list-only -y --yes \
 			-v --version --qf --queryformat' -- `_get_cword` ) )
@@ -131,8 +128,7 @@ _rpmdev_newspec()
 	done
 
 	local cur=`_get_cword`
-	local prev=${COMP_WORDS[COMP_CWORD-1]}
-	case "$prev" in
+	case $3 in
 		-o|--output)
 			_filedir spec
 			return 0
