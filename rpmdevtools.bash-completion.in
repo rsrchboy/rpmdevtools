@@ -8,12 +8,18 @@
 
 _rpmdev_rpmfiles()
 {
-	local cur=`_get_cword`
+	local cur=${cur:-`_get_cword`}
 	_filedir '[rs]pm'
 }
 
-complete -F _rpmdev_rpmfiles $filenames \
-	rpmdev-{cksum,md5,sha{1,224,256,384,512},sum} rpmdev-checksig
+complete -F _rpmdev_rpmfiles $filenames rpmdev-checksig
+
+_rpmdev_md5()
+{
+	local cur=`_get_cword`
+	_filedir '@([rs]pm|deb|zip|?([ejtw])ar|tzo|[gx7]z|bz2|lzma|cpio|arj|zoo|cab|rar|ace|lha)'
+}
+complete -F _rpmdev_md5 $filenames rpmdev-{cksum,md5,sha{1,224,256,384,512},sum}
 
 _rpmdev_specfiles()
 {
