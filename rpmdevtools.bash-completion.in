@@ -35,6 +35,7 @@ _spectool()
 		[[ "$i" == -@(h|-help) ]] && return 0
 	done
 
+	local cur=`_get_cword`
 	local prev=${COMP_WORDS[COMP_CWORD-1]}
 	case "$prev" in
 		-@(C|-directory))
@@ -47,7 +48,6 @@ _spectool()
 			;;
 	esac
 
-	local cur=`_get_cword`
 	if [[ "$cur" == -* ]] ; then
 		COMPREPLY=( $( compgen -W '-l --lf --list-files -g --gf \
 			--get-files -h --help -A --all -S --sources -P \
