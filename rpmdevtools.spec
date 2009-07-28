@@ -57,7 +57,7 @@ rpmdev-bumpspec     Bump revision in specfile
 
 %prep
 %setup -q -a 1
-cp -p spectool*/README README.spectool
+cp -p spectool-%{spectool_version}/README README.spectool
 
 
 %build
@@ -70,7 +70,7 @@ rm -rf $RPM_BUILD_ROOT
 
 make install DESTDIR=$RPM_BUILD_ROOT
 
-install -pm 755 spectool*/spectool $RPM_BUILD_ROOT%{_bindir}
+install -pm 755 spectool-%{spectool_version}/spectool $RPM_BUILD_ROOT%{_bindir}
 
 for dir in %{emacs_sitestart_d} %{xemacs_sitestart_d} ; do
   install -dm 755 $RPM_BUILD_ROOT$dir
