@@ -22,7 +22,7 @@ csum="${csum%%sum}"
 
 while test "$1"; do
     case "$1" in
-	--help)		echo $"Usage: $name <package-file>"; exit 0;;
+	--help)		echo $"Usage: $name <archive-file>"; exit 0;;
 	--version)	echo $"$name 0.8"; exit 0;;
 	--)		shift; break;;
 	*)		break

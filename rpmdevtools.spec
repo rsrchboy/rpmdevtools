@@ -47,7 +47,7 @@ rpmdev-newspec      Creates new .spec from template
 rpmdev-rmdevelrpms  Find (and optionally remove) "development" RPMs
 rpmdev-checksig     Check package signatures using alternate RPM keyring
 rpminfo             Print information about executables and libraries
-rpmdev-md5/sha*     Display checksums of all files in an RPM package file
+rpmdev-md5/sha*     Display checksums of all files in an archive file
 rpmdev-vercmp       RPM version comparison checker
 spectool            Expand and download sources and patches in specfiles
 rpmdev-wipetree     Erase all files within dirs created by rpmdev-setuptree
