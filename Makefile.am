@@ -24,7 +24,7 @@ dist_pkgsysconf_DATA = newspec.conf rmdevelrpms.conf \
 bashcomp_DATA = rpmdevtools.bash-completion
 
 EXTRA_DIST = $(PACKAGE).spec rpmdev-newinit.in rpmdev-newspec.in \
-	rpmdev-rmdevelrpms.in rpmdevtools.bash-completion.in
+	rpmdev-rmdevelrpms.py rpmdevtools.bash-completion.in
 
 MOSTLYCLEANFILES = $(bin_SCRIPTS) $(man1_MANS) $(man8_MANS) $(bashcomp_DATA)
 
@@ -33,6 +33,9 @@ sums = sum cksum sha1 sha224 sha256 sha384 sha512
 all: $(bin_SCRIPTS) $(man1_MANS) $(man8_MANS) $(bashcomp_DATA)
 
 %: %.in
+	$(SED) -e 's|__SYSCONFDIR__|$(sysconfdir)|g' $< > $@
+
+%: %.py
 	$(SED) -e 's|__SYSCONFDIR__|$(sysconfdir)|g' $< > $@
 
 %.1: %
