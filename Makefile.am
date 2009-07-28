@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = foreign 1.10.1 dist-lzma
 
-SUBDIRS = emacs qa-robot
+SUBDIRS = devscripts emacs qa-robot
 
 pkgsysconfdir = $(sysconfdir)/rpmdevtools
 bashcompdir = $(sysconfdir)/bash_completion.d

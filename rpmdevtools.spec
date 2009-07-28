@@ -34,6 +34,7 @@ Requires:       rpm-build >= 4.4.2.1
 Requires:       rpm-python
 Requires:       sed
 Requires:       wget
+Requires:       man
 # For _get_cword in bash completion snippet
 Conflicts:      bash-completion < 20080705
 
@@ -104,13 +105,17 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{_sysconfdir}/rpmdevtools/
 %{_sysconfdir}/bash_completion.d/
 %{_datadir}/rpmdevtools/
-%{_bindir}/rpm*
+%{_bindir}/*
 %{_bindir}/spectool
 %ghost %{_datadir}/*emacs
-%{_mandir}/man[18]/rpm*.[18]*
+%{_mandir}/man[18]/*.[18]*
 
 
 %changelog
+* Tue Jul 28 2009 Ville Skyttä <ville.skytta at iki.fi>
+- Add annotate-output, checkbashisms, licensecheck, and manpage-alert from
+  Debian's devscripts package (#466353).
+
 * Thu Jul 16 2009 Ville Skyttä <ville.skytta at iki.fi>
 - Fix rpmdev-md5 and friends with relative paths to archives.
 

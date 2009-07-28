@@ -15,6 +15,8 @@ fi
 
 AC_OUTPUT(
 Makefile
+devscripts/Makefile
+devscripts/scripts/Makefile
 emacs/Makefile
 qa-robot/Makefile
 )

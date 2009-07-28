@@ -1,0 +1,40 @@
+# This configuration file gives defaults for the scripts in
+# the devscripts package, as documented in the individual manpages.
+# Variables defined here may be overridden by a per-user ~/.devscripts
+# configuration file, which has exactly the same syntax as this file.
+# 
+# This file is sourced by /bin/bash, and should only contain
+# comment lines (beginning with a '#'), and lines of the form
+# VARIABLE=value
+# The value must be quoted if there are spaces in it.
+# Variables corresponding to switches (on/off; yes/no) must take
+# one of the values 'yes' or 'no'.
+# The variable names are all of the form PROGNAME_VARNAME,
+# or DEVSCRIPTS_VARNAME if they are more generally applicable.
+# 
+# As new variables are introduced into the devscripts program, their
+# descriptions and default values will be appended as comments
+# to this file.
+
+# Variables recognised as of devscripts version ###VERSION###:
+
+##### annotate-output
+# 
+# No variables currently
+
+##### checkbashisms
+# 
+# No variables currently
+
+##### licensecheck
+#
+# Print the file header being parsed before the corresponding license
+# information?
+# LICENSECHECK_VERBOSE=no
+#
+# How many lines of each file should be parsed for license information?
+# LICENSECHECK_PARSELINES=60
+
+##### manpage-alert
+#
+# No variables currently
