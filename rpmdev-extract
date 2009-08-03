@@ -123,12 +123,8 @@ ftype()
 
     # Fallback stuff for things not (enough) supported by file(1).
     if [ -z "$ftype" ] ; then
-        # No lzma support as of 4.23, and some lzma files lack magic anyway
-        if [[ -z "$decomp" && "$1" == *.@(lzma|tlz) ]] ; then
-            decomp="lzma -dc"
-        fi
-        # No xz support until 5.01
-        if [[ -z "$decomp" && "$1" == *.@(xz|txz) ]] ; then
+        # No xz support until 5.01; no magic in lzma
+        if [[ -z "$decomp" && "$1" == *.@(xz|txz|lzma|tlz) ]] ; then
             decomp="xz -dc"
         fi
         if [ -n "$decomp" ] ; then
