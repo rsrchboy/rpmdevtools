@@ -112,6 +112,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Aug  3 2009 Ville Skyttä <ville.skytta at iki.fi>
+- Improve xz detection in rpmdev-extract (if file >= 5.01 is installed).
+
 * Tue Jul 28 2009 Ville Skyttä <ville.skytta at iki.fi>
 - Add annotate-output, checkbashisms, licensecheck, and manpage-alert from
   Debian's devscripts package (#466353).
