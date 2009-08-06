@@ -1,0 +1,572 @@
+rpmdevtools x.x (2009-xx-xx)
+
+  Ville Skyttä:
+  - Add bash completion for rpmdev-extract and rpminfo.
+  - Improve xz detection in rpmdev-extract (if file >= 5.01 is installed),
+    decompress lzma files with xz.
+  - Add annotate-output, checkbashisms, licensecheck, and manpage-alert from
+    Debian's devscripts package (#466353).
+  - Fix rpmdev-md5 and friends with relative paths to archives.
+  - Document rpmdev-newspec's long options.
+  - Add rpmdev-newspec bash completion.
+  - Document packager info sources for rpmdev-packager (fedorahosted#10).
+  - Make php-pear and ocaml spec templates more useful without newspec.
+  - Fix formatting error in rpmdev-bumpspec man page (fedorahosted#9).
+  - Add R spec template (#215927).
+
+rpmdevtools 7.3 (2009-05-25)
+
+  Ville Skyttä:
+  - Add rpmdev-packager - script for getting rpm packager info.
+  - Use rpmdev-packager in rpmdev-bumpspec and rpmdev-init.el.
+  - Fix rpmdev-extract MIME type comparisons with file(1) output containing
+    parameters.
+
+rpmdevtools 7.2 (2009-05-20)
+
+  Ville Skyttä:
+  - Add dummy spec template for ad-hoc testing.
+  - Improve newspec/newinit when only "-o foo" argument is given (#498588,
+    thanks to Edwin ten Brink).
+  - Try to get packager mail address for *Emacs rpm-spec-mode from
+    ~/.fedora.cert if rpm-spec-user-mail-address is not set.
+  - Add xz support to rpmdev-extract.
+  - Make bumpspec's use of "head" POSIX compliant.
+  - Add rpmdev-newinit for easier access to the init script template, move the
+    template to %{_sysconfdir}/rpmdevtools, improve reload action example.
+  - Speed up rpmls bash completion.
+
+rpmdevtools 7.1 (2009-04-04)
+
+  Ville Skyttä:
+  - Make rpmdev-md5 and friends work on non-srpm package files too.
+  - Add bash completion.
+  - Add query format option to rmdevelrpms, sort output by NEVRA.
+  - Use %global instead of %define in spec templates.
+  - Handle %global in addition to %define in rpmdev-bumpspec.
+  - Add result dependent exit statuses to rpmdev-vercmp.
+  - Add minimum version to rpm-python dependency (for rpmdev-bumpspec).
+
+rpmdevtools 7.0 (2008-12-26)
+
+  Ville Skyttä:
+  - Drop fonts spec template, adapt to new ones from Fedora fonts SIG (#477055).
+  - Add man page for rpmdev-newspec.
+  - Add imake and intltool to internal list of devel packages in rmdevelrpms.
+  - Add rpmdev-sha*/*sum companions to rpmdev-md5 (fedorahosted#7).
+  - Drop "minimal buildroot" dependencies.
+  - Drop fedora-rpmdevtools Obsoletes.
+  - Add %packager from rpm config to the set of defaults for rpmdev-bumpspec's
+    user string.
+  - Switch to lzma compressed tarball.
+
+  Michael Schwendt:
+  - Bring rpmdev-bumpspec copyright holder closer to truth.
+  - Add vamp-plugin-sdk to internal list of non-devel packages in rmdevelrpms
+    (#472641).
+
+  Todd Zullinger:
+  - Show available types in rpmdev-newspec --help (fedorahosted#6).
+
+  Thorsten Leemhuis:
+  - Add -r/--rightmost option to rpmdev-bumpspec (fedorahosted#1).
+
+  Chris Weyl:
+  - Improve arch specific %files in perl spec template (#461177).
+
+rpmdevtools 6.7 (2008-08-03)
+
+  Ville Skyttä:
+  - Make rpmdev-diff, rpmdev-md5 and rpminfo honor TMPDIR.
+  - Make rpmls work with URLs.
+  - Include rpm arch in dir names created by rpmdev-extract (#443266).
+  - Remove duplicate "reload" from case block in init script template.
+  - Fix exit status of "reload" in case service is not running in init
+    script template (#442993).
+
+rpmdevtools 6.6 (2008-03-27)
+
+  Ville Skyttä:
+  - Fix man page generation.
+
+rpmdevtools 6.5 (2008-03-26)
+
+  Ville Skyttä:
+  - Generate man pages at build time.
+  - Remove libgcj-devel and zlib-devel from rmdevelrpms' internal exclusion
+    list, they're not essential on non-devel systems any more.
+  - Include ocaml spec template.
+  - Include Michael Schwendt's bumpspecfile.py (as rpmdev-bumpspec).
+  - Sync with qa-robot upstream.
+  - Update spectool to 1.0.10.
+  - Add support for 7-zip, lzma and lzo in rpmdev-extract.
+  - Add ';;' to the init script template's reload action.
+  - Add fonts spec template from the Fedora Fonts SIG (#407781).
+  - Add option to use macro style instead of shell style variables to newspec.
+  - Prefer ~/.config/rpmdevtools/rmdevelrpms.conf over ~/.rmdevelrpmsrc in
+    rmdevelrpms.
+
+rpmdevtools 6.4 (2007-10-12)
+
+  Lubomir Kundrak:
+  - Import the previous fix into CVS to resync, bump version.
+
+rpmdevtools 6.3 (2007-10-12)
+
+  Lubomir Kundrak:
+  - Fix paths in qa-robot tools.
+
+rpmdevtools 6.2 (2007-09-08)
+
+  Ville Skyttä:
+  - Sync deps with Fedora's new "assumed present in buildroots" packages list.
+  - Init script template cleanups.
+  - Update rpminfo to version 2004-07-07-02.
+
+rpmdevtools 6.1 (2007-08-10)
+
+  Ville Skyttä:
+  - Sync COPYING with http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
+  - Work around #250990 in rpmls and rpmdev-extract.
+  - Clarify copyright info of rpmdev-* and rpmls.
+  - Fix Epoch handling in the 2-arg form of rpmdev-vercmp with yum < 3.1.2.
+  - The long form of the list option in rmdevelrpms is --list-only, not --list.
+
+rpmdevtools 6.0 (2007-07-05)
+
+  Ville Skyttä:
+  - Remove check-{buildroot,rpaths*}, now included in rpm-build >= 4.4.2.1.
+  - Drop explicit dependency on patch, pulled in by recent rpm-build.
+  - Add cmake and scons to default devel package list in rpmdev-rmdevelrpms.
+  - Add LSB comment block to init script template.
+  - Add 2-argument form for comparing EVR strings to rpmdev-vercmp
+    (available only if rpmUtils.miscutils is available).
+  - Include rpmsodiff and dependencies (rpmargs, rpmelfsym, rpmfile, rpmpeek,
+    rpmsoname) from ALT Linux's qa-robot package.
+  - Include rpmls (#213778).
+  - Update spectool to 1.0.9 (#243731).
+  - BR perl(ExtUtils::MakeMaker) by default in perl spec template.
+  - Drop deprecated backwards compatibility with fedora-rpmdevtools.
+  - Update URL.
+  - Arch-qualify output of matched packages in rmdevelrpms and allow
+    arch-qualified packages in the config file.
+
+  Thorsten Leemhuis:
+  - Add --list-only option to rmdevelrpms.
+
+rpmdevtools 5.3 (2006-10-25)
+
+  Ville Skyttä:
+  - Update spectool to 1.0.8 (#212108).
+
+rpmdevtools 5.2 (2006-10-02)
+
+  Ville Skyttä:
+  - Skip *.jar.so.debug in check-buildroot (#208903).
+  - Treat yasm and *-static as devel packages in rmdevelrpms.
+
+rpmdevtools 5.1 (2006-09-09)
+
+  Christopher Stone, Remi Collet:
+  - Add PHP PEAR spec template (#198706).
+
+  Ville Skyttä:
+  - Migrate rmdevelrpms config when upgrading from fedora-rpmdevtools.
+
+rpmdevtools 5.0 (2006-08-20)
+
+  Ville Skyttä:
+  - Re-rename almost everything to rpmdev-*, with backwards compat symlinks.
+  - Don't encourage %ghost'ing *.pyo in Python spec template, add some comments.
+  - Drop PHP PEAR spec template, it's not ready yet.
+  - Treat *-sdk as devel packages in rmdevelrpms (#199909).
+  - Don't assume compface is a devel package in rmdevelrpms.
+  - Mark things that are not needed for noarch module packages in the Perl
+    spec template.
+  - Move option arguments to "find" before non-option ones in Perl spec
+    template.
+  - Drop python-abi dependency from Python spec template (#189947).
+  - Drop fedora- prefix everywhere, add backcompat symlinks for execubtables.
+  - Move %{_sysconfdir}/fedora to %{_sysconfdir}/rpmdevtools and
+    %{_datadir}/fedora to %{_datadir}/rpmdevtools.
+  - Move spec templates to %{_sysconfdir}/rpmdevtools, mark as config.
+  - Drop fedora-kmodhelper.
+  - Drop fedora-installdevkeys and GPG keys, modify rpmchecksig to use
+    the system rpmdb.
+  - Sort rmdevelrpms' output.
+  - Add manual pages for rmdevelrpms, diffarchive and extract.
+  - Autotoolize source tree.
+
+  David Lutterkort:
+  - Improve ruby spec template (#180066).
+
+fedora-rpmdevtools 1.6 (2006-05-16)
+
+  Ignacio Vazquez-Abrams:
+  - Add spec template for library packages (#185606).
+
+fedora-rpmdevtools 1.5 (2006-02-26)
+
+  Ville Skyttä:
+  - Improve diffarchive and extract error messages.
+  - Update spectool to 1.0.7 (#162253).
+  - Add file(1) based archive type detection to fedora-extract.
+  - Add "diff file lists only" option to diffarchive.
+
+  Oliver Andrich:
+  - Add Ruby spec template (#180066).
+
+  Enrico Scholz:
+  - Fix rpath checker tests with bash 3.1 (#178636).
+
+fedora-rpmdevtools 1.4 (2005-12-30)
+
+  Ville Skyttä:
+  - Update spectool to 1.0.6 (#176521), require wget for it.
+  - Add disttags to spec templates.
+
+fedora-rpmdevtools 1.3 (2005-10-27)
+
+  Enrico Scholz:
+  - check-rpaths-worker: detect when RPATH references the parent directory
+    of an absolute path (#169298).
+  - Add regression test for check-rpaths* (#169298).
+
+  Ville Skyttä:
+  - Honor user's indent-tabs-mode setting in fedora-init.el (#170902).
+
+fedora-rpmdevtools 1.2 (2005-10-07)
+
+  Ville Skyttä:
+  - check-buildroot: grep for buildroot as a fixed string, not a regexp.
+  - Update FSF's address in copyright notices.
+  - Remove some redundancy from the Perl spec template.
+  - Teach fedora-newrpmspec to detect and use different specfile variants.
+  - Use fedora-newrpmspec in fedora-init.el.
+
+  Enrico Scholz:
+  - check-rpaths-worker: allow multiple $ORIGIN paths in an RPATH and allow
+    RPATHs which are relative to $ORIGIN (#169298).
+  - check-rpaths-worker: give out an hint about usage and the detected issues
+    at the first detected error.
+
+fedora-rpmdevtools 1.1 (2005-07-08)
+
+  Ville Skyttä:
+  - Drop more pre-FC2 compat stuff from Perl spec template.
+  - Treat gcc-gfortran as a devel package in rmdevelrpms.
+  - Drop fedora.us GPG key.
+
+fedora-rpmdevtools 1.0 (2005-03-24)
+
+  Ville Skyttä:
+  - Make fedora-diffarchive work better with archives containing dirs without
+    read/execute permissions.
+  - Sync "Epoch: 0" drops with Fedora Extras CVS.
+  - Include Nils Philippsen's spectool.
+  - Own (%ghost'd) more dirs from the site-lisp dir hierarchies.
+  - Drop trigger support pre-FC2 Emacs and XEmacs packages.
+  - Drop rpm-spec-mode.el patch, no longer needed for FC2 Emacs and later.
+  - Update URLs.
+  - Drop developer GPG keys from the package, add Fedora Extras key.
+  - Drop fedora-pkgannfmt, it's no longer relevant.
+  - Remove pre-FC2 compatibility stuff from Perl spec template.
+  - Don't try to remove gcc-java and related packages by default in rmdevelrpms.
+  - Remove "full featured" spec template, convert newrpmspec to use -minimal.
+
+fedora-rpmdevtools 0.3.1 (2005-02-06)
+
+  Ignacio Vazquez-Abrams:
+  - Make buildrpmtree and wipebuildtree less dependent on a specific
+    configuration (#147014).
+
+fedora-rpmdevtools 0.3.0 (2005-01-18)
+
+  Ville Skyttä:
+  - Remove 0.fdr. prefixes and epoch 0's from all spec templates.
+  - Add try-restart action to init script template.
+  - Remove deprecated fedora-diffrpm and fedora-unrpm.
+  - Install check-* to %{_prefix}/lib/rpm instead of %{_libdir}/rpm
+    (fedora.us#2351).
+  - Check both %{_prefix}/lib and %{_prefix}/lib64 in the xemacs trigger.
+  - Update rpminfo to 2004-07-07-01 and include it in the tarball.
+
+fedora-rpmdevtools 0.2.0 (2004-10-07)
+
+  Ville Skyttä:
+  - New generalized replacements for fedora-unrpm and fedora-diffrpm:
+    fedora-extract and fedora-diffarchive.
+  - Treat gcc4, gcc4-c++ and gcc4-gfortran as devel packages in rmdevelrpms.
+  - Cosmetic spec template improvements.
+
+fedora-rpmdevtools 0.1.9 (2004-09-11)
+
+  Ville Skyttä:
+  - Fix "fedora-unrpm -Q".
+  - Treat perl-ExtUtils-* and perl-Module-Build as devel packages in
+    rmdevelrpms.
+  - Minor Perl spec template improvements.
+  - Treat gcc35, gcc35-c++, kernel-sourcecode, and any package matching
+    "-devel\b" or "-debuginfo\b" (for version-in-name stuff) as devel
+    packages in rmdevelrpms.
+  - Fold -emacs into the main package, use triggers to install the site-start.d
+    snippets.
+  - Don't use distutils.sysconfig.get_python_version() in python spec template,
+    it's available in Python >= 2.3 only.
+
+  Thorsten Leemhuis:
+  - Make kmodhelper detect RH/FC 2.6 kernels (fedora.us#1401).
+  - Remove obsolete kernel module stuff from spectemplate.spec (fedora.us#1401).
+  - Prevent $CDPATH/cd from producing unexpected output in fedora-md5 and
+    fedora-unrpm (fedora.us#1401, fedora.us#1953, with Pekka Pietikainen).
+  - Update kmodhelper to work with 2.6 kernels (fedora.us#1401).
+
+fedora-rpmdevtools 0.1.8 (2004-05-02)
+
+  Ville Skyttä:
+  - New script: Thomas Woerner's rpminfo (included here as fedora-rpminfo).
+  - Make fedora-diffrpm work on < FC1, as well as with two different packages
+    with the same NVR (fedora.us#1401).
+  - Add Aurelien Bompard's and Erik S. LaBianca's keys to devgpgkeys
+    (fedora.us#1401).
+  - Include a trimmed-down version of my key, BCD241CB (fedora.us#1401).
+  - Improvements to Perl and Python spec templates (fedora.us#1401,
+    fedora.us#1525).
+  - Treat gcc-g77, gcc-gnat, gcc-java, gcc-objc, and gcc34* as devel packages
+    in rmdevelrpms.
+  - Add package summary to fedora-pkgannfmt's output (fedora.us#1401).
+
+  Michael Schwendt:
+  - Split Requires(pre,postun) into two in spec template due to
+    https://bugzilla.redhat.com/118780 (fedora.us#1401).
+  - Add magic encoding comment to rmdevelrpms (fedora.us#1401).
+  - Treat automake17 (fedora.us#1401) as devel package in rmdevelrpms.
+
+  Enrico Scholz:
+  - Improvements to check-rpaths* (fedora.us#1401).
+
+
+fedora-rpmdevtools 0.1.7 (2004-03-14)
+
+  Ville Skyttä:
+  - Ensure that the correct kmodhelper is tested and executable during build
+    (fedora.us#1167).
+  - Ignore *.py[co], *.elc and .packlist in check-buildroot (fedora.us#1167).
+  - Revert back to the original fedora-md5 version which uses md5sum to
+    calculate the checksums instead of using the rpm headers (fedora.us#1167).
+  - Include GConf schema installation examples in spectemplate.spec
+    (fedora.us#1178).
+  - Add check-buildroot and check-rpaths rpm lib scripts, see
+    fedora-buildrpmtree (or use it) for an example how to enable them
+    (fedora.us#1167).
+  - Add Python spec template and (X)Emacs support for it (fedora.us#1167).
+  - Add more kmodhelper improvements, version 0.9.8 and a tiny test suite.
+  - Add -q, -Q and -C arguments to fedora-unrpm (fedora.us#1167).
+  - New script: fedora-diffrpm for diffing contents of two RPMs
+    (fedora.us#1167).
+  - Treat compat-gcc* and perl-Devel-* as development packages in rmdevelrpms
+    (fedora.us#1167).
+  - kmodhelper improvements, thanks to Thorsten Leemhuis and Michael Schwendt
+    (fedora.us#1167).
+
+fedora-rpmdevtools 0.1.6 (2003-12-27)
+
+  Ville Skyttä:
+  - Do not define %make in ~/.rpmmacros in fedora-buildrpmtree (fedora.us#1115).
+  - Add %_smp_mflags -j3 by default in ~/.rpmmacros in fedora-buildrpmtree
+    to make it easier to catch packages with parallel build problems
+    (fedora.us#1115).
+  - Improved %description (fedora.us#1115).
+  - Check arguments in fedora-pkgannfmt, use sed instead of perl
+    (fedora.us#1115).
+  - New script: fedora-kmodhelper (fedora.us#1115).
+
+fedora-rpmdevtools 0.1.5 (2003-12-06)
+
+  Ville Skyttä:
+  - Add unzip into the list of "assumed present" packages (fedora.us#1010).
+  - Treat gcc32, m4, *-debuginfo and perl-Test-* as development packages
+    in rmdevelrpms (fedora.us#1010).
+  - Add sanity checks to fedora-wipebuildtree (fedora.us#1010).
+  - New tool: fedora-md5 (fedora.us#1010).
+  - Include perl spec file template and add (X)Emacs support for it
+    (fedora.us#1010).
+
+fedora-rpmdevtools 0.1.4 (2003-11-08)
+
+  Ville Skyttä:
+  - Remove duplicate rawhide 2003 automated build key.
+  - Add Fedora Project keys.
+
+fedora-rpmdevtools 0.1.3 (2003-10-31)
+
+  Ville Skyttä:
+  - Add Nils Olav Selåsdal's key into devgpgkeys (fedora.us#783).
+  - fedora-wipebuildtree now cleans up both ~/redhat and ~/rpmbuild for
+    consistency with fedora-buildrpmtree and backwards compatibility
+    (fedora.us#783).
+  - Treat pkgconfig as a devel package in fedora-rmdevelrpms (fedora.us#783).
+  - New script: fedora-pkgannfmt (fedora.us#783).
+  - Make fedora-rmdevelrpms tolerate strings in devpkgs and nondevpkgs
+    (fedora.us#783).
+
+fedora-rpmdevtools 0.1.2 (2003-10-18)
+
+  Ville Skyttä:
+  - Skip removing packages in fedora-rmdevelrpms if it would cause
+    unresolved dependencies (fedora.us#783).
+
+fedora-rpmdevtools 0.1.1 (2003-10-08)
+
+  Ville Skyttä:
+  - Unobfuscate new devel pkg heuristics in fedora-rmdevelrpms (fedora.us#783).
+
+fedora-rpmdevtools 0.1.0 (2003-10-08)
+
+  Ville Skyttä:
+  - Rewrite fedora-rmdevelrpms in Python.
+    Note: configuration files have moved and changed format.
+
+fedora-rpmdevtools 0.0.22 (2003-09-28)
+
+  Ville Skyttä:
+  - Remove tetex-dvips from rmdevelrpms (fedora.us#525).
+
+fedora-rpmdevtools 0.0.21 (2003-09-14)
+
+  Ville Skyttä:
+  - Add the new Rawhide package signing key.
+
+fedora-rpmdevtools 0.0.20 (2003-09-11)
+
+  Ville Skyttä:
+  - Use "make install DESTDIR=..." instead of %makeinstall in spec templates.
+
+fedora-rpmdevtools 0.0.19 (2003-09-04)
+
+  Ville Skyttä:
+  - Add Andreas Bierfert's key to devgpgkeys.
+
+fedora-rpmdevtools 0.0.18 (2003-08-15)
+
+  Ville Skyttä:
+  - Change fallback case to exit 2 in init script template (fedora.us#525).
+  - Sync fedora-buildrpmtree with Russ's latest version (fedora.us#594).
+  - Add CVS Id keywords to applicable files.
+
+fedora-rpmdevtools 0.0.17 (2003-08-05)
+
+  Ville Skyttä:
+  - Require gzip and bzip2 (fedora.us#525).
+  - Read configs first in fedora-rmdevelrpms to prevent overriding internals.
+  - Add autoconf, autoconf213, automake, automake14, automake15, automake16,
+    dev86, doxygen and swig to packages treated as devel in rmdevelrpms.
+  - Make rmdevelrpms work with non-English locales (fedora.us#544).
+  - 2 empty lines instead of # --------- separators in spec templates
+    (fedora.us#525).
+  - Move non-config files under %{_datadir}/fedora.
+  - Change %{_sysconfdir}/fedora-rpmdevtools to %{_sysconfdir}/fedora.
+
+fedora-rpmdevtools 0.0.16 (2003-07-22)
+
+  Ville Skyttä:
+  - Require diffutils, make, patch and tar (fedora.us#492).
+  - One more typo fix for init script template.
+  - Fix force-reload in init script template.
+
+fedora-rpmdevtools 0.0.15 (2003-07-10)
+
+  Ville Skyttä:
+  - Address init script template issues (fedora.us#342 comment 9).
+
+fedora-rpmdevtools 0.0.14 (2003-07-08)
+
+  Ville Skyttä:
+  - Add init script template.
+
+fedora-rpmdevtools 0.0.13 (2003-06-27)
+
+  Ville Skyttä:
+  - Add Michael Schwendt's (0xB8AF1C54) and Adrian Reber's (0x3ED6F034) keys
+    (fedora.us#342).
+  - Treat libtool and qt-designer as devel packages in fedora-rmdevelrpms
+    (fedora.us#342).
+
+fedora-rpmdevtools 0.0.12 (2003-05-14)
+
+  Ville Skyttä:
+  - Make install-info in spec template silent for --excludedocs (fedora.us#234).
+  - Include a minimal spec template for use with editors (fedora.us#234).
+  - Split (X)Emacs stuff into -emacs subpackage (fedora.us#234).
+
+fedora-rpmdevtools 0.0.11 (2003-05-07)
+
+  Ville Skyttä:
+  - Add (post,preun) install-info scriptlets to spec template (fedora.us#234).
+  - Install Fedora rpm-spec-mode (X)Emacs init stuff.  Needs a patched
+    rpm-spec-mode.el (patch included in docs).
+  - Include a copy of the GPL.
+
+fedora-rpmdevtools 0.0.10 (2003-05-03)
+
+  Warren Togami:
+  - Added Enrico's key 0xE421D146.
+  - fedora-develrpms added docbook-utils-pdf, tetex-dvips (fedora.us#234).
+  - Most of Thomas' spec changes (fedora.us#234).
+  - %{buildroot} --> $RPM_BUILD_ROOT (fedora.us#234).
+  - Ville + Adrian's BuildRoot (fedora.us#234).
+  - Adrian's improved newrpmspec (fedora.us#234).
+
+fedora-rpmdevtools 0.0.9 (2003-04-26)
+
+  Warren Togami:
+  - fedora-installdevkeys added RH's key and beta key (fedora.us#224).
+  - RH8 has redhat-rpm-config too (fedora.us#224).
+  - -y option for fedora-rmdevelrpms (fedora.us#224).
+
+fedora-rpmdevtools 0.0.8 (2003-04-22)
+
+  Warren Togami:
+  - changes to rmdevelrpms (fedora.us#181).
+  - added Requires (fedora.us#181).
+  - rpmchecksig file not found crash (fedora.us#181).
+
+fedora-rpmdevtools 0.0.7 (2003-04-14)
+
+  Warren Togami:
+  - Update Seth's rpmchecksig - non-zero exit codes with errors
+  - Include Seth's key
+
+fedora-rpmdevtools 0.0.6 (2003-04-13)
+
+  Ville Skyttä:
+  - Make KEEP_DEVEL_RPMS actually work, include a sample develrpms.conf.
+  - Mark stuff in %{_sysconfdir}/fedora-rpmdevtools properly as %config.
+  - Some spectemplate.spec updates.
+
+fedora-rpmdevtools 0.0.5 (2003-04-12)
+
+  Ville Skyttä:
+  - Improved version of fedora-rmdevelrpms: configurable packages to keep.
+  - Add fedora-unrpm.
+  - Use whoami instead of $USER in fedora-installdevkeys.
+  - Some spec file tweaks.
+
+fedora-rpmdevtools 0.0.4 (2003-04-10)
+
+  Warren Togami:
+  - Replace rpmchecksig with Seth Vidal's python version with more verbose
+    output.
+
+fedora-rpmdevtools 0.0.3 (2003-04-09)
+
+  Warren Togami:
+  - Update spec template
+  - Add Ville Skyttä's fedora-rmdevelrpms script
+  - Add Warren's installdevkeys and rpmchecksig
+  - Add Warren's wipebuildtree
+
+fedora-rpmdevtools 0.0.1 (2003-03-27)
+
+  Warren Togami:
+  - Initial release.
