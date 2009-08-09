@@ -67,9 +67,8 @@ for DIR in "$@"; do
         if [ $RET = "0" ]; then
             NUM_MANPAGES_FOUND=$(( $NUM_MANPAGES_FOUND + 1 ))
         else
-            # Fedora change: use perl instead of sed to quote regex metachars
-            echo "$OUT" | perl -pe "s/^.*'man 7 undocumented'.*$// ; \
-              s,(\W)\Q${F##*/}\E(\b|$),\1$F, ; s,//,/,"
+            echo "$OUT" | perl -ne "next if /^.*'man 7 undocumented'.*$/;" \
+              -e "s,(\W)\Q${F##*/}\E(?:\b|$),\1$F,; s,//,/,; print;"
             NUM_MANPAGES_MISSING=$(( $NUM_MANPAGES_MISSING + 1 ))
         fi
     done

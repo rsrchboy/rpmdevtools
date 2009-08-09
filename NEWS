@@ -8,7 +8,7 @@ rpmdevtools x.x (2009-xx-xx)
   - Improve xz detection in rpmdev-extract (if file >= 5.01 is installed),
     decompress lzma files with xz.
   - Add annotate-output, checkbashisms, licensecheck, and manpage-alert from
-    Debian's devscripts package (#466353).
+    Debian's devscripts 2.10.54 (svn r1956) package (#466353).
   - Fix rpmdev-md5 and friends with relative paths to archives.
   - Document rpmdev-newspec's long options.
   - Add rpmdev-newspec bash completion.
