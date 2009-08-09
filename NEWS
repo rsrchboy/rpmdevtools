@@ -1,6 +1,7 @@
 rpmdevtools x.x (2009-xx-xx)
 
   Ville Skyttä:
+  - Switch to xz compressed tarball.
   - Rewrite deprecated bits in rpmdev-bumpspec, python >= 2.4 is now required.
   - Remove rpmdevtools.spec from dist tarball, it's maintained elsewhere anyway.
   - Add bash completion for rpmdev-extract and rpminfo.

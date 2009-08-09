@@ -1,4 +1,4 @@
-AUTOMAKE_OPTIONS = foreign 1.10.1 dist-lzma
+AUTOMAKE_OPTIONS = foreign 1.11 dist-xz
 
 SUBDIRS = devscripts emacs qa-robot
 
