@@ -1,4 +1,5 @@
 annotate-output
 checkbashisms
 licensecheck
+licensecheck.1
 manpage-alert
