@@ -77,8 +77,9 @@ class SpecFile:
         else:
             evrstring = ''
         changematch = re.compile(r"^%changelog")
-        date = time.strftime("%a %b %d %Y",   time.localtime(time.time()))
-        newchangelogentry = "%changelog\n* "+date+" "+email+evrstring+"\n"+entry+"\n\n"
+        date = time.strftime("%a %b %d %Y", time.localtime(time.time()))
+        newchangelogentry = "%%changelog\n* %s %s%s\n%s\n\n" % \
+            (date, email, evrstring, entry)
         for i in range(len(self.lines)):
             if(changematch.match(self.lines[i])):
                 self.lines[i] = newchangelogentry
