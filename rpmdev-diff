@@ -173,10 +173,12 @@ if [ -n "$list" ] ; then
     diff $diffopts "$old.files" "$new.files"
 elif [ -n "$long" ] ; then
     find "$old" -ls | \
-        perl -pe "s|^[\d\s]*|| ; s|.*\s\Q$old\E$|| ; s|(\s)\Q$old/\E|\1|" | \
+        perl -pe "s|^(?:[\d\s]*)(\S+)(?:\s+\d+)(.+)$|\1\2| ;
+                  s|.*\s\Q$old\E$|| ; s|(\s)\Q$old/\E|\1|" | \
         sort > "$old.files"
     find "$new" -ls | \
-        perl -pe "s|^[\d\s]*|| ; s|.*\s\Q$new\E$|| ; s|(\s)\Q$new/\E|\1|" | \
+        perl -pe "s|^(?:[\d\s]*)(\S+)(?:\s+\d+)(.+)$|\1\2| ;
+                  s|.*\s\Q$new\E$|| ; s|(\s)\Q$new/\E|\1|" | \
         sort > "$new.files"
     diff $diffopts "$old.files" "$new.files"
 else
