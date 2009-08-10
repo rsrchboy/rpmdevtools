@@ -70,8 +70,10 @@ Options:
                   instead of files themselves.
   -h, --help      Print help message and exit.
   -v, --version   Print version information and exit.
-  diff-options    Options passed to diff(1), in addition to -r (default: -Nu).
-                  The first argument not starting with a '-' ends diff-options.
+  diff-options    Options passed to diff(1).  The first argument not starting
+                  with a '-' ends diff-options.  Default: -Nu (in addition to
+                  -r which will always be passed in non-list modes), -U0 in
+                  list modes.
 EOF
 }
 
@@ -99,7 +101,11 @@ for file in "$1" "$2" ; do
     fi
 done
 
-diffopts="-r ${diffopts:--Nu}"
+if [ -n "$list$long" ] ; then
+    diffopts="${diffopts:--U0}"
+else
+    diffopts="-r ${diffopts:--Nu}"
+fi
 
 tmpdir=`mktemp -d ${TMPDIR:-/tmp}/rpmdev-diff.XXXXXX`
 
