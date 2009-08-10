@@ -1,6 +1,7 @@
 rpmdevtools x.x (2009-xx-xx)
 
   Ville Skyttä:
+  - Add -L/--long-list option to rpmdev-diff.
   - Make rpmdev-extract -q quieter with some tarballs.
   - Switch to xz compressed tarball.
   - Rewrite deprecated bits in rpmdev-bumpspec, python >= 2.4 is now required.
