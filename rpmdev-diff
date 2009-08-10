@@ -70,21 +70,45 @@ Options:
                   instead of files themselves.
   -h, --help      Print help message and exit.
   -v, --version   Print version information and exit.
-  diff-options    Options passed to diff(1).  The first argument not starting
-                  with a '-' ends diff-options.  Default: -Nup (in addition to
-                  -r which will always be passed) in non-list mode, -U0 in
-                  list modes.
+  diff-options    Options passed to diff(1).  The first repeated argument of
+                  the above or the first argument starting with a '-' but not
+                  one of the above starts diff-options, the first one not
+                  starting with it ends them.  Default: -Nup (in addition to
+                  -r which will always be passed) in non-list mode, -U0 in list
+                  modes.
 EOF
 }
 
 while true ; do
     case "$1" in
-        -l|--list)      [ -n "$list" ] && diffopts="$diffopts $1" || list=true;;
-        -L|--long-list) [ -n "$long" ] && diffopts="$diffopts $1" || long=true;;
-        -h|--help)      help ; exit 0 ;;
-        -v|--version)   version ; exit 0 ;;
-        -*)             diffopts="$diffopts $1" ;;
-        *)              break ;;
+        -l|--list)
+            [ -n "$list$diffopts" ] && diffopts="$diffopts $1" || list=true
+            ;;
+        -L|--long-list)
+            [ -n "$long$diffopts" ] && diffopts="$diffopts $1" || long=true
+            ;;
+        -h|--help)
+            if [ -n "$diffopts" ] ; then
+                diffopts="$diffopts $1"
+            else
+                help
+                exit 0
+            fi
+            ;;
+        -v|--version)
+            if [ -n "$diffopts" ] ; then
+                diffopts="$diffopts $1"
+            else
+                version
+                exit 0
+            fi
+            ;;
+        -*)
+            diffopts="$diffopts $1"
+            ;;
+        *)
+            break
+            ;;
     esac
     shift
 done

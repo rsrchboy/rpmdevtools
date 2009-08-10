@@ -4,6 +4,7 @@ rpmdevtools x.x (2009-xx-xx)
   - Add -L/--long-list option to rpmdev-diff.
   - Change default diff options to -U0 with rpmdev-diff -l and -L.
   - Add -p to default diff options with rpmdev-diff's non-list mode.
+  - Improve separation of internal and diff options in rpmdev-diff.
   - Make rpmdev-extract -q quieter with some tarballs.
   - Switch to xz compressed tarball.
   - Rewrite deprecated bits in rpmdev-bumpspec, python >= 2.4 is now required.
