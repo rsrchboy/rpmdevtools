@@ -1,6 +1,7 @@
 rpmdevtools x.x (2009-xx-xx)
 
   Ville Skyttä:
+  - Add lzip support to rpmdev-extract.
   - Add -L/--long-list option to rpmdev-diff.
   - Change default diff options to -U0 with rpmdev-diff -l and -L.
   - Add -p to default diff options with rpmdev-diff's non-list mode.

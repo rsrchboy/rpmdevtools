@@ -87,6 +87,7 @@ fmime()
         application/x-compress|application/x-gzip)  decomp="gzip -dc"  ;;
         application/x-bzip2)                        decomp="bzip2 -dc" ;;
         application/x-xz)                           decomp="xz -dc"    ;;
+        application/x-lzip)                         decomp="lzip -dc"  ;;
     esac
 }
 
@@ -123,9 +124,13 @@ ftype()
 
     # Fallback stuff for things not (enough) supported by file(1).
     if [ -z "$ftype" ] ; then
-        # No xz support until 5.01; no magic in lzma
-        if [[ -z "$decomp" && "$1" == *.@(xz|txz|lzma|tlz) ]] ; then
-            decomp="xz -dc"
+        if [[ -z "$decomp" ]] ; then
+            case $1 in
+                # xz support added in file 5.01; no magic in lzma
+                *.@(xz|txz|lzma|tlz)) decomp="xz -dc"   ;;
+                # lzip support added in file 5.00
+                *.lz)                 decomp="lzip -dc" ;;
+            esac
         fi
         if [ -n "$decomp" ] ; then
             case "$1" in

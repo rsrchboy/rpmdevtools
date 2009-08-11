@@ -15,7 +15,7 @@ _rpmdev_rpmfiles()
 _rpmdev_archives()
 {
 	local cur=${cur:-`_get_cword`}
-	_filedir '@([rs]pm|deb|zip|?([ejtw])ar|tzo|[gx7]z|bz2|lzma|cpio|arj|zoo|cab|rar|ace|lha)'
+	_filedir '@([rs]pm|deb|zip|?([ejtw])ar|tzo|[glx7]z|bz2|lzma|cpio|arj|zoo|cab|rar|ace|lha)'
 }
 
 _rpmdev_specfiles()
