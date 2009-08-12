@@ -26,6 +26,7 @@ tmpdir=
 diffopts=
 list=
 long=
+contents=
 
 trap cleanup EXIT
 cleanup()
@@ -65,27 +66,44 @@ usage()
 Usage: rpmdev-diff [OPTION]... [DIFF_OPTIONS] FROM-ARCHIVE TO-ARCHIVE
 
 Options:
-  -l, --list      Diff lists of files in archives instead of files themselves.
-  -L, --long-list Diff long lists (akin to find -ls) of files in archives
-                  instead of files themselves.
-  -h, --help      Print help message and exit.
-  -v, --version   Print version information and exit.
-  diff-options    Options passed to diff(1).  The first repeated argument of
-                  the above or the first argument starting with a '-' but not
-                  one of the above starts diff-options, the first one not
-                  starting with it ends them.  Default: -Nup (in addition to
-                  -r which will always be passed) in non-list mode, -U0 in list
-                  modes.
+  -c, --contents   Diff contents of files in archives.  This is the default.
+  -l, --list       Diff lists of files in archives.
+  -L, --long-list  Diff long lists (akin to find -ls) of files in archives.
+  -h, --help       Print help message and exit.
+  -v, --version    Print version information and exit.
+  diff-options     Options passed to diff(1).  The first repeated argument of
+                   the above or the first argument starting with a '-' but not
+                   one of the above starts diff-options, the first one not
+                   starting with it ends them.  Default: -Nup (in addition to
+                   -r which will always be passed) in contents only mode, -U0
+                   in list only modes.
+
+A combination of -l, -L, and -c may be specified.
 EOF
 }
 
 while true ; do
     case "$1" in
         -l|--list)
-            [ -n "$list$diffopts" ] && diffopts="$diffopts $1" || list=true
+            if [ -n "$list$diffopts" ] ; then
+                diffopts="$diffopts $1"
+            else
+                list=true
+            fi
             ;;
         -L|--long-list)
-            [ -n "$long$diffopts" ] && diffopts="$diffopts $1" || long=true
+            if [ -n "$long$diffopts" ] ; then
+                diffopts="$diffopts $1"
+            else
+                long=true
+            fi
+            ;;
+        -c|--contents)
+            if [ -n "$contents$diffopts" ] ; then
+                diffopts="$diffopts $1"
+            else
+                contents=true
+            fi
             ;;
         -h|--help)
             if [ -n "$diffopts" ] ; then
@@ -125,12 +143,6 @@ for file in "$1" "$2" ; do
     fi
 done
 
-if [ -n "$list$long" ] ; then
-    diffopts="${diffopts:--U0}"
-else
-    diffopts="-r ${diffopts:--Nup}"
-fi
-
 tmpdir=`mktemp -d ${TMPDIR:-/tmp}/rpmdev-diff.XXXXXX`
 
 mkdir "$tmpdir/old" "$tmpdir/new"
@@ -166,12 +178,27 @@ if [ `basename "$old"` != `basename "$new"` ] ; then
   fi
 fi
 
+# Contents mode is the default.
+if [ -z "$list$long$contents" ] ; then
+    contents=true
+else
+    contents=${contents:-false}
+fi
+list=${list:-false}
+long=${long:-false}
+
 # Here we go.
-if [ -n "$list" ] ; then
+
+if $list ; then
     find "$old" | sort | cut -d/ -f 2- -s > "$old.files"
     find "$new" | sort | cut -d/ -f 2- -s > "$new.files"
-    diff $diffopts "$old.files" "$new.files"
-elif [ -n "$long" ] ; then
+    set +e
+    diff ${diffopts:--U0} "$old.files" "$new.files"
+    [ $? -eq 0 -o $? -eq 1 ] || exit $?
+    set -e
+fi
+
+if $long ; then
     find "$old" -ls | \
         perl -pe "s|^(?:[\d\s]*)(\S+)(?:\s+\d+)(.+)$|\1\2| ;
                   s|.*\s\Q$old\E$|| ; s|(\s)\Q$old/\E|\1|" | \
@@ -180,7 +207,15 @@ elif [ -n "$long" ] ; then
         perl -pe "s|^(?:[\d\s]*)(\S+)(?:\s+\d+)(.+)$|\1\2| ;
                   s|.*\s\Q$new\E$|| ; s|(\s)\Q$new/\E|\1|" | \
         sort > "$new.files"
-    diff $diffopts "$old.files" "$new.files"
-else
-    diff $diffopts "$old" "$new"
+    set +e
+    diff ${diffopts:--U0} "$old.files" "$new.files"
+    [ $? -eq 0 -o $? -eq 1 ] || exit $?
+    set -e
+fi
+
+if $contents ; then
+    set +e
+    diff -r ${diffopts:--Nup} "$old" "$new"
+    [ $? -eq 0 -o $? -eq 1 ] || exit $?
+    set -e
 fi
