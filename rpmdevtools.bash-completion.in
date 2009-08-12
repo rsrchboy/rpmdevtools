@@ -24,9 +24,9 @@ _rpmdev_specfiles()
 	_filedir spec
 }
 
-complete -F _rpmdev_rpmfiles $filenames rpmdev-checksig
+complete -F _rpmdev_rpmfiles -o filenames rpmdev-checksig
 
-complete -F _rpmdev_archives $filenames \
+complete -F _rpmdev_archives -o filenames \
 	rpmdev-{cksum,md5,sha{1,224,256,384,512},sum}
 
 _spectool()
@@ -59,7 +59,7 @@ _spectool()
 		_rpmdev_specfiles
 	fi
 }
-complete -F _spectool $filenames spectool
+complete -F _spectool -o filenames spectool
 
 _rpmdev_bumpspec()
 {
@@ -80,7 +80,7 @@ _rpmdev_bumpspec()
 		_rpmdev_specfiles
 	fi
 }
-complete -F _rpmdev_bumpspec $filenames rpmdev-bumpspec
+complete -F _rpmdev_bumpspec -o filenames rpmdev-bumpspec
 
 _rpmdev_rmdevelrpms()
 {
@@ -119,7 +119,7 @@ _rpmls()
 	[[ "$cur" == */* ]] || _rpm_installed_packages
 	_rpmdev_rpmfiles
 }
-complete -F _rpmls $filenames rpmls
+complete -F _rpmls -o filenames rpmls
 
 _rpmdev_newspec()
 {
@@ -152,7 +152,7 @@ _rpmdev_newspec()
 
 	_filedir spec
 }
-complete -F _rpmdev_newspec $filenames rpmdev-newspec
+complete -F _rpmdev_newspec -o filenames rpmdev-newspec
 
 _rpminfo()
 {
@@ -186,7 +186,7 @@ _rpminfo()
 	[[ "$cur" == */* ]] || _rpm_installed_packages
 	_rpmdev_rpmfiles
 }
-complete -F _rpminfo $filenames rpminfo
+complete -F _rpminfo -o filenames rpminfo
 
 _rpmdev_extract()
 {
@@ -209,4 +209,4 @@ _rpmdev_extract()
 
 	_rpmdev_archives
 }
-complete -F _rpmdev_extract $filenames rpmdev-extract
+complete -F _rpmdev_extract -o filenames rpmdev-extract
