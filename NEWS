@@ -1,6 +1,7 @@
 rpmdevtools x.x (2009-xx-xx)
 
   Ville Skyttä:
+  - Insert bullet if one if not available in comment given to rpmdev-bumpspec.
   - Wrap unformatted long comments in rpmdev-bumpspec.
   - Add lzip support to rpmdev-extract.
   - Add -L/--long-list and -c/--contents options to rpmdev-diff.
