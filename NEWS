@@ -1,6 +1,7 @@
 rpmdevtools x.x (2009-xx-xx)
 
   Ville Skyttä:
+  - Wrap unformatted long comments in rpmdev-bumpspec.
   - Add lzip support to rpmdev-extract.
   - Add -L/--long-list and -c/--contents options to rpmdev-diff.
   - Change default diff options to -U0 with rpmdev-diff -l and -L.

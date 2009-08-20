@@ -21,6 +21,7 @@ import commands
 import re
 import subprocess
 import sys
+import textwrap
 import time
 from optparse import OptionParser
 
@@ -214,7 +215,17 @@ the Free Software Foundation; either version 2 of the License, or
         popen = subprocess.Popen(cmd, stdout = subprocess.PIPE)
         evr = popen.communicate()[0].split("\n")[0]
 
-        s.addChangelogEntry(evr, opts.comment, opts.userstring)
+        # Format comment.
+        comment = opts.comment
+        bullet = "-"
+        if comment.find("\n") == -1:
+            wrapopts = { "subsequent_indent": (len(bullet)+1) * " ",
+                         "break_long_words":  False }
+            if sys.version_info[:2] > (2, 5):
+                wrapopts["break_on_hyphens"] = False
+            comment = textwrap.fill(opts.comment, 80, **wrapopts)
+
+        s.addChangelogEntry(evr, comment, opts.userstring)
         s.writeFile(aspec)
 
 sys.exit(0)
