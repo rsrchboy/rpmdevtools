@@ -1,4 +1,4 @@
-rpmdevtools x.x (2009-xx-xx)
+rpmdevtools 7.4 (2009-08-21)
 
   Ville Skyttä:
   - Insert bullet if one if not available in comment given to rpmdev-bumpspec.
