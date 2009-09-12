@@ -3,6 +3,9 @@ rpmdevtools x.x
   Chris Weyl:
   - Add %{?perl_default_filter} to perl spec template (#502403).
 
+  Ville Skyttä:
+  - Sync with upstream devscripts 2.10.55.
+
 rpmdevtools 7.4 (2009-08-21)
 
   Ville Skyttä:
