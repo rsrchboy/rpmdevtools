@@ -1,4 +1,4 @@
-rpmdevtools x.x
+rpmdevtools 7.5 (2009-09-17)
 
   Chris Weyl:
   - Add %{?perl_default_filter} to perl spec template (#502403).
