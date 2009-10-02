@@ -47,10 +47,10 @@ _spectool()
     esac
 
     if [[ "$cur" == -* ]] ; then
-        COMPREPLY=( $( compgen -W '-l --lf --list-files -g --gf \
-                        --get-files -h --help -A --all -S --sources -P \
-                        --patches -s --source -p --patch -d --define -C \
-                        --directory -R --sourcedir -n --dryrun --dry-run \
+        COMPREPLY=( $( compgen -W '-l --lf --list-files -g --gf
+                        --get-files -h --help -A --all -S --sources -P
+                        --patches -s --source -p --patch -d --define -C
+                        --directory -R --sourcedir -n --dryrun --dry-run
                         -D --debug' -- "$cur" ) )
     else
         _rpmdev_specfiles
@@ -70,8 +70,8 @@ _rpmdev_bumpspec()
 
     local cur=`_get_cword`
     if [[ "$cur" == -* ]] ; then
-        COMPREPLY=( $( compgen -W '-h --help -c --comment -u \
-                        --userstring -r --rightmost -V --verbose -v \
+        COMPREPLY=( $( compgen -W '-h --help -c --comment -u
+                        --userstring -r --rightmost -V --verbose -v
                         --version' -- "$cur" ) )
     else
         _rpmdev_specfiles
@@ -89,7 +89,7 @@ _rpmdev_rmdevelrpms()
 
     [[ $3 == --@(qf|queryformat) ]] && return 0
 
-    COMPREPLY=( $( compgen -W '-h --help -l --list-only -y --yes \
+    COMPREPLY=( $( compgen -W '-h --help -l --list-only -y --yes
                         -v --version --qf --queryformat' -- `_get_cword` ) )
 }
 complete -F _rpmdev_rmdevelrpms rpmdev-rmdevelrpms
@@ -142,7 +142,7 @@ _rpmdev_newspec()
     esac
 
     if [[ "$cur" == -* ]] ; then
-        COMPREPLY=( $( compgen -W '-t --type -o --output -m --macros \
+        COMPREPLY=( $( compgen -W '-t --type -o --output -m --macros
                        -h --help -v --version' -- "$cur" ) )
         return 0
     fi
