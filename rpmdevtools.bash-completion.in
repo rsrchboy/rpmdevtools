@@ -1,6 +1,3 @@
-# -*- mode: shell-script; sh-basic-offset: 8; indent-tabs-mode: t -*-
-# ex: ts=8 sw=8 noet filetype=sh
-#
 # bash completion for rpmdevtools
 # Requires bash-completion >= 20080705 (for _get_cword)
 
@@ -8,205 +5,213 @@
 
 _rpmdev_rpmfiles()
 {
-	local cur=${cur:-`_get_cword`}
-	_filedir '[rs]pm'
+    local cur=${cur:-`_get_cword`}
+    _filedir '[rs]pm'
 }
 
 _rpmdev_archives()
 {
-	local cur=${cur:-`_get_cword`}
-	_filedir '@([rs]pm|deb|zip|?([ejtw])ar|tzo|[glx7]z|bz2|lzma|cpio|arj|zoo|cab|rar|ace|lha)'
+    local cur=${cur:-`_get_cword`}
+    _filedir '@([rs]pm|deb|zip|?([ejtw])ar|tzo|[glx7]z|bz2|lzma|cpio|arj|zoo|cab|rar|ace|lha)'
 }
 
 _rpmdev_specfiles()
 {
-	local cur=${cur:-`_get_cword`}
-	_filedir spec
+    local cur=${cur:-`_get_cword`}
+    _filedir spec
 }
 
 complete -F _rpmdev_rpmfiles -o filenames rpmdev-checksig
 
 complete -F _rpmdev_archives -o filenames \
-	rpmdev-{cksum,md5,sha{1,224,256,384,512},sum}
+    rpmdev-{cksum,md5,sha{1,224,256,384,512},sum}
 
 _spectool()
 {
-	COMPREPLY=()
+    COMPREPLY=()
 
-	for i in ${COMP_WORDS[@]} ; do
-		[[ "$i" == -@(h|-help) ]] && return 0
-	done
+    for i in ${COMP_WORDS[@]} ; do
+        [[ "$i" == -@(h|-help) ]] && return 0
+    done
 
-	local cur=`_get_cword`
-	case $3 in
-		-@(C|-directory))
-			_filedir -d
-			return 0
-			;;
-		-@(s|-source|p|-patch|d|-define))
-			# TODO: do better with these
-			return 0
-			;;
-	esac
+    local cur=`_get_cword`
+    case $3 in
+        -@(C|-directory))
+            _filedir -d
+            return 0
+            ;;
+        -@(s|-source|p|-patch|d|-define))
+            # TODO: do better with these
+            return 0
+            ;;
+    esac
 
-	if [[ "$cur" == -* ]] ; then
-		COMPREPLY=( $( compgen -W '-l --lf --list-files -g --gf \
-			--get-files -h --help -A --all -S --sources -P \
-			--patches -s --source -p --patch -d --define -C \
-			--directory -R --sourcedir -n --dryrun --dry-run \
-			-D --debug' -- "$cur" ) )
-	else
-		_rpmdev_specfiles
-	fi
+    if [[ "$cur" == -* ]] ; then
+        COMPREPLY=( $( compgen -W '-l --lf --list-files -g --gf \
+                        --get-files -h --help -A --all -S --sources -P \
+                        --patches -s --source -p --patch -d --define -C \
+                        --directory -R --sourcedir -n --dryrun --dry-run \
+                        -D --debug' -- "$cur" ) )
+    else
+        _rpmdev_specfiles
+    fi
 }
 complete -F _spectool -o filenames spectool
 
 _rpmdev_bumpspec()
 {
-	COMPREPLY=()
+    COMPREPLY=()
 
-	for i in ${COMP_WORDS[@]} ; do
-		[[ "$i" == -@(h|-help|v|-version) ]] && return 0
-	done
+    for i in ${COMP_WORDS[@]} ; do
+        [[ "$i" == -@(h|-help|v|-version) ]] && return 0
+    done
 
-	[[ $3 == -@(c|-comment|u|-userstring) ]] && return 0
+    [[ $3 == -@(c|-comment|u|-userstring) ]] && return 0
 
-	local cur=`_get_cword`
-	if [[ "$cur" == -* ]] ; then
-		COMPREPLY=( $( compgen -W '-h --help -c --comment -u \
-			--userstring -r --rightmost -V --verbose -v \
-			--version' -- "$cur" ) )
-	else
-		_rpmdev_specfiles
-	fi
+    local cur=`_get_cword`
+    if [[ "$cur" == -* ]] ; then
+        COMPREPLY=( $( compgen -W '-h --help -c --comment -u \
+                        --userstring -r --rightmost -V --verbose -v \
+                        --version' -- "$cur" ) )
+    else
+        _rpmdev_specfiles
+    fi
 }
 complete -F _rpmdev_bumpspec -o filenames rpmdev-bumpspec
 
 _rpmdev_rmdevelrpms()
 {
-	COMPREPLY=()
+    COMPREPLY=()
 
-	for i in ${COMP_WORDS[@]} ; do
-		[[ "$i" == -@(h|-help|v|-version) ]] && return 0
-	done
+    for i in ${COMP_WORDS[@]} ; do
+        [[ "$i" == -@(h|-help|v|-version) ]] && return 0
+    done
 
-	[[ $3 == --@(qf|queryformat) ]] && return 0
+    [[ $3 == --@(qf|queryformat) ]] && return 0
 
-	COMPREPLY=( $( compgen -W '-h --help -l --list-only -y --yes \
-			-v --version --qf --queryformat' -- `_get_cword` ) )
+    COMPREPLY=( $( compgen -W '-h --help -l --list-only -y --yes \
+                        -v --version --qf --queryformat' -- `_get_cword` ) )
 }
 complete -F _rpmdev_rmdevelrpms rpmdev-rmdevelrpms
 
 _rpmdev_setuptree()
 {
-	local cur=`_get_cword`
-	if [[ "$cur" == -* ]] ; then
-		COMPREPLY=( $( compgen -W '-d' -- "$cur" ) )
-	fi
+    local cur=`_get_cword`
+    if [[ "$cur" == -* ]] ; then
+        COMPREPLY=( $( compgen -W '-d' -- "$cur" ) )
+    fi
 }
 complete -F _rpmdev_setuptree rpmdev-setuptree
 
 _rpmls()
 {
-	COMPREPLY=()
-	local cur=`_get_cword`
+    COMPREPLY=()
+    local cur=`_get_cword`
 
-	if [[ "$cur" == -* ]] ; then
-		COMPREPLY=( $( compgen -W '-l' -- "$cur" ) )
-		return 0
-	fi
+    if [[ "$cur" == -* ]] ; then
+        COMPREPLY=( $( compgen -W '-l' -- "$cur" ) )
+        return 0
+    fi
 
-	[[ "$cur" == */* ]] || _rpm_installed_packages
-	_rpmdev_rpmfiles
+    [[ "$cur" == */* ]] || _rpm_installed_packages
+    _rpmdev_rpmfiles
 }
 complete -F _rpmls -o filenames rpmls
 
 _rpmdev_newspec()
 {
-	COMPREPLY=()
+    COMPREPLY=()
 
-	for i in ${COMP_WORDS[@]} ; do
-		[[ "$i" == -@(h|-help|v|-version) ]] && return 0
-	done
+    for i in ${COMP_WORDS[@]} ; do
+        [[ "$i" == -@(h|-help|v|-version) ]] && return 0
+    done
 
-	local cur=`_get_cword`
-	case $3 in
-		-o|--output)
-			_filedir spec
-			return 0
-			;;
-		-t|--type)
-			COMPREPLY=( $( command ls __SYSCONFDIR__/rpmdevtools/spectemplate-*.spec 2>/dev/null ) )
-			COMPREPLY=( ${COMPREPLY[@]%.spec} )
-			COMPREPLY=( ${COMPREPLY[@]#__SYSCONFDIR__/rpmdevtools/spectemplate-} )
-			COMPREPLY=( $( compgen -W '${COMPREPLY[@]}' -- "$cur" ) )
-			return 0
-			;;
-	esac
+    local cur=`_get_cword`
+    case $3 in
+        -o|--output)
+            _filedir spec
+            return 0
+            ;;
+        -t|--type)
+            COMPREPLY=( $( command ls __SYSCONFDIR__/rpmdevtools/spectemplate-*.spec 2>/dev/null ) )
+            COMPREPLY=( ${COMPREPLY[@]%.spec} )
+            COMPREPLY=( ${COMPREPLY[@]#__SYSCONFDIR__/rpmdevtools/spectemplate-} )
+            COMPREPLY=( $( compgen -W '${COMPREPLY[@]}' -- "$cur" ) )
+            return 0
+            ;;
+    esac
 
-	if [[ "$cur" == -* ]] ; then
-		COMPREPLY=( $( compgen -W '-t --type -o --output -m --macros \
-			-h --help -v --version' -- "$cur" ) )
-		return 0
-	fi
+    if [[ "$cur" == -* ]] ; then
+        COMPREPLY=( $( compgen -W '-t --type -o --output -m --macros \
+                       -h --help -v --version' -- "$cur" ) )
+        return 0
+    fi
 
-	_filedir spec
+    _filedir spec
 }
 complete -F _rpmdev_newspec -o filenames rpmdev-newspec
 
 _rpminfo()
 {
-	COMPREPLY=()
+    COMPREPLY=()
 
-	for i in ${COMP_WORDS[@]} ; do
-		[[ "$i" == -@(h|-help) ]] && return 0
-	done
+    for i in ${COMP_WORDS[@]} ; do
+        [[ "$i" == -@(h|-help) ]] && return 0
+    done
 
-	local cur=`_get_cword`
-	case $3 in
-		-o|--output)
-			_filedir
-			return 0
-			;;
-		-T|--tmp-dir)
-			_filedir -d
-			return 0
-			;;
-	esac
+    local cur=`_get_cword`
+    case $3 in
+        -o|--output)
+            _filedir
+            return 0
+            ;;
+        -T|--tmp-dir)
+            _filedir -d
+            return 0
+            ;;
+    esac
 
-	if [[ "$cur" == -* ]] ; then
-		COMPREPLY=( $( compgen -W '-h --help -v --verbose -q --quiet
-			-qq -i --installed -e --executables -l --libraries -p
-			--pic -np --no_pic -P --pie -nP --no_pie -r --rpath -ro
-			--rpath_odd -s --split -t --test -o --output -T
-			--tmp-dir' -- "$cur" ) )
-		return 0
-	fi
+    if [[ "$cur" == -* ]] ; then
+        COMPREPLY=( $( compgen -W '-h --help -v --verbose -q --quiet
+                        -qq -i --installed -e --executables -l --libraries -p
+                        --pic -np --no_pic -P --pie -nP --no_pie -r --rpath -ro
+                        --rpath_odd -s --split -t --test -o --output -T
+                        --tmp-dir' -- "$cur" ) )
+        return 0
+    fi
 
-	[[ "$cur" == */* ]] || _rpm_installed_packages
-	_rpmdev_rpmfiles
+    [[ "$cur" == */* ]] || _rpm_installed_packages
+    _rpmdev_rpmfiles
 }
 complete -F _rpminfo -o filenames rpminfo
 
 _rpmdev_extract()
 {
-	COMPREPLY=()
+    COMPREPLY=()
 
-	for i in ${COMP_WORDS[@]} ; do
-		[[ "$i" == -@(h|v) ]] && return 0
-	done
+    for i in ${COMP_WORDS[@]} ; do
+        [[ "$i" == -@(h|v) ]] && return 0
+    done
 
-	local cur=`_get_cword`
-	if [[ $3 == -C ]] ; then
-		_filedir -d
-		return 0
-	fi
+    local cur=`_get_cword`
+    if [[ $3 == -C ]] ; then
+        _filedir -d
+        return 0
+    fi
 
-	if [[ "$cur" == -* ]] ; then
-		COMPREPLY=( $( compgen -W '-q -f -C -h -v' -- "$cur" ) )
-		return 0
-	fi
+    if [[ "$cur" == -* ]] ; then
+        COMPREPLY=( $( compgen -W '-q -f -C -h -v' -- "$cur" ) )
+        return 0
+    fi
 
-	_rpmdev_archives
+    _rpmdev_archives
 }
 complete -F _rpmdev_extract -o filenames rpmdev-extract
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh
