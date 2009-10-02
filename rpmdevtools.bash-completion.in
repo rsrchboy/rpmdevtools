@@ -36,11 +36,11 @@ _spectool()
 
     local cur=`_get_cword`
     case $3 in
-        -@(C|-directory))
+        -C|--directory)
             _filedir -d
             return 0
             ;;
-        -@(s|-source|p|-patch|d|-define))
+        -s|--source|-p|--patch|-d|--define)
             # TODO: do better with these
             return 0
             ;;
