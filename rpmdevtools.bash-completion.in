@@ -47,11 +47,10 @@ _spectool()
     esac
 
     if [[ "$cur" == -* ]] ; then
-        COMPREPLY=( $( compgen -W '-l --lf --list-files -g --gf
-                        --get-files -h --help -A --all -S --sources -P
-                        --patches -s --source -p --patch -d --define -C
-                        --directory -R --sourcedir -n --dryrun --dry-run
-                        -D --debug' -- "$cur" ) )
+        COMPREPLY=( $( compgen -W '--list-files --get-files --help --all
+                                   --sources --patches --source --patch
+                                   --define --directory --sourcedir --dry-run
+                                   --debug' -- "$cur" ) )
     else
         _rpmdev_specfiles
     fi
@@ -70,9 +69,8 @@ _rpmdev_bumpspec()
 
     local cur=`_get_cword`
     if [[ "$cur" == -* ]] ; then
-        COMPREPLY=( $( compgen -W '-h --help -c --comment -u
-                        --userstring -r --rightmost -V --verbose -v
-                        --version' -- "$cur" ) )
+        COMPREPLY=( $( compgen -W '--help --comment --userstring --rightmost
+                                   --verbose --version' -- "$cur" ) )
     else
         _rpmdev_specfiles
     fi
@@ -89,8 +87,8 @@ _rpmdev_rmdevelrpms()
 
     [[ $3 == --@(qf|queryformat) ]] && return 0
 
-    COMPREPLY=( $( compgen -W '-h --help -l --list-only -y --yes
-                        -v --version --qf --queryformat' -- `_get_cword` ) )
+    COMPREPLY=( $( compgen -W '--help --list-only --queryformat --yes
+                               --version' -- `_get_cword` ) )
 }
 complete -F _rpmdev_rmdevelrpms rpmdev-rmdevelrpms
 
@@ -142,8 +140,8 @@ _rpmdev_newspec()
     esac
 
     if [[ "$cur" == -* ]] ; then
-        COMPREPLY=( $( compgen -W '-t --type -o --output -m --macros
-                       -h --help -v --version' -- "$cur" ) )
+        COMPREPLY=( $( compgen -W '--output --type --macros --help --version' \
+            -- "$cur" ) )
         return 0
     fi
 
@@ -172,11 +170,10 @@ _rpminfo()
     esac
 
     if [[ "$cur" == -* ]] ; then
-        COMPREPLY=( $( compgen -W '-h --help -v --verbose -q --quiet
-                        -qq -i --installed -e --executables -l --libraries -p
-                        --pic -np --no_pic -P --pie -nP --no_pie -r --rpath -ro
-                        --rpath_odd -s --split -t --test -o --output -T
-                        --tmp-dir' -- "$cur" ) )
+        COMPREPLY=( $( compgen -W '--help --verbose --quiet -qq --installed
+                                   --executables --libraries --pic --no_pic
+                                   --pie --no_pie --rpath --rpath_odd --split
+                                   --test --output --tmp-dir' -- "$cur" ) )
         return 0
     fi
 
