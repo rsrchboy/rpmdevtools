@@ -3,6 +3,9 @@ rpmdevtools x.x (20xx-xx-xx)
   Ville Skyttä:
   - bash completion improvements.
 
+  Mads Kiilerich:
+  - Fix pear_name definition in php-pear spec template (#528907).
+
 rpmdevtools 7.5 (2009-09-17)
 
   Chris Weyl:

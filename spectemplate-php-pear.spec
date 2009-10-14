@@ -1,5 +1,5 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name $(echo %{name} | sed -e 's/^php-pear-//' -e 's/-/_/g')
+%global pear_name %(echo %{name} | sed -e 's/^php-pear-//' -e 's/-/_/g')
 
 Name:           
 Version:        
