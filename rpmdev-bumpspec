@@ -17,7 +17,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-import commands
 import re
 import subprocess
 import sys
@@ -25,7 +24,7 @@ import textwrap
 import time
 from optparse import OptionParser
 
-__version__ = "1.0.6"
+__version__ = "1.0.7"
 
 class BumpSpecError(Exception):
     pass
@@ -96,16 +95,18 @@ class SpecFile:
         relmatch = relre.search(release)
         if not relmatch:  # pattern match failed
             raise BumpSpecError
-        value = int(relmatch.group('rel'))
+        value = str(int(relmatch.group('rel')) + 1)
         post = relmatch.group('post')
 
+        new = value + post
         if not pre:
             if post.find('rc')>=0:
-                print 'WARNING: Bad pre-release versioning scheme:', self.filename
+                sys.stderr.write(
+                    'WARNING: Bad pre-release versioning scheme: %s\n' %
+                    self.filename)
                 raise BumpSpecError
-            new = `value+1`+post
         else:
-            new = '0.'+`value+1`+post
+            new = '0.' + new
         return new
 
     def increaseJPP(self, release):
@@ -159,9 +160,7 @@ class SpecFile:
         f.close()
 
     def debugdiff(self, old, new):
-        print self.filename
-        print '-%s' % old
-        print '+%s\n' % new
+        sys.stdout.write('%s\n-%s\n+%s\n\n' % (self.filename, old, new))
 
 if __name__ == "__main__":
     usage = '''Usage: %prog [OPTION]... SPECFILE...
@@ -195,7 +194,7 @@ the Free Software Foundation; either version 2 of the License, or
     (opts, args) = parser.parse_args()
 
     if opts.version:
-        print version
+        sys.stdout.write('%s\n' % version)
         sys.exit(0)
 
     if not args:
@@ -230,7 +229,7 @@ the Free Software Foundation; either version 2 of the License, or
         cmd = ("rpm", "-q", "--specfile", "--define", "dist %{nil}",
                "--qf=%|epoch?{%{epoch}:}:{}|%{version}-%{release}\n", aspec)
         popen = subprocess.Popen(cmd, stdout = subprocess.PIPE)
-        evr = popen.communicate()[0].split("\n")[0]
+        evr = str(popen.communicate()[0]).split("\n")[0]
 
         s.addChangelogEntry(evr, opts.comment, opts.userstring)
         s.writeFile(aspec)

@@ -3,6 +3,7 @@ rpmdevtools x.x (20xx-xx-xx)
   Ville Skyttä:
   - bash completion improvements.
   - Make python_site* definitions in python spec template work with Python 3.
+  - Make rpmdev-bumpspec work with Python 3.
 
   Mads Kiilerich:
   - Fix pear_name definition in php-pear spec template (#528907).
