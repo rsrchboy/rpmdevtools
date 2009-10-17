@@ -31,7 +31,7 @@ import types
 import rpm
 
 
-__version__ = "1.12"
+__version__ = "1.13"
 
 
 dev_re  = re.compile("-(?:de(?:buginfo|vel)|sdk|static)\\b", re.IGNORECASE)
@@ -111,12 +111,6 @@ def callback(what, bytes, total, h, user):
     sys.stdout.flush()
 
 
-def _hdrcmp(x, y):
-    "Comparison function for rpm headers."
-    return cmp(x[rpm.RPMTAG_NAME], y[rpm.RPMTAG_NAME]) or cmp(x, y) or \
-           cmp(x[rpm.RPMTAG_ARCH], y[rpm.RPMTAG_ARCH])
-
-
 def _usage():
     return '''rpmdev-rmdevelrpms [options]
 
@@ -192,7 +186,8 @@ def main():
 
     try:
         if len(hdrs) > 0:
-            hdrs.sort(_hdrcmp)
+            hdrs.sort(key =
+                      lambda x: (x[rpm.RPMTAG_NAME], x, x[rpm.RPMTAG_ARCH]))
             indent = ""
             if not opts.listonly:
                 indent = "  "
@@ -206,7 +201,7 @@ def main():
                 unresolved = ts.check()
                 if unresolved:
                     print "...whose removal would cause unresolved dependencies:"
-                    unresolved.sort(lambda x, y: cmp(x[0][0], y[0][0]))
+                    unresolved.sort(key = lambda x: x[0][0])
                     for t in unresolved:
                         dep = t[1][0]
                         if t[1][1]:
