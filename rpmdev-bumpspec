@@ -68,7 +68,8 @@ class SpecFile:
                 return
 
         if self.verbose:
-            print >> sys.stderr, 'ERROR: No release value matched:', self.filename
+            sys.stderr.write('ERROR: No release value matched: %s\n' %
+                             self.filename)
             sys.exit(1)
 
     def addChangelogEntry(self, evr, entry, email):
