@@ -145,13 +145,13 @@ Report bugs to <http://bugzilla.redhat.com/>.'''
 
 
 def version():
-    print "rpmdev-rmdevelrpms version %s" % __version__
-    print '''
+    print ("rpmdev-rmdevelrpms version %s" % __version__)
+    print ('''
 Copyright (c) 2004-2009 Ville Skyttä <ville.skytta at iki.fi>
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.'''
+(at your option) any later version.''')
     sys.exit(0)
 
 
@@ -191,16 +191,17 @@ def main():
             indent = ""
             if not opts.listonly:
                 indent = "  "
-                print "Found %d devel packages:" % len(hdrs)
+                print ("Found %d devel packages:" % len(hdrs))
             for hdr in hdrs:
-                print indent + hdr.sprintf(opts.qf)
+                print (indent + hdr.sprintf(opts.qf))
             if opts.listonly:
                 pass
             else:
                 # TODO: is there a way to get arch for the unresolved deps?
                 unresolved = ts.check()
                 if unresolved:
-                    print "...whose removal would cause unresolved dependencies:"
+                    print ("...whose removal would cause unresolved "
+                           "dependencies:")
                     unresolved.sort(key = lambda x: x[0][0])
                     for t in unresolved:
                         dep = t[1][0]
@@ -217,8 +218,9 @@ def main():
                             dep = "conflicts with " + dep
                         elif t[4] == rpm.RPMDEP_SENSE_REQUIRES:
                             dep = "requires " + dep
-                        print "  %s-%s-%s %s" % (t[0][0], t[0][1], t[0][2], dep)
-                    print "Not removed due to dependencies."
+                        print ("  %s-%s-%s %s" %
+                               (t[0][0], t[0][1], t[0][2], dep))
+                    print ("Not removed due to dependencies.")
                 elif os.geteuid() == 0:
                     if not opts.yes:
                         proceed = raw_input("Remove them? [y/N] ")
@@ -227,17 +229,17 @@ def main():
                     if (proceed in ("Y", "y")):
                         sys.stdout.write("Removing...")
                         errors = ts.run(callback, "")
-                        print "Done."
+                        print ("Done.")
                         if errors:
                             for error in errors:
-                                print error
+                                print (error)
                             sys.exit(1)
                     else:
-                        print "Not removed."
+                        print ("Not removed.")
                 else:
-                    print "Not running as root, skipping remove."
+                    print ("Not running as root, skipping remove.")
         else:
-            print "No devel packages found."
+            print ("No devel packages found.")
     finally:
         ts.closeDB()
         del ts

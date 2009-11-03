@@ -29,14 +29,14 @@ except:
     pass
 
 def usage():
-    print """
+    print ("""
 rpmdev-vercmp <epoch1> <ver1> <release1> <epoch2> <ver2> <release2>
 rpmdev-vercmp <EVR1> <EVR2> # if rpmUtils.miscutils is available
 rpmdev-vercmp # with no arguments, prompt
 
 Exit status is 0 if the EVR's are equal, 11 if EVR1 is newer, and 12 if EVR2
 is newer.  Other exit statuses indicate problems.
-"""
+""")
 
 def vercmp((e1, v1, r1), (e2, v2, r2)):
    rc = rpm.labelCompare((e1, v1, r1), (e2, v2, r2))
@@ -60,9 +60,9 @@ def main():
             if e1 is not None: e1 = str(e1)
             if e2 is not None: e2 = str(e2)
         else:
-            print """
+            print ("""
 Sorry, the 2-argument form is available only if rpmUtils.miscutils (which
-ships eg. with yum) is available."""
+ships eg. with yum) is available.""")
             usage()
             sys.exit(1)
     elif len(sys.argv) < 7:
@@ -77,12 +77,12 @@ ships eg. with yum) is available."""
     
     rc = vercmp((e1, v1, r1), (e2, v2, r2))
     if rc > 0:
-        print "%s:%s-%s is newer" % (e1, v1, r1)
+        print ("%s:%s-%s is newer" % (e1, v1, r1))
         rc = 11
     elif rc == 0:
-        print "These are equal"
+        print ("These are equal")
     elif rc < 0:
-        print "%s:%s-%s is newer" % (e2, v2, r2)
+        print ("%s:%s-%s is newer" % (e2, v2, r2))
         rc = 12
     sys.exit(rc)
 

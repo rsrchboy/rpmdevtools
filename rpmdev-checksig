@@ -128,7 +128,7 @@ def main(args):
         hdr = returnHdr(ts, package)
         if hdr == None:
             error = 100
-            print '%s: FAILED - None <None>' % package
+            print ('%s: FAILED - None <None>' % package)
         else:
             sigerror, (sigtype, sigdate, sigid) = getSigInfo(hdr)
             if sigid == 'None':
@@ -139,11 +139,11 @@ def main(args):
                 email = lookupKeyID(ts, keyid)
             if error != 0:
                 if error == 103:
-                    print '%s: MISSING KEY - %s' % (package, keyid)
+                    print ('%s: MISSING KEY - %s' % (package, keyid))
                 else:                
-                    print '%s: FAILED - %s %s' % (package, keyid, email)
+                    print ('%s: FAILED - %s %s' % (package, keyid, email))
             else:
-                print '%s: %s - %s - %s' % (package, sigtype, keyid, email)
+                print ('%s: %s - %s - %s' % (package, sigtype, keyid, email))
 
         if error < sigerror:
             error = sigerror
