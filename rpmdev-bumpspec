@@ -161,7 +161,7 @@ class SpecFile:
         f.close()
 
     def debugdiff(self, old, new):
-        sys.stdout.write('%s\n-%s\n+%s\n\n' % (self.filename, old, new))
+        print ('%s\n-%s\n+%s\n' % (self.filename, old, new))
 
 if __name__ == "__main__":
     usage = '''Usage: %prog [OPTION]... SPECFILE...
@@ -195,7 +195,7 @@ the Free Software Foundation; either version 2 of the License, or
     (opts, args) = parser.parse_args()
 
     if opts.version:
-        sys.stdout.write('%s\n' % version)
+        print (version)
         sys.exit(0)
 
     if not args:
