@@ -18,15 +18,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import rpm
 import sys
 
-have_miscutils = 0
-try:
-    from rpmUtils.miscutils import stringToVersion
-    have_miscutils = 1
-except:
-    pass
+import rpm
+
 
 def usage():
     print ("""
@@ -39,9 +34,8 @@ is newer.  Other exit statuses indicate problems.
 """)
 
 def vercmp((e1, v1, r1), (e2, v2, r2)):
-   rc = rpm.labelCompare((e1, v1, r1), (e2, v2, r2))
-   return rc
-
+    rc = rpm.labelCompare((e1, v1, r1), (e2, v2, r2))
+    return rc
 
 def askforstuff(thingname):
     thing = raw_input('%s :' % thingname)
@@ -52,19 +46,22 @@ def main():
         usage()
         sys.exit(0)
     elif len(sys.argv) == 3:
-        if have_miscutils:
-            (e1, v1, r1) = stringToVersion(sys.argv[1])
-            (e2, v2, r2) = stringToVersion(sys.argv[2])
-            # stringToVersion in yum < 3.1.2 may return numeric (non-string)
-            # Epochs, and labelCompare does not like that.
-            if e1 is not None: e1 = str(e1)
-            if e2 is not None: e2 = str(e2)
-        else:
+        try:
+            from rpmUtils.miscutils import stringToVersion
+        except:
             print ("""
 Sorry, the 2-argument form is available only if rpmUtils.miscutils (which
 ships eg. with yum) is available.""")
             usage()
             sys.exit(1)
+
+        (e1, v1, r1) = stringToVersion(sys.argv[1])
+        (e2, v2, r2) = stringToVersion(sys.argv[2])
+        # stringToVersion in yum < 3.1.2 may return numeric (non-string)
+        # Epochs, and labelCompare does not like that.
+        if e1 is not None: e1 = str(e1)
+        if e2 is not None: e2 = str(e2)
+
     elif len(sys.argv) < 7:
         e1 = askforstuff('Epoch1')
         v1 = askforstuff('Version1')

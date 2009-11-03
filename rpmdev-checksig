@@ -30,11 +30,12 @@
 # 103 = signed - but key not in rpmdb
 # 104 = signed but untrusted key
 
-import rpm
 import re
 import os
 import os.path
 import sys
+
+import rpm
 
 
 def lookupKeyID(ts, keyid):

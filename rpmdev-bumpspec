@@ -24,6 +24,7 @@ import textwrap
 import time
 from optparse import OptionParser
 
+
 __version__ = "1.0.7"
 
 class BumpSpecError(Exception):
