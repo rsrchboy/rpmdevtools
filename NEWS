@@ -5,6 +5,7 @@ rpmdevtools x.x (20xx-xx-xx)
   - Make python_site* definitions in python spec template work with Python 3.
   - Make rpmdev-bumpspec work with Python 3.
   - Initial Python 3 compatibility changes to other tools.
+  - Sync with upstream devscripts 2.10.59.
 
   Mads Kiilerich:
   - Fix pear_name definition in php-pear spec template (#528907).
