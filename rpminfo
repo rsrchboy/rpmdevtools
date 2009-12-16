@@ -94,7 +94,7 @@ check_rpath() {
 		[ "${dir:0:10}" = "/usr/local" ] && odd=9
 		[ "${dir:0:12}" = "/usr/lib/qt-" ] && odd=10
 		[ "${dir:0:8}" = "/usr/src" ] && odd=11
-		echo $dir | egrep -q "/\." && odd=12
+		echo $dir | grep -q "/\." && odd=12
 	    done
 	    IFS=$OLDIFS
 	fi
@@ -110,7 +110,7 @@ check_file() {
     
     file -b "$file" 2>/dev/null | grep -q ELF || return
     
-    if $EU_READELF -h "$file" 2>/dev/null | egrep -q 'Type:[[:space:]]*EXEC';
+    if $EU_READELF -h "$file" 2>/dev/null | grep -q 'Type:[[:space:]]*EXEC';
     then
 	if [ $exec -eq 1 ]; then
 	    if $READELF -d "$file" 2>/dev/null | grep -q TEXTREL; then
@@ -130,7 +130,7 @@ check_file() {
 	    check_rpath "$file"
 	fi
     else
-	if $EU_READELF -d "$file" 2>/dev/null | egrep -q '  DEBUG[[:space:]]*$';
+	if $EU_READELF -d "$file" 2>/dev/null | grep -q '  DEBUG[[:space:]]*$';
 	then
 	    if [ $exec -eq 1 ]; then
 		[ $pie -eq 1 ] && opt "PIE"
