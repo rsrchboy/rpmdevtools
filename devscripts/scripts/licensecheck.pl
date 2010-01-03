@@ -79,6 +79,7 @@ The default includes common source files.
 Also display copyright text found within the file
 
 =item B<--no-conf> B<--noconf>
+
 Do not read any configuration files. This can only be used as the first
 option given on the command-line.
 
@@ -515,6 +516,18 @@ sub parselicense($) {
     if ($licensetext =~ /The origin of this software must not be misrepresented.*Altered source versions must be plainly marked as such.*This notice may not be removed or altered from any source distribution/ or
         $licensetext =~ /see copyright notice in zlib\.h/) {
 	$license = "zlib/libpng $license";
+    }
+
+    if ($licensetext =~ /Do What The Fuck You Want To Public License, Version ([^, ]+)/i) {
+        $license = "WTFPL (v$1)";
+    }
+
+    if ($licensetext =~ /Do what The Fuck You Want To Public License/i) {
+        $license = "WTFPL";
+    }
+
+    if ($licensetext =~ /(License WTFPL|Under (the|a) WTFPL)/i) {
+        $license = "WTFPL";
     }
 
     $license = "UNKNOWN" if (!length($license));

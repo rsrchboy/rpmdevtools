@@ -2,6 +2,7 @@ rpmdevtools x.x (20xx-xx-xx)
 
   Ville Skyttä:
   - Use plain grep instead of deprecated egrep in rpminfo.
+  - Sync with upstream devscripts 2.10.60 (svn r2067).
 
 rpmdevtools 7.6 (2009-12-07)
 
