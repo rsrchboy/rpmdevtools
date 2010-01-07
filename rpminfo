@@ -154,12 +154,12 @@ check_package() {
 
     local pkg=
     local prefix=
-    local files=`rpm -ql $package 2>/dev/null`
+    local files=`rpm -ql --nodigest --nosignature $package 2>/dev/null`
 
     if echo $files | grep -q "not installed"; then
 	# not installed
 	if [ -f $package ]; then
-	    rpm -qp $package >& /dev/null
+	    rpm -qp --nodigest --nosignature $package >& /dev/null
 	    if [ $? -eq 1 ]; then
 		# no rpm package
 		package=
@@ -174,7 +174,7 @@ check_package() {
 		    rpm2cpio "$package" \
 			| cpio -i --make-directories >& /dev/null
 		    [ $? -eq 0 ] || echo "Error while extracting package '$package'.. ignoring!" > /dev/stderr
-		    files=`rpm -qlp $package 2>/dev/null`
+		    files=`rpm -qlp --nodigest --nosignature $package 2>/dev/null`
 		    popd >& /dev/null
 		    chmod -R u+rwx $prefix 2>/dev/null 
 		else
@@ -365,7 +365,7 @@ for pkg in $packages; do
 done
 pkg_no=1
 for pkg in $packages; do
-    tmp=`rpm -q $pkg | sort -u 2>/dev/null`
+    tmp=`rpm -q --nodigest --nosignature $pkg | sort -u 2>/dev/null`
     [ $verbose -eq 1 ] && \
 	printf "(%*d/%d) => %s\n" ${#pkg_num} $pkg_no $pkg_num $pkg \
 	> /dev/stderr
@@ -380,7 +380,7 @@ for pkg in $packages; do
 done
 
 if [ $installed -eq 1 ]; then
-    rpmqa=`rpm -qa | sort -u`
+    rpmqa=`rpm -qa --nodigest --nosignature | sort -u`
     for i in $rpmqa; do
 	check_package "$i"
     done

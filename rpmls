@@ -26,5 +26,5 @@ qf="[%-11{filemodes:perms} $owner%{filenames}\\n]"
 for arg in "$@" ; do
     p=
     case "$arg" in *.[rs]pm) p=p ;; esac
-    rpm -q$p --qf="$qf" "$arg"
+    rpm -q$p --qf="$qf" --nodigest --nosignature "$arg"
 done

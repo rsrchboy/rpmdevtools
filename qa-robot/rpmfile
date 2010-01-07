@@ -3,7 +3,8 @@ export LC_ALL=C
 
 rpmfile()
 {
-	rpm -qp --qf '[%{FILENAMES}\t%{FILEMODES:octal}\n]' "$1" >files
+	rpm -qp --qf '[%{FILENAMES}\t%{FILEMODES:octal}\n]' \
+		--nodigest --nosignature "$1" >files
 	[ -s files ] || return 0
 	awk -F'\t' '{print"./"$1}' files |rpmpeek "$1" \
 		file -b -f - >types || [ -s types ] || return 1

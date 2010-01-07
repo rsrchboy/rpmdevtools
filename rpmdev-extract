@@ -170,7 +170,8 @@ unarch()
         rpm)
             arch="%{ARCH}"
             [[ "$f" =~ '\.s(rc\.r)?pm$' ]] && arch=src
-            name=$(rpm -qp --qf="%{NAME}-%{VERSION}-%{RELEASE}.$arch" "$f")
+            name=$(rpm -qp --qf="%{NAME}-%{VERSION}-%{RELEASE}.$arch" \
+                --nodigest --nosignature "$f")
             mkdir -p "$name"
             cd "$name"
             rpm2cpio "$f" \
