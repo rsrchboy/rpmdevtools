@@ -3,7 +3,7 @@
 
 # rpmdev-extract -- Extract various archives in "tar xvf" style
 #
-# Copyright (c) 2004-2009 Ville Skyttä <ville.skytta at iki.fi>
+# Copyright (c) 2004-2010 Ville Skyttä <ville.skytta at iki.fi>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -34,9 +34,9 @@ shopt -s extglob
 version()
 {
     cat <<EOF
-rpmdev-extract version 1.7
+rpmdev-extract version 1.8
 
-Copyright (c) 2004-2009 Ville Skyttä <ville.skytta at iki.fi>
+Copyright (c) 2004-2010 Ville Skyttä <ville.skytta at iki.fi>
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
@@ -171,10 +171,6 @@ unarch()
             arch="%{ARCH}"
             [[ "$f" =~ '\.s(rc\.r)?pm$' ]] && arch=src
             name=$(rpm -qp --qf="%{NAME}-%{VERSION}-%{RELEASE}.$arch" "$f")
-            if [ -z "$name" ] ; then # workaround for #250990
-                bname=$(basename "$f")
-                name=${bname/\.[rs]pm/}
-            fi
             mkdir -p "$name"
             cd "$name"
             rpm2cpio "$f" \

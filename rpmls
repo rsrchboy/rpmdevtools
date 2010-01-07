@@ -16,8 +16,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-unset CDPATH
-
 owner=
 if [ "$1" = "-l" ] ; then
     owner='%-8{fileusername} %-8{filegroupname} '
@@ -26,17 +24,7 @@ fi
 qf="[%-11{filemodes:perms} $owner%{filenames}\\n]"
 
 for arg in "$@" ; do
-    case "$arg" in
-        http://*|https://*|ftp://*)
-            rpm -qp --qf="$qf" "$arg"
-            ;;
-        *.[rs]pm)
-            # dirname/basename: workaround for #250990
-            cd "$(dirname "$arg")"
-            rpm -qp --qf="$qf" "$(basename "$arg")"
-            cd - >/dev/null 2>&1
-            ;;
-        *)
-            rpm -q --qf="$qf" "$arg"
-    esac
+    p=
+    case "$arg" in *.[rs]pm) p=p ;; esac
+    rpm -q$p --qf="$qf" "$arg"
 done
