@@ -28,6 +28,8 @@ list=
 long=
 contents=
 meta=
+diffcopts=-Nup
+diffoopts=-U0
 
 trap cleanup EXIT
 cleanup()
@@ -64,23 +66,23 @@ EOF
 usage()
 {
     cat <<EOF
-Usage: rpmdev-diff [OPTION]... [DIFF_OPTIONS] FROM-ARCHIVE TO-ARCHIVE
+Usage: rpmdev-diff [OPTION]... [DIFF-OPTIONS] FROM-ARCHIVE TO-ARCHIVE
 
 Options:
   -c, --contents   Diff contents of files in archives.  This is the default.
   -l, --list       Diff lists of files in archives.
-  -L, --long-list  Diff long lists (akin to find -ls) of files in archives.
+  -L, --long-list  Diff long lists (akin to 'find -ls') of files in archives.
   -m, --metadata   Diff archive metadata (only implemented for rpms for now).
   -h, --help       Print help message and exit.
   -v, --version    Print version information and exit.
   diff-options     Options passed to diff(1).  The first repeated argument of
                    the above or the first argument starting with a '-' but not
                    one of the above starts diff-options, the first one not
-                   starting with it ends them.  Default: -Nup (in addition to
-                   -r which will always be passed) in contents only mode, -U0
-                   in list only modes.
+                   starting with it ends them.  Default: $diffcopts for contents
+                   (in addition to -r which will always be passed), -U0 for
+                   others.
 
-A combination of -c, -l, -L, and -m may be specified.
+More than one of -c, -l, -L, and -m may be specified.
 EOF
 }
 
@@ -212,7 +214,7 @@ meta=${meta:-false}
 
 if $meta ; then
     set +e
-    diff ${diffopts:--U0} old.meta new.meta
+    diff ${diffopts:-$diffoopts} old.meta new.meta
     [ $? -eq 0 -o $? -eq 1 ] || exit $?
     set -e
 fi
@@ -221,7 +223,7 @@ if $list ; then
     find "$old" | sort | cut -d/ -f 2- -s > "$old.files"
     find "$new" | sort | cut -d/ -f 2- -s > "$new.files"
     set +e
-    diff ${diffopts:--U0} "$old.files" "$new.files"
+    diff ${diffopts:-$diffoopts} "$old.files" "$new.files"
     [ $? -eq 0 -o $? -eq 1 ] || exit $?
     set -e
 fi
@@ -236,14 +238,14 @@ if $long ; then
                   s|.*\s\Q$new\E$|| ; s|(\s)\Q$new/\E|\1|" | \
         sort > "$new.files"
     set +e
-    diff ${diffopts:--U0} "$old.files" "$new.files"
+    diff ${diffopts:-$diffoopts} "$old.files" "$new.files"
     [ $? -eq 0 -o $? -eq 1 ] || exit $?
     set -e
 fi
 
 if $contents ; then
     set +e
-    diff -r ${diffopts:--Nup} "$old" "$new"
+    diff -r ${diffopts:-$diffcopts} "$old" "$new"
     [ $? -eq 0 -o $? -eq 1 ] || exit $?
     set -e
 fi
