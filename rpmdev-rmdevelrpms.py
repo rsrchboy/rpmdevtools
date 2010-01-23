@@ -3,7 +3,7 @@
 
 # rpmdev-rmdevelrpms -- Find (and optionally remove) "development" RPMs
 #
-# Copyright (c) 2004-2009 Ville Skyttä <ville.skytta at iki.fi>
+# Copyright (c) 2004-2009 Ville Skyttä <ville.skytta@iki.fi>
 # Credits: Seth Vidal (yum), Thomas Vander Stichele (mach)
 #
 # This program is free software; you can redistribute it and/or modify
@@ -147,7 +147,7 @@ Report bugs to <http://bugzilla.redhat.com/>.'''
 def version():
     print ("rpmdev-rmdevelrpms version %s" % __version__)
     print ('''
-Copyright (c) 2004-2009 Ville Skyttä <ville.skytta at iki.fi>
+Copyright (c) 2004-2009 Ville Skyttä <ville.skytta@iki.fi>
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
