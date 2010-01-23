@@ -3,7 +3,7 @@
 
 # rpmdev-diff -- Diff contents of two archives
 #
-# Copyright (c) 2004-2009 Ville Skyttä <ville.skytta at iki.fi>
+# Copyright (c) 2004-2010 Ville Skyttä <ville.skytta at iki.fi>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ diffopts=
 list=
 long=
 contents=
+meta=
 
 trap cleanup EXIT
 cleanup()
@@ -38,9 +39,9 @@ cleanup()
 version()
 {
     cat <<EOF
-rpmdev-diff version 1.3
+rpmdev-diff version 1.4
 
-Copyright (c) 2004-2009 Ville Skyttä <ville.skytta@iki.fi>
+Copyright (c) 2004-2010 Ville Skyttä <ville.skytta@iki.fi>
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
@@ -69,6 +70,7 @@ Options:
   -c, --contents   Diff contents of files in archives.  This is the default.
   -l, --list       Diff lists of files in archives.
   -L, --long-list  Diff long lists (akin to find -ls) of files in archives.
+  -m, --metadata   Diff archive metadata (only implemented for rpms for now).
   -h, --help       Print help message and exit.
   -v, --version    Print version information and exit.
   diff-options     Options passed to diff(1).  The first repeated argument of
@@ -78,8 +80,15 @@ Options:
                    -r which will always be passed) in contents only mode, -U0
                    in list only modes.
 
-A combination of -l, -L, and -c may be specified.
+A combination of -c, -l, -L, and -m may be specified.
 EOF
+}
+
+rpm_meta()
+{
+    rpm -qp --nodigest --nosignature --info --changelog --scripts --triggers \
+        --qf='[Requires: %{REQUIRENAME} %{REQUIREFLAGS:depflags} %{REQUIREVERSION}\n][Provides: %{PROVIDENAME} %{PROVIDEFLAGS:depflags} %{PROVIDEVERSION}\n][Obsoletes: %{OBSOLETENAME} %{OBSOLETEFLAGS:depflags} %{OBSOLETEVERSION}\n][Conflicts: %{CONFLICTNAME} %{CONFLICTFLAGS:depflags} %{CONFLICTVERSION}\n]' \
+        "$@" 2>/dev/null
 }
 
 while true ; do
@@ -103,6 +112,13 @@ while true ; do
                 diffopts="$diffopts $1"
             else
                 contents=true
+            fi
+            ;;
+        -m|--metadata)
+            if [ -n "$meta$diffopts" ] ; then
+                diffopts="$diffopts $1"
+            else
+                meta=true
             fi
             ;;
         -h|--help)
@@ -148,6 +164,10 @@ tmpdir=`mktemp -d ${TMPDIR:-/tmp}/rpmdev-diff.XXXXXX`
 mkdir "$tmpdir/old" "$tmpdir/new"
 rpmdev-extract -q -C "$tmpdir/old" "$1"
 rpmdev-extract -q -C "$tmpdir/new" "$2"
+if $meta ; then
+    rpm_meta "$1" > "$tmpdir/old.meta"
+    rpm_meta "$2" > "$tmpdir/new.meta"
+fi
 
 # It would be nice if rpmdev-extract could do some of the chmods.
 find "$tmpdir"/* -type d -exec chmod u+rx {} ';' # Note: -exec, not xargs here.
@@ -179,15 +199,23 @@ if [ `basename "$old"` != `basename "$new"` ] ; then
 fi
 
 # Contents mode is the default.
-if [ -z "$list$long$contents" ] ; then
+if [ -z "$list$long$meta$contents" ] ; then
     contents=true
 else
     contents=${contents:-false}
 fi
 list=${list:-false}
 long=${long:-false}
+meta=${meta:-false}
 
 # Here we go.
+
+if $meta ; then
+    set +e
+    diff ${diffopts:--U0} old.meta new.meta
+    [ $? -eq 0 -o $? -eq 1 ] || exit $?
+    set -e
+fi
 
 if $list ; then
     find "$old" | sort | cut -d/ -f 2- -s > "$old.files"
