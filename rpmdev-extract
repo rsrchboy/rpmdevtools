@@ -169,7 +169,7 @@ unarch()
             ;;
         rpm)
             arch="%{ARCH}"
-            [[ "$f" =~ '\.s(rc\.r)?pm$' ]] && arch=src
+            [[ "$f" == *.src.rpm || "$f" == *.spm ]] && arch=src
             name=$(rpm -qp --qf="%{NAME}-%{VERSION}-%{RELEASE}.$arch" \
                 --nodigest --nosignature "$f")
             mkdir -p "$name"

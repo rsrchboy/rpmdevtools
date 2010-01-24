@@ -6,6 +6,8 @@ rpmdevtools x.x (20xx-xx-xx)
   - Purge workarounds for #250990, rpm >= 4.4.2.3 is now required.
   - Invoke rpm with --nodigest --nosignature where appropriate.
   - Add rpm metadata diffing support to rpmdev-diff (#558048).
+  - Fix source rpm dir naming in rpmdev-extract with some bash
+    versions (#558263).
 
 rpmdevtools 7.6 (2009-12-07)
 
