@@ -168,10 +168,8 @@ unarch()
             cabextract -f "$f"
             ;;
         rpm)
-            arch="%{ARCH}"
-            [[ "$f" == *.src.rpm || "$f" == *.spm ]] && arch=src
-            name=$(rpm -qp --qf="%{NAME}-%{VERSION}-%{RELEASE}.$arch" \
-                --nodigest --nosignature "$f")
+            qf='%{NAME}-%{VERSION}-%{RELEASE}.%|SOURCERPM?{%{ARCH}}:{src}|'
+            name=$(rpm -qp --qf="$qf" --nodigest --nosignature "$f")
             mkdir -p "$name"
             cd "$name"
             rpm2cpio "$f" \
