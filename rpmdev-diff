@@ -166,9 +166,11 @@ tmpdir=`mktemp -d ${TMPDIR:-/tmp}/rpmdev-diff.XXXXXX`
 mkdir "$tmpdir/old" "$tmpdir/new"
 rpmdev-extract -q -C "$tmpdir/old" "$1"
 rpmdev-extract -q -C "$tmpdir/new" "$2"
-if $meta ; then
+if ${meta:-false} ; then
+    set +e
     rpm_meta "$1" > "$tmpdir/old.meta"
     rpm_meta "$2" > "$tmpdir/new.meta"
+    set -e
 fi
 
 # It would be nice if rpmdev-extract could do some of the chmods.
