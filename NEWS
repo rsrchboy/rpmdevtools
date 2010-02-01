@@ -1,4 +1,4 @@
-rpmdevtools x.x (20xx-xx-xx)
+rpmdevtools 7.7 (2010-02-01)
 
   Ville Skyttä:
   - Use plain grep instead of deprecated egrep in rpminfo.
